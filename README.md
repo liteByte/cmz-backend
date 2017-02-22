@@ -6,6 +6,17 @@
 2. CodeIgniter 3.1.2
 3. codeigniter-restserver - https://github.com/chriskacerguis/codeigniter-restserver
 
+## Setup (Wamp/Xamp)
+1. Install WAMP/XAMP server
+2. Run WAMP/XAMP server
+3. Test  Wamp Server (localhost)
+4. Create Database
+	4.1 Connect to localhost:3306 with user "root"
+	4.2 Execute "CREATE DATABASE cmz"
+5. Exectute migrations
+	http://localhost/cmz-backend/migrate
+
+
 
 ## Instalacion
 
