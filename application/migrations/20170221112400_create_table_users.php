@@ -53,7 +53,8 @@ class Migration_Create_table_users extends CI_Migration{
                 ),
                 'active'        => array(
                     'type'      => 'VARCHAR',
-                    'constraint'    =>  150
+                    'constraint'    =>  150,
+                    'null'          => FALSE
                 ),
                 'date_update'  => array(
                     'type'          => 'TIMESTAMP',
@@ -71,6 +72,7 @@ class Migration_Create_table_users extends CI_Migration{
         $this->dbforge->drop_table('users');
 
     }
+
 
 
 
