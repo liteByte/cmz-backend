@@ -8,9 +8,9 @@ class Login_model extends CI_Model{
 		parent::__construct();
 	}
 	
-	public function getUser($email){
-		$this->db->where('email', $email);
-		$query = $this->db->get('user');
+	public function getUser($username){
+		$this->db->where('email_user', $username);
+		$query = $this->db->get('users');
 		return $query->row();
 	}
 	

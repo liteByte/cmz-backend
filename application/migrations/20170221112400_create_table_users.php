@@ -57,7 +57,7 @@ class Migration_Create_table_users extends CI_Migration{
                 ),
                 'date_update'  => array(
                     'type'          => 'TIMESTAMP',
-                    'null'          => FALSE,
+                    'null'          => TRUE,
                 ),
         ));
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
