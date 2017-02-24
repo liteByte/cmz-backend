@@ -11,6 +11,7 @@ class Role extends CI_Model{
 		parent::__construct();
 	}
 
+  //Get all roles
   public function getRoles(){
     $result = array();
 
@@ -24,6 +25,7 @@ class Role extends CI_Model{
     return $result;
   }
 
+  //Save a role
   public function save($name,$permissions){
 
     $data = array('name' => $name);
@@ -42,6 +44,7 @@ class Role extends CI_Model{
 
   }
 
+  //Validate repeated role name
   public function validateData($name){
 
     //Name validation
