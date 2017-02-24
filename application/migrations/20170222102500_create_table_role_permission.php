@@ -16,11 +16,13 @@ class Migration_Create_table_role_permission extends CI_Migration{
                 'permission_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          => FALSE
                 ),
                 'role_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          => FALSE
                 )
         ));

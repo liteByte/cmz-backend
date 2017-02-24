@@ -7,22 +7,28 @@ class Role extends CI_Model{
   private $name;
   private $permissions;
 
-	public function __construct($name,$permissions){
+	public function __construct(){
 		parent::__construct();
-    $this->name         = $name;
-    $this->permissions  = $permissions;
 	}
 
-  public static function getRoles(){
+  public function getRoles(){
+
+    $result = array();
 
     $this->db->select('name');
-    return $this->db->get('roles');
+    $query = $this->db->get('roles');
 
+    foreach ($query->result('Role') as $row)
+    {
+       array_push($result,$row->name);
+    }
+
+    return $result;
   }
 
-  public function save(){
+  public function save($name,$permissions){
 
-    $data = array('name' => $this->name);
+    $data = array('name' => $name);
 
     $this->db->insert('roles', $data);
 
@@ -30,7 +36,7 @@ class Role extends CI_Model{
     $roleID = $this->db->insert_id();
 
     //For each permission, insert a new register in role_permissions table
-    foreach ($this->permissions as $permission) {
+    foreach ($permissions as $permission) {
       $this->db->insert('role_permissions', array('permission_id' => $permission,'role_id' => $roleID));
     }
 
@@ -38,13 +44,13 @@ class Role extends CI_Model{
 
   }
 
-  public function validateData(){
+  public function validateData($name){
 
     //Name validation
-    $query = $this->db->get_where('roles', array('name' => $this->name));
-    if ($query->num_rows() > 0) return array("valid"=>false,"message"=>"Role already exists");;
+    $query = $this->db->get_where('roles', array('name' => $name));
+    if ($query->num_rows() > 0) return "Role already exists";
 
-    return array("valid"=>true,"message"=>"");;
+    return "OK";
 
   }
 

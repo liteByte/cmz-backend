@@ -16,15 +16,17 @@ class Migration_Create_table_user_role extends CI_Migration{
                 'user_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          => FALSE
                 ),
                 'role_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          => FALSE
                 )
         ));
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (user_id) REFERENCES users(user_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (role_id) REFERENCES roles(role_id)');
         $this->dbforge->add_key('user_role_id', TRUE);
         $this->dbforge->create_table('user_role');

@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/libraries/REST_Controller.php';
+//require_once(APPPATH.'/models/Role.php');
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
@@ -11,13 +12,13 @@ class RoleController extends REST_Controller{
 
 		function __construct(){
 			parent::__construct();
-			$this->load->model('role');
+			$this->load->model('Role');
 		}
 
     //Show roles
     public function roles_get(){
-      $roles = Role::getRoles();
-      $this->response($roles, REST_Controller::HTTP_OK);
+      $roles = $this->Role->getRoles();
+      return $this->response($roles, REST_Controller::HTTP_OK);
     }
 
     //Create role
@@ -26,24 +27,16 @@ class RoleController extends REST_Controller{
       $name         = $this->post('name');
       $permissions  = $this->post('permissions');
 
-      if($name === NULL) $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($name)) return $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
 
-      $newRole = new Role($name,$permissions);
+      $error = $this->Role->validateData($name);
 
-      $error = $newRole->validateData();
+      if(strcmp($error,"OK") != 0) return $this->response($error, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
-      if(!$error['valid']){
-
-        $this->response($error['message'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-
+      if($this->Role->save($name,$permissions)){
+        return $this->response("Role created succesfully", REST_Controller::HTTP_OK);
       } else {
-
-        if($newRole->save()){
-          $this->response("Role created succesfully", REST_Controller::HTTP_OK);
-        } else {
-          $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
+        return $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
     }

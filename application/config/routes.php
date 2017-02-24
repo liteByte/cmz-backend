@@ -58,5 +58,17 @@ $route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
 //$route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
 
 
-$route['user/login'] = 'UserController/login';
-$route['login'] = 'LoginController/login';
+//Roles
+$route['roles']               = 'RoleController/roles';
+
+//Permissions
+$route['permissions']         = 'PermissionController/permissions';
+
+////////////////////////User routes////////////////////////
+//Signup
+$route['signup']              = 'UserController/signup';
+
+//Users
+$route['user/(:num)']         = 'UserController/getUser/id/$1';
+$route['users']               = 'UserController/getUsers';
+$route['user/update/(:num)']  = 'UserController/update/id/$1';

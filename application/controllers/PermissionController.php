@@ -11,12 +11,12 @@ class PermissionController extends REST_Controller{
 
 		function __construct(){
 			parent::__construct();
-			$this->load->model('permission');
+			$this->load->model('Permission');
 		}
 
     //Show permissions
     public function permissions_get(){
-      $permissions = Permission::getPermissions();
+      $permissions = $this->Permission->getPermissions();
       $this->response($permissions, REST_Controller::HTTP_OK);
     }
 
@@ -25,24 +25,16 @@ class PermissionController extends REST_Controller{
 
       $name = $this->post('name');
 
-      if($name === NULL) $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($name)) return $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
 
-      $newPermission = new Role($name);
+      $error = $this->Permission->validateData($name);
 
-      $error = $newPermission->validateData();
+      if(strcmp($error,"OK")) return $this->response($error, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
-      if(!$error['valid']){
-
-        $this->response($error['message'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-
+      if($this->Permission->save($name)){
+        $this->response("Permission created succesfully", REST_Controller::HTTP_OK);
       } else {
-
-        if($newPermission->save()){
-          $this->response("Permission created succesfully", REST_Controller::HTTP_OK);
-        } else {
-          $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
+        $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
     }
