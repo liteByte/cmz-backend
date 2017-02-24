@@ -14,6 +14,8 @@ class UserController extends REST_Controller{
 			$this->load->model('User');
 			$this->load->model('Role');
 			$this->load->helper('email');
+		  $this->load->library('email');
+			$this->load->library('validator');
 		}
 
     //Create user
@@ -37,8 +39,12 @@ class UserController extends REST_Controller{
       if(empty($password))        return $this->response(array('error'=>'No se ha ingresado contraseña'), REST_Controller::HTTP_BAD_REQUEST);
 
 			//Validations
-			if (!valid_email($email)) 	return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
-      $error = $this->User->validateData($email,$document_number,$document_type);
+			if(!$this->validator->validatePassword($password)) 										    return $this->response(array('error'=>'Su contraseña debe tener 8 o mas digitos'), REST_Controller::HTTP_BAD_REQUEST);
+			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+			if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Valid repeated email or document number
+			$error = $this->User->validateData($email,$document_number,$document_type);
 
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
@@ -71,7 +77,10 @@ class UserController extends REST_Controller{
       if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
 
 			//Validations
-			if (!valid_email($email)) 	return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
+			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+			if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Valid repeated email or document number
 			$error = $this->User->validateDataOnUpdate($email,$document_number,$document_type,$id);
 
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
@@ -97,7 +106,6 @@ class UserController extends REST_Controller{
 				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 			}
 
-
     }
 
     //Show users
@@ -122,6 +130,72 @@ class UserController extends REST_Controller{
 			}
 		}
 
+		//Send recovery mail to user
+		public function recoverPassword_post(){
 
+			$post = json_decode(file_get_contents('php://input'));
+
+			$document_type    = $post->document_type;
+      $document_number  = $post->document_number;
+
+			if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validations
+			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+
+			$info = $this->User->getUserByDocument($document_type,$document_number);
+
+			if($info['status'] != "ok") return $this->response(array('error'=>$info['data']), REST_Controller::HTTP_BAD_REQUEST);
+
+			$newPassword = random_bytes(8);
+			if($this->User->changePassword($info['data']->user_id,$newPassword)){
+
+				$this->email->from('cmz@cmz.com', 'CMZ');
+				$this->email->to($info['data']->email);
+				$this->email->subject('Recuperacion de contraseña');
+				$this->email->message('Se nueva contraseña es: '.$newPassword);
+				$this->email->send();
+
+				return $this->response(array('msg'=>'Operacion satisfactoria: se ha enviado su nueva contraseña a su correo electronico'), REST_Controller::HTTP_OK);
+
+			} else {
+
+				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
+			}
+
+		}
+
+		//Change user password
+		public function changePassword_post(){
+
+			$post = json_decode(file_get_contents('php://input'));
+
+			$oldPassword = $post->oldPassword;
+			$newPassword = $post->newPassword;
+			$id 			   = $this->get('id');
+
+			if(empty($oldPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña antigua'), REST_Controller::HTTP_BAD_REQUEST);
+			if(empty($newPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña nueva'), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validations
+			if(!$this->validator->validatePassword($newPassword)) return $this->response(array('error'=>'Su contraseña debe tener 8 o mas digitos'), REST_Controller::HTTP_BAD_REQUEST);
+
+			$user = $this->User->getUserById($id);
+
+			if(password_verify($oldPassword,$user->password)){
+				if($this->User->changePassword($id,$newPassword)){
+					return $this->response(array('msg'=>"Se ha cambiado la contraseña satisfactoriamente"), REST_Controller::HTTP_OK);
+				} else {
+					return $this->response(array('error'=>'Error al realizar el cambio de contraseña'), REST_Controller::HTTP_BAD_REQUEST);
+				}
+			} else {
+				return $this->response(array('error'=>'La contraseña antigua es incorrecta'), REST_Controller::HTTP_BAD_REQUEST);
+			}
+
+			return $this->response(array('msg'=>$user->password), REST_Controller::HTTP_OK);
+
+		}
 
 }

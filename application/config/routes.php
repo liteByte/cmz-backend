@@ -59,17 +59,21 @@ $route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
 
 
 //Roles
-$route['roles']               = 'RoleController/roles';
+$route['roles']                 = 'RoleController/roles';  //Get -> show roles  & post -> create role
 
 //Permissions
-$route['permissions']         = 'PermissionController/permissions';
+$route['permissions']           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
 
 ////////////////////////User routes////////////////////////
 //Signup
-$route['signup']              = 'UserController/signup';
+$route['signup']                = 'UserController/signup';
 
 //Users
-$route['users/(:num)']         = 'UserController/getUser/id/$1';
-$route['users']                = 'UserController/getUsers';
-$route['users/update/(:num)']  = 'UserController/updateUser/id/$1';
-$route['users/remove/(:num)']  = 'UserController/removeUser/id/$1';
+$route['users/(:num)']          = 'UserController/getUser/id/$1';
+$route['users']                 = 'UserController/getUsers';
+$route['users/update/(:num)']   = 'UserController/updateUser/id/$1';
+$route['users/remove/(:num)']   = 'UserController/removeUser/id/$1';
+
+//Recover or change password
+$route['recoverPassword']       = 'UserController/recoverPassword';
+$route['changePassword/(:num)'] = 'UserController/changePassword/id/$1';

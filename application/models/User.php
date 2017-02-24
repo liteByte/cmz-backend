@@ -83,9 +83,11 @@ class User extends CI_Model{
   //Delete user and role information in 'user_role'
   public function delete($userID){
 
-    //Delete user role information. Then, delete user
-    $this->db->delete('user_role', array('user_id' => $userID));
-    $this->db->delete('users', array('user_id' => $userID));
+    $now = date('Y-m-d H:i:s');
+
+    //Delete user
+    $this->db->where('user_id', $userID);
+    $this->db->update('users', array('active' => 'inactive','date_update'=>$now));
 
     return true;
 
@@ -96,15 +98,26 @@ class User extends CI_Model{
 
     $result = array();
 
-    $this->db->select('document_type,document_number,name,email,last_name');
     $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
-    foreach ($query->result_array('User') as $row)
-    {
-       array_push($result,$row);
-    }
+    return $query->row();
+  }
 
-    return $result;
+  //Get a specific user information
+  public function getUserByDocument($document_type,$document_number){
+
+    $query = $this->db->get_where('users', array('document_type' => $document_type, "document_number" => $document_number));
+
+    if ($query->num_rows() > 0)
+    {
+       $row = $query->row();
+       return array('status'=>'ok','data'=>$row);
+
+    } else {
+
+      return array('status'=>'error','data'=>'No se ha encontrado un usuario con la informacion especificada');
+
+    }
   }
 
   //Get all users information
