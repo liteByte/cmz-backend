@@ -25,16 +25,16 @@ class PermissionController extends REST_Controller{
 
       $name = $this->post('name');
 
-      if(empty($name)) return $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($name)) return $this->response("No se ha ingresado nombre", REST_Controller::HTTP_BAD_REQUEST);
 
       $error = $this->Permission->validateData($name);
 
-      if(strcmp($error,"OK")) return $this->response($error, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+      if(strcmp($error,"OK")) return $this->response($error, REST_Controller::HTTP_BAD_REQUEST);
 
       if($this->Permission->save($name)){
-        $this->response("Permission created succesfully", REST_Controller::HTTP_OK);
+        $this->response("Permiso creado satisfactoriamente", REST_Controller::HTTP_OK);
       } else {
-        $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        $this->response("Error de base de datos", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
     }

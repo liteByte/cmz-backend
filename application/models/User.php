@@ -21,7 +21,7 @@ class User extends CI_Model{
     $this->load->library('hash');
 	}
 
-  //Creates the user in 'users' and then assigns the roles in user_role
+  //Creates the user in 'users' and then assigns the roles in 'user_role'
 	public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
 
     $now = date('Y-m-d H:i:s');
@@ -44,7 +44,7 @@ class User extends CI_Model{
 
     //For each role, insert a new register in user_role table
     foreach ($roles as $role) {
-      $this->db->insert('user_role', array('user_id' => $userID,'role_id' => $role));
+      $this->db->insert('user_role', array('user_id' => $userID,'role_id' => $role->role_id));
     }
 
     return true;
@@ -69,23 +69,35 @@ class User extends CI_Model{
     $this->db->update('users', $data);
 
     //Delete old roles from the user
-    //todo
+    $this->db->delete('user_role', array('user_id' => $id));
 
     //Add new roles to the user
     foreach ($roles as $role) {
-      $this->db->insert('user_role', array('user_id' => $userID,'role_id' => $role));
+      $this->db->insert('user_role', array('user_id' => $id,'role_id' => $role->role_id));
     }
 
     return true;
 
 	}
 
-  function getUserById($id){
+  //Delete user and role information in 'user_role'
+  public function delete($userID){
+
+    //Delete user role information. Then, delete user
+    $this->db->delete('user_role', array('user_id' => $userID));
+    $this->db->delete('users', array('user_id' => $userID));
+
+    return true;
+
+  }
+
+  //Get a specific user information
+  public function getUserById($userID){
 
     $result = array();
 
     $this->db->select('document_type,document_number,name,email,last_name');
-    $query = $this->db->get_where('users', array('active' => "active", "user_id" => $id));
+    $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
     foreach ($query->result_array('User') as $row)
     {
@@ -95,6 +107,7 @@ class User extends CI_Model{
     return $result;
   }
 
+  //Get all users information
   public function getUsers(){
 
     $result = array();
@@ -111,6 +124,18 @@ class User extends CI_Model{
 
   }
 
+  //Get all the permissons of an user
+  public function getPermissions($userID){
+
+  }
+
+  //Change user's password
+  public function changePassword($userID,$newPassword){
+    $this->db->where('user_id', $userID);
+    $this->db->update('users', array('password'=>$this->hash->encrypt($newPassword)));
+
+    return true;
+  }
 
   public function validateData($email,$document_number,$document_type){
 
@@ -120,6 +145,20 @@ class User extends CI_Model{
 
     //Document validation
     $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type));
+    if ($query->num_rows() > 0) return "Document number already in use";
+
+    return "OK";
+
+  }
+
+  public function validateDataOnUpdate($email,$document_number,$document_type,$id){
+
+    //Email validation
+    $query = $this->db->get_where('users', array('email' => $email,'user_id !='=>$id));
+    if ($query->num_rows() > 0) return "Email already in use";
+
+    //Document validation
+    $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type,'user_id !='=>$id));
     if ($query->num_rows() > 0) return "Document number already in use";
 
     return "OK";

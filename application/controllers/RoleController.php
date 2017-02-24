@@ -24,19 +24,21 @@ class RoleController extends REST_Controller{
     //Create role
     public function roles_post(){
 
-      $name         = $this->post('name');
-      $permissions  = $this->post('permissions');
+			$post = json_decode(file_get_contents('php://input'));
 
-      if(empty($name)) return $this->response("Name is missing", REST_Controller::HTTP_BAD_REQUEST);
+      $name         = $post->name;
+      $permissions  = $post->permissions;
+
+      if(empty($name)) return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
 
       $error = $this->Role->validateData($name);
 
-      if(strcmp($error,"OK") != 0) return $this->response($error, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+      if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
       if($this->Role->save($name,$permissions)){
-        return $this->response("Role created succesfully", REST_Controller::HTTP_OK);
+        return $this->response(array('msg'=>'Rol creado satisfactoriamente'), REST_Controller::HTTP_OK);
       } else {
-        return $this->response("Database error", REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->response(array('error'=>"Error de base de datos"), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
     }

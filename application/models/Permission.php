@@ -13,24 +13,21 @@ class Permission extends CI_Model{
   public function getPermissions(){
     $result = array();
 
-    $this->db->select('name');
     $query = $this->db->get('permissions');
 
-    foreach ($query->result('Permission') as $row)
+    foreach ($query->result_array('Permission') as $row)
     {
-       array_push($result,$row->name);
+       array_push($result,$row);
     }
 
     return $result;
   }
 
   public function save($name){
-
     $data = array('name' => $name);
     $this->db->insert('permissions', $data);
 
     return true;
-
   }
 
   public function validateData($name){

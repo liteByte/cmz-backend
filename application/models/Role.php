@@ -12,15 +12,13 @@ class Role extends CI_Model{
 	}
 
   public function getRoles(){
-
     $result = array();
 
-    $this->db->select('name');
     $query = $this->db->get('roles');
 
-    foreach ($query->result('Role') as $row)
+    foreach ($query->result_array('Role') as $row)
     {
-       array_push($result,$row->name);
+       array_push($result,$row);
     }
 
     return $result;
@@ -37,7 +35,7 @@ class Role extends CI_Model{
 
     //For each permission, insert a new register in role_permissions table
     foreach ($permissions as $permission) {
-      $this->db->insert('role_permissions', array('permission_id' => $permission,'role_id' => $roleID));
+      $this->db->insert('role_permissions', array('permission_id' => $permission->id,'role_id' => $roleID));
     }
 
     return true;

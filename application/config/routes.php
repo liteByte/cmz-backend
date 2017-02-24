@@ -69,6 +69,7 @@ $route['permissions']         = 'PermissionController/permissions';
 $route['signup']              = 'UserController/signup';
 
 //Users
-$route['user/(:num)']         = 'UserController/getUser/id/$1';
-$route['users']               = 'UserController/getUsers';
-$route['user/update/(:num)']  = 'UserController/update/id/$1';
+$route['users/(:num)']         = 'UserController/getUser/id/$1';
+$route['users']                = 'UserController/getUsers';
+$route['users/update/(:num)']  = 'UserController/updateUser/id/$1';
+$route['users/remove/(:num)']  = 'UserController/removeUser/id/$1';
