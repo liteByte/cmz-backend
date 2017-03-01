@@ -10,7 +10,7 @@ class LoginController extends CI_Controller {
         parent::__construct();
         $this->load->library('hash');
         $this->load->library('Response_msg');
-        $this->load->model('login_model');
+        $this->load->model('user');
     }
 
     public function login(){
@@ -26,7 +26,7 @@ class LoginController extends CI_Controller {
         }else{
             $this->dni =  $this->security->xss_clean(addslashes(strip_tags($this->input->post('dni', TRUE))));
             $this->clave =  $this->security->xss_clean(addslashes(strip_tags($this->input->post('clave', TRUE))));
-            $user_data = $this->login_model->getUser($this->dni);
+            $user_data = $this->user->getUser($this->dni);
             if(!$user_data){
                  $this->response_msg->setResponse(['mensaje' =>'Usuario inexistente' ]);
             }
@@ -35,7 +35,16 @@ class LoginController extends CI_Controller {
                 $this->response_msg->setResponse(['mensaje' =>'Clave incorrecta']);
             }
 
-            // Create Token
+
+            $permissions = $this->user->getPermissions($user_data->document_number);
+
+            if(!$permissions){
+                $this->response_msg->setResponse(['mensaje' =>'Usuario no tiene permisos asociados']);
+            }
+            unset($user_data->password);
+
+             // Create Token
+            $user_data->permissions = $permissions;
             $user_data->iat = time();
             $user_data->exp = time() + 300;
             $jwt = JWT::encode($user_data, '');
