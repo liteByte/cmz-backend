@@ -35,11 +35,14 @@ class LoginControllerp extends CI_Controller {
                 $this->response_msg->setResponse(['mensaje' =>'Clave incorrecta']);
             }
 
-
-            
-            
+            // Login
+            $user_data->iat = time();
+            $user_data->exp = time() + 300;
+            $jwt = JWT::encode($user_data, '');
+            $this->response_msg->setResponse([
+                            'token' => $jwt,
+                            'code'  => 0
+            ], 200);
         }
-
-
     }
 }
