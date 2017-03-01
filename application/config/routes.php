@@ -73,6 +73,7 @@ $route['users/(:num)']          = 'UserController/getUser/id/$1';
 $route['users']                 = 'UserController/getUsers';
 $route['users/update/(:num)']   = 'UserController/updateUser/id/$1';
 $route['users/remove/(:num)']   = 'UserController/removeUser/id/$1';
+$route['users/roles/(:num)']    = 'UserController/updateRoles/id/$1';
 
 //Recover or change password
 $route['recoverPassword']       = 'UserController/recoverPassword';

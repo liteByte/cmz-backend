@@ -42,12 +42,7 @@ class User extends CI_Model{
     //Obtain last inserted user id
     $userID = $this->db->insert_id();
 
-    //For each role, insert a new register in user_role table
-    foreach ($roles as $role) {
-      $this->db->insert('user_role', array('user_id' => $userID,'role_id' => $role->role_id));
-    }
-
-    return true;
+    return $this->updateRoles($roles,$userID);
 
 	}
 
@@ -68,15 +63,7 @@ class User extends CI_Model{
     $this->db->where('user_id', $id);
     $this->db->update('users', $data);
 
-    //Delete old roles from the user
-    $this->db->delete('user_role', array('user_id' => $id));
-
-    //Add new roles to the user
-    foreach ($roles as $role) {
-      $this->db->insert('user_role', array('user_id' => $id,'role_id' => $role->role_id));
-    }
-
-    return true;
+    return $this->updateRoles($roles,$id);
 
 	}
 
@@ -138,7 +125,53 @@ class User extends CI_Model{
   }
 
   //Get all the permissons of an user
-  public function getPermissions($userID){
+  public function getPermissions($email){
+
+    //Get user_id
+    $this->db->select('user_id');
+    $query = $this->db->get_where('users', array('active' => "active",'email'=>$email));
+    $userID = $query->row()->user_id;
+
+    //Get user roles
+    $roles = array();
+    $query = $this->db->get_where('user_role', array('user_id' => $userID));
+
+    foreach ($query->result_array() as $row)
+    {
+       array_push($roles,$row['role_id']);
+    }
+
+    //Get permissions associated with obtained roles
+    $this->db->distinct();
+    $this->db->select('name');
+    $this->db->from('permissions');
+    $this->db->join('role_permissions', 'role_permissions.permission_id = permissions.permission_id');
+    $this->db->where_in('role_permissions.role_id', $roles);
+
+    $query = $this->db->get();
+    $result = array();
+
+    foreach ($query->result_array() as $row)
+    {
+       array_push($result,$row['name']);
+    }
+
+    return $result;
+
+  }
+
+  //Update an user roles
+  public function updateRoles($roles,$userID){
+
+    //Delete old roles from the user
+    $this->db->delete('user_role', array('user_id' => $userID));
+
+    //Add new roles to the user
+    foreach ($roles as $role) {
+      $this->db->insert('user_role', array('user_id' => $userID,'role_id' => $role->role_id));
+    }
+
+    return true;
 
   }
 
@@ -154,11 +187,11 @@ class User extends CI_Model{
 
     //Email validation
     $query = $this->db->get_where('users', array('email' => $email));
-    if ($query->num_rows() > 0) return "Email already in use";
+    if ($query->num_rows() > 0) return "El email ingresado ya ha sido utilizado";
 
     //Document validation
     $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type));
-    if ($query->num_rows() > 0) return "Document number already in use";
+    if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
 
     return "OK";
 
@@ -168,11 +201,11 @@ class User extends CI_Model{
 
     //Email validation
     $query = $this->db->get_where('users', array('email' => $email,'user_id !='=>$id));
-    if ($query->num_rows() > 0) return "Email already in use";
+    if ($query->num_rows() > 0) return "El email ingresado ya ha sido utilizado";
 
     //Document validation
     $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type,'user_id !='=>$id));
-    if ($query->num_rows() > 0) return "Document number already in use";
+    if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
 
     return "OK";
 

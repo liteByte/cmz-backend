@@ -198,4 +198,20 @@ class UserController extends REST_Controller{
 
 		}
 
+		//Update a user specific roles
+		public function updateRoles_post(){
+
+			$post = json_decode(file_get_contents('php://input'));
+
+			$roles = $post->roles;
+			$id 	 = $this->get('id');
+
+			if($this->User->updateRoles($roles,$id)){
+				return $this->response(array('msg'=>'Roles del usuario actualizados correctamente'), REST_Controller::HTTP_OK);
+			} else {
+				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+			}
+
+		}
+
 }
