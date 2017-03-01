@@ -21,6 +21,16 @@ class User extends CI_Model{
     $this->load->library('hash');
 	}
 
+
+  //Get user information to sign in
+  public function getUser($dni){
+    $this->db->select('*');
+    $this->db->where('document_number', $dni);
+    $query = $this->db->get('users');
+    return $query->row();
+  }
+  
+  
   //Creates the user in 'users' and then assigns the roles in 'user_role'
 	public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
 
@@ -126,11 +136,11 @@ class User extends CI_Model{
   }
 
   //Get all the permissons of an user
-  public function getPermissions($email){
+  public function getPermissions($document_number){
 
     //Get user_id
     $this->db->select('user_id');
-    $query = $this->db->get_where('users', array('active' => "active",'email'=>$email));
+    $query = $this->db->get_where('users', array('active' => "active",'document_number'=>$document_number));
     $userID = $query->row()->user_id;
 
     //Get user roles
