@@ -68,6 +68,7 @@ class User extends CI_Model{
 	}
 
   //Delete user and role information in 'user_role'
+  //TODO: verificar que el usuario no tenga auditorias antes de borrarlo
   public function delete($userID){
 
     $now = date('Y-m-d H:i:s');

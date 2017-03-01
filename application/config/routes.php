@@ -58,10 +58,10 @@ $route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
 //$route['api/example/users/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/example/users/id/$1/format/$3$4'; // Example 8
 
 
-//Roles
+////////////////////////Role routes////////////////////////
 $route['roles']                 = 'RoleController/roles';  //Get -> show roles  & post -> create role
 
-//Permissions
+////////////////////////Permission routes////////////////////////
 $route['permissions']           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
 
 ////////////////////////User routes////////////////////////
@@ -78,3 +78,9 @@ $route['users/roles/(:num)']    = 'UserController/updateRoles/id/$1';
 //Recover or change password
 $route['recoverPassword']       = 'UserController/recoverPassword';
 $route['changePassword/(:num)'] = 'UserController/changePassword/id/$1';
+
+////////////////////////Bank routes////////////////////////
+$route['banks']                 = 'BankController/banks';  //Get -> show banks  & post -> create bank
+$route['banks/update/(:num)']   = 'BankController/updateBank/id/$1';
+$route['banks/remove/(:num)']   = 'BankController/removeBank/id/$1';
+$route['banks/(:num)']          = 'BankController/getBank/id/$1';

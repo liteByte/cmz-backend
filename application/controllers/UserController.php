@@ -114,7 +114,7 @@ class UserController extends REST_Controller{
       return $this->response($users, REST_Controller::HTTP_OK);
     }
 
-		//Show users
+		//Show specific users
 		public function getUser_get(){
 
 			$id = $this->get('id');
@@ -169,7 +169,7 @@ class UserController extends REST_Controller{
 
 			}
 		}
-		
+
 		//Change user password
 		public function changePassword_post(){
 
