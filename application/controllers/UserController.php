@@ -136,14 +136,15 @@ class UserController extends REST_Controller{
 			$post = json_decode(file_get_contents('php://input'));
 
 			$document_type    = $post->document_type;
-      $document_number  = $post->document_number;
+			$document_number  = $post->document_number;
 
 			if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+			if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
 
 			//Validations
 			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
 
+			//Verify if the user with specified document exits. If so, change it's password and send it by email
 			$info = $this->User->getUserByDocument($document_type,$document_number);
 
 			if($info['status'] != "ok") return $this->response(array('error'=>$info['data']), REST_Controller::HTTP_BAD_REQUEST);
@@ -151,22 +152,24 @@ class UserController extends REST_Controller{
 			$newPassword = random_bytes(8);
 			if($this->User->changePassword($info['data']->user_id,$newPassword)){
 
-				$this->email->from('cmz@cmz.com', 'CMZ');
+				$this->email->from('pruebalitebyte@gmail.com', 'CMZ');
 				$this->email->to($info['data']->email);
 				$this->email->subject('Recuperacion de contraseña');
 				$this->email->message('Se nueva contraseña es: '.$newPassword);
-				$this->email->send();
 
-				return $this->response(array('msg'=>'Operacion satisfactoria: se ha enviado su nueva contraseña a su correo electronico'), REST_Controller::HTTP_OK);
+				if($this->email->send()){
+					return $this->response(array('msg'=>$info['data']->email), REST_Controller::HTTP_OK);
+				} else {
+					return $this->response(array('error'=>show_error($this->email->print_debugger())), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+				}
 
 			} else {
 
 				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
 			}
-
 		}
-
+		
 		//Change user password
 		public function changePassword_post(){
 
