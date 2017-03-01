@@ -1,42 +1,48 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . '/controllers/AuthController.php';
+class LoginController extends CI_Controller {
+   
+    private $dni;
+    private $clave;
+    
+    function __construct(){
+        parent::__construct();
+        $this->load->library('hash');
+        $this->load->library('Response_msg');
+        $this->load->model('login_model');
+    }
 
-// use namespace
-use Restserver\Libraries\REST_Controller;
+    public function login(){
+        $methodHTTP    =  $this->input->method();
+            if( strtolower($methodHTTP) != 'post'){
+                $this->response_msg->setResponse(['mensaje'=> 'Metodo no aceptado']);
+            }
 
-class LoginController extends AuthController{
+        $_POST = json_decode(file_get_contents('php://input'), true);
 
-    	function __construct(){
-			parent::__construct();
-			$this->load->library('session');
-			$this->load->model('login_model');
-            //$this->validateToken(apache_request_headers());
-		}
-	
-		public function login_get(){ echo "Test"; }
-		
-		public function login_post(){
-			$dni = $this->post('dni');
-			$password = $this->post('clave');
-            $user_data = $this->login_model->getUser($dni);
+        if ($this->form_validation->run('login_validate') == FALSE){
+            $this->response_msg->setResponse(validation_errors());
+        }else{
+            $this->dni =  $this->security->xss_clean(addslashes(strip_tags($this->input->post('dni', TRUE))));
+            $this->clave =  $this->security->xss_clean(addslashes(strip_tags($this->input->post('clave', TRUE))));
+            $user_data = $this->login_model->getUser($this->dni);
+            if(!$user_data){
+                 $this->response_msg->setResponse(['mensaje' =>'Usuario inexistente' ]);
+            }
 
-			if(!$user_data){
-				return $this->set_response([
-					'usuario' => $dni,
-					'message' => 'Usuario inexistente'
-				], REST_Controller::HTTP_BAD_REQUEST);
-			}
+            if(!password_verify($this->clave , $user_data->password )){
+                $this->response_msg->setResponse(['mensaje' =>'Clave incorrecta']);
+            }
 
-			if(!password_verify($password, $user_data->password)){
-				return  $this->set_response([
-					'usuario' => $dni,
-					'message' => 'Usuario  o Clave inexistente'
-				], REST_Controller::HTTP_BAD_REQUEST);
-			}
-		}
-
-
-
+            // Create Token
+            $user_data->iat = time();
+            $user_data->exp = time() + 300;
+            $jwt = JWT::encode($user_data, '');
+            $this->response_msg->setResponse([
+                            'token' => $jwt,
+                            'code'  => 0
+            ], 200);
+        }
+    }
 }

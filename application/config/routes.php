@@ -62,14 +62,5 @@ $route['api/example/users/(:num)'] = 'api/example/users/id/$1'; // Example 4
 
 //$route['user/loginp'] = 'LoginControllerp/login';
 
-$route['user/login']["post"] = 'LoginControllerp/login';
+$route['user/login']["post"] = 'LoginController/login';
 $route['login']["get"] = 'LoginController/login';
-
-
-
-/*
-$route["users"]["get"]    = "users/get";
-$route["users"]["post"]   = "users/store";
-$route["users"]["update"] = "users/update";
-$route["users"]["delete"] = "users/delete";
- */
