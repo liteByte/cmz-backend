@@ -8,8 +8,8 @@ class Login_model extends CI_Model{
 		parent::__construct();
 	}
 	
-	public function getUser($username){
-		$this->db->where('email_user', $username);
+	public function getUser($dni){
+		$this->db->where('document_number', $dni);
 		$query = $this->db->get('users');
 		return $query->row();
 	}
