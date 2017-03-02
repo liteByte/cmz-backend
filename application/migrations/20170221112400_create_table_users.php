@@ -60,6 +60,11 @@ class Migration_Create_table_users extends CI_Migration{
                     'type'          => 'TIMESTAMP',
                     'null'          => TRUE,
                 ),
+                'down_user_id' => array(
+                    'type'          =>  'INT',
+                    'constraint'    =>  5,
+                    'unsigned'      =>  TRUE
+                ),
         ));
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_key('user_id', TRUE);
