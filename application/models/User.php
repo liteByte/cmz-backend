@@ -21,16 +21,16 @@ class User extends CI_Model{
     $this->load->library('hash');
 	}
 
-
   //Get user information to sign in
   public function getUser($dni){
     $this->db->select('*');
     $this->db->where('document_number', $dni);
+    $this->db->where('active', 'active');
     $query = $this->db->get('users');
     return $query->row();
   }
-  
-  
+
+
   //Creates the user in 'users' and then assigns the roles in 'user_role'
 	public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
 
@@ -79,13 +79,13 @@ class User extends CI_Model{
 
   //Delete user and role information in 'user_role'
   //TODO: verificar que el usuario no tenga auditorias antes de borrarlo
-  public function delete($userID){
+  public function delete($userID,$downUserID){
 
     $now = date('Y-m-d H:i:s');
 
     //Delete user
     $this->db->where('user_id', $userID);
-    $this->db->update('users', array('active' => 'inactive','date_update'=>$now));
+    $this->db->update('users', array('active' => 'inactive','date_update'=>$now,'down_user_id'=>$downUserID));
 
     return true;
 
@@ -152,6 +152,9 @@ class User extends CI_Model{
        array_push($roles,$row['role_id']);
     }
 
+    //If user has no roles, return empty
+    if(empty($roles)) return array();
+
     //Get permissions associated with obtained roles
     $this->db->distinct();
     $this->db->select('name');
@@ -166,6 +169,9 @@ class User extends CI_Model{
     {
        array_push($result,$row['name']);
     }
+
+    //If user has no permissions, return empty
+    if(empty($result)) return array();
 
     return $result;
 

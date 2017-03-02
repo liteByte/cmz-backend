@@ -2,12 +2,14 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . '/libraries/REST_Controller.php';
+require APPPATH . '/controllers/AuthController.php';
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
 
-class UserController extends REST_Controller{
+class UserController extends AuthController{
+
+		private $token_valid;
 
 		function __construct(){
 			parent::__construct();
@@ -16,10 +18,14 @@ class UserController extends REST_Controller{
 			$this->load->helper('email');
 		  $this->load->library('email');
 			$this->load->library('validator');
+			$this->token_valid = $this->validateToken(apache_request_headers());
 		}
 
     //Create user
     public function signup_post(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -60,6 +66,9 @@ class UserController extends REST_Controller{
     //Update user information
     public function updateUser_put(){
 
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
 			$post = json_decode(file_get_contents('php://input'));
 
       $name             = $post->name;
@@ -98,9 +107,12 @@ class UserController extends REST_Controller{
     //Delete user
     public function removeUser_delete(){
 
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
 			$id	= (int) $this->get('id');
 
-			if($this->User->delete($id)){
+			if($this->User->delete($id,$this->token_valid->user_id)){
 				return $this->response(array('msg'=>'Usuario eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
 			} else {
 				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -110,12 +122,19 @@ class UserController extends REST_Controller{
 
     //Show users
     public function getUsers_get(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
       $users = $this->User->getUsers();
       return $this->response($users, REST_Controller::HTTP_OK);
     }
 
 		//Show specific users
 		public function getUser_get(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
 			$id = $this->get('id');
 
@@ -132,6 +151,9 @@ class UserController extends REST_Controller{
 
 		//Send recovery mail to user
 		public function recoverPassword_post(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -173,11 +195,13 @@ class UserController extends REST_Controller{
 		//Change user password
 		public function changePassword_post(){
 
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
 			$post = json_decode(file_get_contents('php://input'));
 
 			$oldPassword = $post->oldPassword;
 			$newPassword = $post->newPassword;
-			$id 			   = $this->get('id');
 
 			if(empty($oldPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña antigua'), REST_Controller::HTTP_BAD_REQUEST);
 			if(empty($newPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña nueva'), REST_Controller::HTTP_BAD_REQUEST);
@@ -185,10 +209,10 @@ class UserController extends REST_Controller{
 			//Validations
 			if(!$this->validator->validatePassword($newPassword)) return $this->response(array('error'=>'Su contraseña debe tener 8 o mas digitos'), REST_Controller::HTTP_BAD_REQUEST);
 
-			$user = $this->User->getUserById($id);
+			$user = $this->User->getUserById($this->token_valid->user_id);
 
 			if(password_verify($oldPassword,$user->password)){
-				if($this->User->changePassword($id,$newPassword)){
+				if($this->User->changePassword($this->token_valid->user_id,$newPassword)){
 					return $this->response(array('msg'=>"Se ha cambiado la contraseña satisfactoriamente"), REST_Controller::HTTP_OK);
 				} else {
 					return $this->response(array('error'=>'Error al realizar el cambio de contraseña'), REST_Controller::HTTP_BAD_REQUEST);
@@ -203,6 +227,9 @@ class UserController extends REST_Controller{
 
 		//Update a user specific roles
 		public function updateRoles_post(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
 			$post = json_decode(file_get_contents('php://input'));
 

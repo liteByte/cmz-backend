@@ -19,7 +19,8 @@ class Bank extends CI_Model{
                   'corporate_name'  => $corporate_name,
                   'address'         => $address,
                   'location'        => $location,
-                  'phone_number'    => $phone_number
+                  'phone_number'    => $phone_number,
+                  'active'          => 'active'
     );
 
     $this->db->insert('banks', $data);
@@ -77,7 +78,7 @@ class Bank extends CI_Model{
 
     //Delete bank
     $this->db->where('bank_id', $bankID);
-    $this->db->delete('banks');
+    $this->db->update('banks', array('active' => 'inactive'));
 
     return true;
 

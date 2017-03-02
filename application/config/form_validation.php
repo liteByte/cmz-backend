@@ -10,19 +10,17 @@
 $config = array(
     'login_validate' => array(
         array(
-            'field' => 'dni',
+            'field' => 'document_number',
             'label' => 'DNI',
             'rules' => 'required',
             "errors" => array('required' => " Debe ingresar numero de  %s.")
 
         ),
         array(
-            'field' => 'clave',
+            'field' => 'password',
             'label' => 'Clave',
             'rules' => 'required',
             "errors" => array('required' => "Debe ingresar  su  contraseña.")
         )
     ),
 );
-
-

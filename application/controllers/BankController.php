@@ -2,20 +2,26 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . '/libraries/REST_Controller.php';
+require APPPATH . '/controllers/AuthController.php';
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
 
-class UserController extends REST_Controller{
+class BankController extends AuthController{
+
+		private $token_valid;
 
 		function __construct(){
 			parent::__construct();
 			$this->load->model('Bank');
+			$this->token_valid = $this->validateToken(apache_request_headers());
 		}
 
     //Create bank
     public function banks_post(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -44,12 +50,20 @@ class UserController extends REST_Controller{
 
     //Show banks
     public function banks_get(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
       $banks = $this->Bank->getBanks();
       return $this->response($banks, REST_Controller::HTTP_OK);
     }
 
     //Update bank information
     public function updateBank_put(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
       $post = json_decode(file_get_contents('php://input'));
 
       $bank_code        = $post->bank_code;
@@ -79,6 +93,9 @@ class UserController extends REST_Controller{
     //Show specific bank
     public function getBank_get(){
 
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
       $id = $this->get('id');
 
       if(empty($id)) return $this->response(array('error'=>'Falta el ID del banco'), REST_Controller::HTTP_BAD_REQUEST);
@@ -94,6 +111,9 @@ class UserController extends REST_Controller{
 
     //Delete bank
     public function removeBank_delete(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
       $id	= (int) $this->get('id');
 

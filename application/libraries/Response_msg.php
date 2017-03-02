@@ -26,7 +26,7 @@ class Response_msg{
             $this->msg = $msg;
         }
         http_response_code($this->error_code);
-        $result_json = array("response"=> ($this->msg));
+        $result_json = $this->msg;
         $json= json_encode($result_json, JSON_UNESCAPED_UNICODE);
         echo $json;
         exit;

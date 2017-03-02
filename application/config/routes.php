@@ -73,7 +73,7 @@ $route['users/roles/(:num)']    = 'UserController/updateRoles/id/$1';
 
 //Recover or change password
 $route['recoverPassword']       = 'UserController/recoverPassword';
-$route['changePassword/(:num)'] = 'UserController/changePassword/id/$1';
+$route['changePassword']        = 'UserController/changePassword';
 
 ////////////////////////Bank routes////////////////////////
 $route['banks']                 = 'BankController/banks';  //Get -> show banks  & post -> create bank
@@ -82,6 +82,4 @@ $route['banks/remove/(:num)']   = 'BankController/removeBank/id/$1';
 $route['banks/(:num)']          = 'BankController/getBank/id/$1';
 
 ////////////////////////Login routes////////////////////////
-$route['user/login']["post"] = 'LoginController/login';
-$route['login']["get"] = 'LoginController/login';
-
+$route['login']["post"]         = 'LoginController/login';
