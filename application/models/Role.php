@@ -13,7 +13,29 @@ class Role extends CI_Model{
 
   //Get all roles
   public function getRoles(){
+
     $result = array();
+
+    $query = $this->db->get('roles');
+
+    foreach ($query->result_array('Role') as $row)
+    {
+      //Get permissions associated with each role
+      $this->db->select('name,permissions.permission_id');
+      $this->db->from('permissions');
+      $this->db->join('role_permissions', 'role_permissions.permission_id = permissions.permission_id');
+      $this->db->where('role_permissions.role_id', $row['role_id']);
+      $permissionQuery = $this->db->get();
+
+      $row['permissions'] = $permissionQuery->result_array();
+
+      array_push($result,$row);
+    }
+
+    return $result;
+
+
+    /*$result = array();
 
     $query = $this->db->get('roles');
 
@@ -22,7 +44,7 @@ class Role extends CI_Model{
        array_push($result,$row);
     }
 
-    return $result;
+    return $result;*/
   }
 
   //Save a role
