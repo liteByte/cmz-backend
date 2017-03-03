@@ -52,4 +52,27 @@ class RoleController extends AuthController{
 
     }
 
+		//Create role
+		public function updateRole_put(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMroles",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+
+			$post = json_decode(file_get_contents('php://input'));
+
+			$permissions  = $post->permissions;
+			$id 	 				= $this->get('id');
+
+			if($this->Role->updatePermissions($permissions,$id)){
+				return $this->response(array('msg'=>'Rol modificado satisfactoriamente'), REST_Controller::HTTP_OK);
+			} else {
+				return $this->response(array('error'=>"Error de base de datos"), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+			}
+
+		}
+
 }

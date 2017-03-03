@@ -56,6 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 ////////////////////////Role routes////////////////////////
 $route['roles']                 = 'RoleController/roles';  //Get -> show roles  & post -> create role
+$route['roles/update/(:num)']   = 'RoleController/updateRole/id/$1'; 
 
 ////////////////////////Permission routes////////////////////////
 $route['permissions']           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission

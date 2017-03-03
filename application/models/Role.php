@@ -44,6 +44,21 @@ class Role extends CI_Model{
 
   }
 
+  //Update a role's permissions
+  public function updatePermissions($permissions,$roleID){
+
+    //Delete old roles from the user
+    $this->db->delete('role_permissions', array('role_id' => $roleID));
+
+    //Add new permissions to the role
+    foreach ($permissions as $permission) {
+      $this->db->insert('role_permissions', array('role_id' => $roleID,'permission_id' => $permission->permission_id));
+    }
+
+    return true;
+
+  }
+
   //Validate repeated role name
   public function validateData($name){
 
