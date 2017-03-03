@@ -121,7 +121,7 @@ class BankController extends AuthController{
       if(empty($bank)){
         return $this->response(array('error'=>'No se encontro el ID del banco'), REST_Controller::HTTP_BAD_REQUEST);
       } else {
-        return $this->response($user, REST_Controller::HTTP_OK);
+        return $this->response($bank, REST_Controller::HTTP_OK);
       }
     }
 
