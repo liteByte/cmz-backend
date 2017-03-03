@@ -147,13 +147,8 @@ class UserController extends AuthController{
       return $this->response($users, REST_Controller::HTTP_OK);
     }
 
-<<<<<<< HEAD
 	//Show specific users
 	public function getUser_get(){
-=======
-		//Show specific user
-		public function getUser_get(){
->>>>>>> feature-seedersAndPermissions
 
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -273,7 +268,6 @@ class UserController extends AuthController{
 		for($i=0;$i < $longitud;$i++) $password .= $pattern{mt_rand(0,$max)};
 		return $password;
 	}
-
 
 	// Send Mail with new Password
 	public function sendMail($info, $newPassword){
