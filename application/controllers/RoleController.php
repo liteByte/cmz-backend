@@ -52,7 +52,7 @@ class RoleController extends AuthController{
 
     }
 
-		//Create role
+		//Updates a role's permissions
 		public function updateRole_put(){
 
 			//Validates if the user is logged and the token sent is valid.
