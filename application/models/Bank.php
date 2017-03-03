@@ -52,7 +52,7 @@ class Bank extends CI_Model{
 
     $result = array();
 
-    $query = $this->db->get('banks');
+    $query = $this->db->get_where('banks', array('active' => "active"));
 
     foreach ($query->result_array('Bank') as $row)
     {

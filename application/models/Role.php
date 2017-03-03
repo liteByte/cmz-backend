@@ -13,16 +13,27 @@ class Role extends CI_Model{
 
   //Get all roles
   public function getRoles(){
+
     $result = array();
 
     $query = $this->db->get('roles');
 
     foreach ($query->result_array('Role') as $row)
     {
-       array_push($result,$row);
+      //Get permissions associated with each role
+      $this->db->select('name,permissions.permission_id');
+      $this->db->from('permissions');
+      $this->db->join('role_permissions', 'role_permissions.permission_id = permissions.permission_id');
+      $this->db->where('role_permissions.role_id', $row['role_id']);
+      $permissionQuery = $this->db->get();
+
+      $row['permissions'] = $permissionQuery->result_array();
+
+      array_push($result,$row);
     }
 
     return $result;
+
   }
 
   //Save a role
@@ -38,6 +49,21 @@ class Role extends CI_Model{
     //For each permission, insert a new register in role_permissions table
     foreach ($permissions as $permission) {
       $this->db->insert('role_permissions', array('permission_id' => $permission->id,'role_id' => $roleID));
+    }
+
+    return true;
+
+  }
+
+  //Update a role's permissions
+  public function updatePermissions($permissions,$roleID){
+
+    //Delete old roles from the user
+    $this->db->delete('role_permissions', array('role_id' => $roleID));
+
+    //Add new permissions to the role
+    foreach ($permissions as $permission) {
+      $this->db->insert('role_permissions', array('role_id' => $roleID,'permission_id' => $permission->permission_id));
     }
 
     return true;
