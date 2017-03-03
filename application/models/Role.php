@@ -34,17 +34,6 @@ class Role extends CI_Model{
 
     return $result;
 
-
-    /*$result = array();
-
-    $query = $this->db->get('roles');
-
-    foreach ($query->result_array('Role') as $row)
-    {
-       array_push($result,$row);
-    }
-
-    return $result;*/
   }
 
   //Save a role
