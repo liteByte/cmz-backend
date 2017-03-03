@@ -24,7 +24,7 @@ class Permission extends CI_Model{
     return $result;
   }
 
-  //Save a role
+  //Save a permission
   public function save($name){
     $data = array('name' => $name);
     $this->db->insert('permissions', $data);
@@ -32,7 +32,7 @@ class Permission extends CI_Model{
     return true;
   }
 
-  //Validate repeated role name
+  //Validate repeated permission name
   public function validateData($name){
 
     //Name validation

@@ -61,12 +61,9 @@ $route['roles']                 = 'RoleController/roles';  //Get -> show roles  
 $route['permissions']           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
 
 ////////////////////////User routes////////////////////////
-//Signup
-$route['signup']                = 'UserController/signup';
-
 //Users
+$route['users']                 = 'UserController/users'; //Get -> show users  & post -> create users
 $route['users/(:num)']          = 'UserController/getUser/id/$1';
-$route['users']                 = 'UserController/getUsers';
 $route['users/update/(:num)']   = 'UserController/updateUser/id/$1';
 $route['users/remove/(:num)']   = 'UserController/removeUser/id/$1';
 $route['users/roles/(:num)']    = 'UserController/updateRoles/id/$1';

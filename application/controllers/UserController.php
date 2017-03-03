@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 require APPPATH . '/controllers/AuthController.php';
+//include (APPPATH . '/helpers/permissions.php');
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
@@ -22,10 +23,14 @@ class UserController extends AuthController{
 		}
 
     //Create user
-    public function signup_post(){
+    public function users_post(){
 
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -69,6 +74,10 @@ class UserController extends AuthController{
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+
 			$post = json_decode(file_get_contents('php://input'));
 
       $name             = $post->name;
@@ -110,6 +119,10 @@ class UserController extends AuthController{
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+
 			$id	= (int) $this->get('id');
 
 			if($this->User->delete($id,$this->token_valid->user_id)){
@@ -121,17 +134,28 @@ class UserController extends AuthController{
     }
 
     //Show users
-    public function getUsers_get(){
+    public function users_get(){
 
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
       $users = $this->User->getUsers();
       return $this->response($users, REST_Controller::HTTP_OK);
     }
 
-		//Show specific users
+		//Show specific user
 		public function getUser_get(){
+
+			//Validates if the user is logged and the token sent is valid.
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -230,6 +254,10 @@ class UserController extends AuthController{
 
 			//Validates if the user is logged and the token sent is valid.
 			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+
+			//Validates if the user has permissions to do this action
+			if(!in_array("ABMusuarios",$this->token_valid->permissions))
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
 			$post = json_decode(file_get_contents('php://input'));
 
