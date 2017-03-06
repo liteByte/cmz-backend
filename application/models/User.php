@@ -30,7 +30,6 @@ class User extends CI_Model{
     return $query->row();
   }
 
-
   //Creates the user in 'users' and then assigns the roles in 'user_role'
 	public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
 
@@ -94,11 +93,25 @@ class User extends CI_Model{
   //Get a specific user information
   public function getUserById($userID){
 
-    $result = array();
-
+    //Get user data
     $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
-    return $query->row();
+    $result        = $query->row();
+    $result->roles = array();
+
+    //Get user roles
+    $this->db->select('R.name,UR.role_id');
+    $this->db->from('user_role UR');
+    $this->db->join('roles R', 'UR.role_id = R.role_id');
+    $this->db->where('UR.user_id', $userID);
+    $query = $query = $this->db->get();
+
+    foreach ($query->result_array() as $row)
+    {
+       array_push($result->roles,$row);
+    }
+
+    return $result;
   }
 
   //Get a specific user information
@@ -123,7 +136,7 @@ class User extends CI_Model{
 
     $result = array();
 
-    $this->db->select('document_type,document_number,name,email,last_name');
+    $this->db->select('document_type,document_number,name,email,last_name,user_id');
     $query = $this->db->get_where('users', array('active' => "active"));
 
     foreach ($query->result_array('User') as $row)
