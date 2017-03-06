@@ -46,7 +46,9 @@ class Speciality extends CI_Model{
 
     $result = array();
 
-    $query = $this->db->get_where('specialitys', array('active' => "active"));
+    $this->db->where('specialitys', array('active' => "active"));
+    $this->db->order_by("description", "asc");
+    $query = $this->db->get();
 
     foreach ($query->result_array('Speciality') as $row)
     {
