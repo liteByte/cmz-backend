@@ -42,7 +42,7 @@ class SpecialityController extends AuthController{
 
       //If everything is valid, save the bank
       if($this->Speciality->save($speciality_code,$description)){
-        return $this->response(array('msg'=>'Especialidad creado satisfactoriamente'), REST_Controller::HTTP_OK);
+        return $this->response(array('msg'=>'Especialidad creada satisfactoriamente'), REST_Controller::HTTP_OK);
       } else {
 				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 			}
