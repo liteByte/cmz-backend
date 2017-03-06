@@ -22,156 +22,156 @@ class UserController extends AuthController{
 		$this->token_valid = $this->validateToken(apache_request_headers());
 	}
 
-    //Create user
-    public function users_post(){
+  //Create user
+  public function users_post(){
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validates if the user has permissions to do this action
-			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+		//Validates if the user has permissions to do this action
+		if(!in_array("ABMusuarios",$this->token_valid->permissions))
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
-			$post = json_decode(file_get_contents('php://input'));
+		$post = json_decode(file_get_contents('php://input'));
 
-      $name             = $post->name;
-      $last_name        = $post->last_name;
-      $email            = $post->email;
-      $document_type    = $post->document_type;
-      $document_number  = $post->document_number;
-      $roles            = $post->roles;
-      $password         = $post->password;
+    $name             = $post->name;
+    $last_name        = $post->last_name;
+    $email            = $post->email;
+    $document_type    = $post->document_type;
+    $document_number  = $post->document_number;
+    $roles            = $post->roles;
+    $password         = $post->password;
 
-      if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($last_name))       return $this->response(array('error'=>'No se ha ingresado apellido'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($email))           return $this->response(array('error'=>'No se ha ingresado email'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($password))        return $this->response(array('error'=>'No se ha ingresado contraseña'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($last_name))       return $this->response(array('error'=>'No se ha ingresado apellido'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($email))           return $this->response(array('error'=>'No se ha ingresado email'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($password))        return $this->response(array('error'=>'No se ha ingresado contraseña'), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validations
-			if(!$this->validator->validatePassword($password)) 										    return $this->response(array('error'=>'Su contraseña debe tener 8 o mas digitos'), REST_Controller::HTTP_BAD_REQUEST);
-			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
-			if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
+		//Validations
+		if(!$this->validator->validatePassword($password)) 										    return $this->response(array('error'=>'Su contraseña debe tener 8 o mas digitos'), REST_Controller::HTTP_BAD_REQUEST);
+		if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+		if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Valid repeated email or document number
-			$error = $this->User->validateData($email,$document_number,$document_type);
+		//Valid repeated email or document number
+		$error = $this->User->validateData($email,$document_number,$document_type);
 
-      if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
+    if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
-			//If everything is valid, save the user
-      if($this->User->save($name,$last_name,$document_type,$document_number,$email,$password,$roles)){
-        return $this->response(array('msg'=>'Usuario creado satisfactoriamente'), REST_Controller::HTTP_OK);
-      } else {
-				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-			}
+		//If everything is valid, save the user
+    if($this->User->save($name,$last_name,$document_type,$document_number,$email,$password,$roles)){
+      return $this->response(array('msg'=>'Usuario creado satisfactoriamente'), REST_Controller::HTTP_OK);
+    } else {
+			return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+		}
 
-    }
+  }
 
-    //Update user information
-    public function updateUser_put(){
+  //Update user information
+  public function updateUser_put(){
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validates if the user has permissions to do this action
-			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+		//Validates if the user has permissions to do this action
+		if(!in_array("ABMusuarios",$this->token_valid->permissions))
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
-			$post = json_decode(file_get_contents('php://input'));
+		$post = json_decode(file_get_contents('php://input'));
 
-      $name             = $post->name;
-      $last_name        = $post->last_name;
-      $email            = $post->email;
-      $document_type    = $post->document_type;
-      $document_number  = $post->document_number;
-      $roles            = $post->roles;
-			$id								= (int) $this->get('id');
+    $name             = $post->name;
+    $last_name        = $post->last_name;
+    $email            = $post->email;
+    $document_type    = $post->document_type;
+    $document_number  = $post->document_number;
+    $roles            = $post->roles;
+		$id								= (int) $this->get('id');
 
-			if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($last_name))       return $this->response(array('error'=>'No se ha ingresado apellido'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($email))           return $this->response(array('error'=>'No se ha ingresado email'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+		if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($last_name))       return $this->response(array('error'=>'No se ha ingresado apellido'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($email))           return $this->response(array('error'=>'No se ha ingresado email'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validations
-			if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
-			if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
+		//Validations
+		if(!$this->validator->validateDocument($document_type,$document_number)) 	return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
+		if (!valid_email($email)) 																								return $this->response(array('error'=>'El formato de email no es correcto'), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Valid repeated email or document number
-			$error = $this->User->validateDataOnUpdate($email,$document_number,$document_type,$id);
+		//Valid repeated email or document number
+		$error = $this->User->validateDataOnUpdate($email,$document_number,$document_type,$id);
 
-      if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
+    if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
-			//If everything is valid, update the user
-      if($this->User->update($name,$last_name,$document_type,$document_number,$email,$id,$roles)){
-        return $this->response(array('msg'=>'Usuario modificado satisfactoriamente'), REST_Controller::HTTP_OK);
-      } else {
-				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-			}
+		//If everything is valid, update the user
+    if($this->User->update($name,$last_name,$document_type,$document_number,$email,$id,$roles)){
+      return $this->response(array('msg'=>'Usuario modificado satisfactoriamente'), REST_Controller::HTTP_OK);
+    } else {
+			return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+		}
 
 
-    }
+  }
 
-    //Delete user
-    public function removeUser_delete(){
+  //Delete user
+  public function removeUser_delete(){
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validates if the user has permissions to do this action
-			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+		//Validates if the user has permissions to do this action
+		if(!in_array("ABMusuarios",$this->token_valid->permissions))
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
-			$id	= (int) $this->get('id');
+		$id	= (int) $this->get('id');
 
-			if($this->User->delete($id,$this->token_valid->user_id)){
-				return $this->response(array('msg'=>'Usuario eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
-			} else {
-				return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-			}
+		if($this->User->delete($id,$this->token_valid->user_id)){
+			return $this->response(array('msg'=>'Usuario eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
+		} else {
+			return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+		}
 
-    }
+  }
 
-    //Show users
-    public function users_get(){
+  //Show users
+  public function users_get(){
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validates if the user has permissions to do this action
-			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+		//Validates if the user has permissions to do this action
+		if(!in_array("ABMusuarios",$this->token_valid->permissions))
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
-      $users = $this->User->getUsers();
-      return $this->response($users, REST_Controller::HTTP_OK);
-    }
+    $users = $this->User->getUsers();
+    return $this->response($users, REST_Controller::HTTP_OK);
+  }
 
 	//Show specific users
 	public function getUser_get(){
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			//Validates if the user has permissions to do this action
-			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+		//Validates if the user has permissions to do this action
+		if(!in_array("ABMusuarios",$this->token_valid->permissions))
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
-			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		//Validates if the user is logged and the token sent is valid.
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
-			$id = $this->get('id');
+		$id = $this->get('id');
 
-      if(empty($id)) return $this->response(array('error'=>'Falta el ID del usuario'), REST_Controller::HTTP_BAD_REQUEST);
+    if(empty($id)) return $this->response(array('error'=>'Falta el ID del usuario'), REST_Controller::HTTP_BAD_REQUEST);
 
-			$user = $this->User->getUserById($id);
+		$user = $this->User->getUserById($id);
 
-			if(empty($user)){
-				return $this->response(array('error'=>'No se encontro el ID del usuario'), REST_Controller::HTTP_BAD_REQUEST);
-			} else {
-				return $this->response($user, REST_Controller::HTTP_OK);
-			}
+		if(empty($user)){
+			return $this->response(array('error'=>'No se encontro el ID del usuario'), REST_Controller::HTTP_BAD_REQUEST);
+		} else {
+			return $this->response($user, REST_Controller::HTTP_OK);
 		}
+	}
 
 	//Send recovery mail to user
 	public function recoverPassword_post(){
