@@ -17,7 +17,7 @@ class UserController extends AuthController{
 		$this->load->model('User');
 		$this->load->model('Role');
 		$this->load->helper('email');
-	  	$this->load->library('email');
+	  $this->load->library('email');
 		$this->load->library('validator');
 		$this->token_valid = $this->validateToken(apache_request_headers());
 	}
@@ -26,11 +26,11 @@ class UserController extends AuthController{
   public function users_post(){
 
 		//Validates if the user is logged and the token sent is valid.
-		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 		//Validates if the user has permissions to do this action
 		if(!in_array("ABMusuarios",$this->token_valid->permissions))
-			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
 		$post = json_decode(file_get_contents('php://input'));
 
@@ -72,11 +72,11 @@ class UserController extends AuthController{
   public function updateUser_put(){
 
 		//Validates if the user is logged and the token sent is valid.
-		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 		//Validates if the user has permissions to do this action
 		if(!in_array("ABMusuarios",$this->token_valid->permissions))
-			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
 		$post = json_decode(file_get_contents('php://input'));
 
@@ -117,11 +117,11 @@ class UserController extends AuthController{
   public function removeUser_delete(){
 
 		//Validates if the user is logged and the token sent is valid.
-		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 		//Validates if the user has permissions to do this action
 		if(!in_array("ABMusuarios",$this->token_valid->permissions))
-			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
 		$id	= (int) $this->get('id');
 
@@ -137,11 +137,11 @@ class UserController extends AuthController{
   public function users_get(){
 
 		//Validates if the user is logged and the token sent is valid.
-		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 		//Validates if the user has permissions to do this action
 		if(!in_array("ABMusuarios",$this->token_valid->permissions))
-			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
     $users = $this->User->getUsers();
     return $this->response($users, REST_Controller::HTTP_OK);
@@ -151,11 +151,11 @@ class UserController extends AuthController{
 	public function getUser_get(){
 
 		//Validates if the user is logged and the token sent is valid.
-		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 		//Validates if the user has permissions to do this action
 		if(!in_array("ABMusuarios",$this->token_valid->permissions))
-			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+			return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
 		//Validates if the user is logged and the token sent is valid.
 		if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -177,7 +177,7 @@ class UserController extends AuthController{
 	public function recoverPassword_post(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -207,7 +207,7 @@ class UserController extends AuthController{
 	public function changePassword_post(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -240,11 +240,11 @@ class UserController extends AuthController{
 	public function updateRoles_post(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 			//Validates if the user has permissions to do this action
 			if(!in_array("ABMusuarios",$this->token_valid->permissions))
-				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+				return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
 
 			$post = json_decode(file_get_contents('php://input'));
 

@@ -21,7 +21,7 @@ class RoleController extends AuthController{
     public function roles_get(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
       $roles = $this->Role->getRoles();
       return $this->response($roles, REST_Controller::HTTP_OK);
@@ -31,7 +31,7 @@ class RoleController extends AuthController{
     public function roles_post(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 			$post = json_decode(file_get_contents('php://input'));
 
@@ -56,7 +56,7 @@ class RoleController extends AuthController{
 		public function updateRole_put(){
 
 			//Validates if the user is logged and the token sent is valid.
-			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
+			if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
 			//Validates if the user has permissions to do this action
 			if(!in_array("ABMroles",$this->token_valid->permissions))
