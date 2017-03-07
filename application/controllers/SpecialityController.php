@@ -29,8 +29,8 @@ class SpecialityController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-      $speciality_code  = $post->speciality_code;
-      $description   		= $post->description;
+      $speciality_code  = $post->speciality_code ?? "";
+      $description   		= $post->description		 ?? "";
 
       if(empty($speciality_code)) return $this->response(array('error'=>'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
       if(empty($description))   	return $this->response(array('error'=>'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
@@ -75,8 +75,8 @@ class SpecialityController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-			$speciality_code  = $post->speciality_code;
-			$description   		= $post->description;
+			$speciality_code  = $post->speciality_code ?? "";
+			$description   		= $post->description     ?? "";
       $id								= (int) $this->get('id');
 
 			if(empty($speciality_code)) return $this->response(array('error'=>'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
