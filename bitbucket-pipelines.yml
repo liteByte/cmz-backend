@@ -2,7 +2,7 @@ image: php:7.1.1
 
 pipelines:
   branches:
-    master:
+    staging:
       - step:
           script:
             - apt-get update && apt-get install -y unzip

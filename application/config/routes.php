@@ -55,29 +55,35 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 ////////////////////////Role routes////////////////////////
-$route['roles']                 = 'RoleController/roles';  //Get -> show roles  & post -> create role
-$route['roles/update/(:num)']   = 'RoleController/updateRole/id/$1'; 
+$route['roles']                       = 'RoleController/roles';  //Get -> show roles  & post -> create role
+$route['roles/(:num)']                = 'RoleController/getRole/id/$1';
+$route['roles/update/(:num)']         = 'RoleController/updateRole/id/$1';
 
 ////////////////////////Permission routes////////////////////////
-$route['permissions']           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
+$route['permissions']                 = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
 
 ////////////////////////User routes////////////////////////
-//Users
-$route['users']                 = 'UserController/users'; //Get -> show users  & post -> create users
-$route['users/(:num)']          = 'UserController/getUser/id/$1';
-$route['users/update/(:num)']   = 'UserController/updateUser/id/$1';
-$route['users/remove/(:num)']   = 'UserController/removeUser/id/$1';
-$route['users/roles/(:num)']    = 'UserController/updateRoles/id/$1';
+$route['users']                       = 'UserController/users'; //Get -> show users  & post -> create users
+$route['users/(:num)']                = 'UserController/getUser/id/$1';
+$route['users/update/(:num)']         = 'UserController/updateUser/id/$1';
+$route['users/remove/(:num)']         = 'UserController/removeUser/id/$1';
+$route['users/roles/(:num)']          = 'UserController/updateRoles/id/$1';
 
 //Recover or change password
-$route['recoverPassword']       = 'UserController/recoverPassword';
-$route['changePassword']        = 'UserController/changePassword';
+$route['recoverPassword']             = 'UserController/recoverPassword';
+$route['changePassword']              = 'UserController/changePassword';
 
 ////////////////////////Bank routes////////////////////////
-$route['banks']                 = 'BankController/banks';  //Get -> show banks  & post -> create bank
-$route['banks/update/(:num)']   = 'BankController/updateBank/id/$1';
-$route['banks/remove/(:num)']   = 'BankController/removeBank/id/$1';
-$route['banks/(:num)']          = 'BankController/getBank/id/$1';
+$route['banks']                       = 'BankController/banks';  //Get -> show banks  & post -> create bank
+$route['banks/update/(:num)']         = 'BankController/updateBank/id/$1';
+$route['banks/remove/(:num)']         = 'BankController/removeBank/id/$1';
+$route['banks/(:num)']                = 'BankController/getBank/id/$1';
+
+////////////////////////Speciality routes////////////////////////
+$route['specialitys']                 = 'SpecialityController/specialitys';  //Get -> show specialitys  & post -> create speciality
+$route['specialitys/update/(:num)']   = 'SpecialityController/updateSpeciality/id/$1';
+$route['specialitys/remove/(:num)']   = 'SpecialityController/removeSpeciality/id/$1';
+$route['specialitys/(:num)']          = 'SpecialityController/getSpeciality/id/$1';
 
 ////////////////////////Login routes////////////////////////
 $route['login']["post"]         = 'LoginController/login';

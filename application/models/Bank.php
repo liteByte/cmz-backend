@@ -4,14 +4,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Bank extends CI_Model{
 
-  private $name;
-  private $permissions;
+  private $bank_code;
+  private $corporate_name;
+  private $address;
+  private $location;
+  private $phone_number;
 
 	public function __construct(){
 		parent::__construct();
 	}
 
-  //Creates the user in 'users' and then assigns the roles in 'user_role'
+  //Creates the bank in 'banks'
   public function save($bank_code,$corporate_name,$address,$location,$phone_number){
 
     $data = array(
