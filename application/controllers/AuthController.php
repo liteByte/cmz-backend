@@ -17,7 +17,7 @@ class AuthController extends REST_Controller{
 
     public function validateToken($headers){
 
-        $token = $headers["Authorization"];
+        $token = $headers["authorization"];
         if(!empty($token)){
 
             try {

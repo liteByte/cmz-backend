@@ -30,7 +30,22 @@ class Migration_Create_table_user_role extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (role_id) REFERENCES roles(role_id)');
         $this->dbforge->add_key('user_role_id', TRUE);
         $this->dbforge->create_table('user_role');
+
+        $data = array(
+            array(
+                'user_id' => "1",
+                'role_id' => "1"
+            ),
+            array(
+                'user_id' => "2",
+                'role_id' => "2"
+            )
+        );
+
+        $this->db->insert_batch('user_role', $data);
     }
+
+    
 
 
     public function down(){

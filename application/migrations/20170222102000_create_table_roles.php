@@ -21,6 +21,27 @@ class Migration_Create_table_roles extends CI_Migration{
         ));
         $this->dbforge->add_key('role_id', TRUE);
         $this->dbforge->create_table('roles');
+
+
+        $data = array(
+            array(
+                'name' => "administrador"
+            ),
+            array(
+                'name' => "operador"
+            ),
+            array(
+                'name' => "gerencial"
+            ),
+            array(
+                'name' => "profesional"
+            )
+        );
+
+        $this->db->insert_batch('roles', $data);
+
+
+
     }
 
 

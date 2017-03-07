@@ -30,6 +30,23 @@ class Migration_Create_table_role_permission extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (permission_id) REFERENCES permissions(permission_id)');
         $this->dbforge->add_key('role_permission_id', TRUE);
         $this->dbforge->create_table('role_permissions');
+
+        $data = array(
+            array(
+                'permission_id' => "1",
+                'role_id' => "1"
+            ),
+            array(
+                'permission_id' => "1",
+                'role_id' => "2"
+            ),
+            array(
+                'permission_id' => "4",
+                'role_id' => "2"
+            )
+        );
+
+        $this->db->insert_batch('role_permissions', $data);
     }
 
 

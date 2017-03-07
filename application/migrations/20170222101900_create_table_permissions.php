@@ -21,6 +21,18 @@ class Migration_Create_table_permissions extends CI_Migration{
         ));
         $this->dbforge->add_key('permission_id', TRUE);
         $this->dbforge->create_table('permissions');
+
+
+        $data = array(
+            array(
+                'name' => "ABMusuarios"
+            ),
+            array(
+                'name' => "ABMbancos"
+            )
+        );
+
+        $this->db->insert_batch('permissions', $data);
     }
 
 

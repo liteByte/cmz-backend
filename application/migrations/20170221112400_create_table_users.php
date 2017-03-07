@@ -11,6 +11,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Migration_Create_table_users extends CI_Migration{
 
+
+
     public function up(){
 
         $this->dbforge->add_field(array(
@@ -70,6 +72,33 @@ class Migration_Create_table_users extends CI_Migration{
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_key('user_id', TRUE);
         $this->dbforge->create_table('users');
+
+
+       
+            $data = array(
+                array(
+                    'document_type' => "DNI",
+                    'document_number' => "1234567",
+                    'name' => "NameTest",
+                    'email' => "email@gmail.com",
+                    'last_name' => "LastNameTest",
+                    'password' => $this->hash->encrypt('1234567'),
+                    'active' => "active",
+                ),
+                array(
+                    'document_type' => "DNI",
+                    'document_number' => "12345678",
+                    'name' => "NameTest 2",
+                    'email' => "email2@gmail.com",
+                    'last_name' => "LastNameTest 2",
+                    'password' => $this->hash->encrypt('1234567'),
+                    'active' => "active",
+                )
+                );
+
+            $this->db->insert_batch('users', $data);
+     
+
     }
 
 
