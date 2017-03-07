@@ -35,8 +35,8 @@ class RoleController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-      $name         = $post->name;
-      $permissions  = $post->permissions;
+      $name         = $post->name 				?? "";
+      $permissions  = $post->permissions  ?? array();
 
       if(empty($name)) return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
 
@@ -64,7 +64,7 @@ class RoleController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-			$permissions  = $post->permissions;
+			$permissions  = $post->permissions ?? array();
 			$id 	 				= $this->get('id');
 
 			if($this->Role->updatePermissions($permissions,$id)){

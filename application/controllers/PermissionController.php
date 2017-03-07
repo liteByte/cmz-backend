@@ -35,7 +35,7 @@ class PermissionController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-      $name = $post->name;
+      $name = $post->name ?? "";
 
       if(empty($name)) return $this->response(array('error'=>"No se ha ingresado nombre"), REST_Controller::HTTP_BAD_REQUEST);
 

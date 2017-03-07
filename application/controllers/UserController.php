@@ -34,13 +34,13 @@ class UserController extends AuthController{
 
 		$post = json_decode(file_get_contents('php://input'));
 
-    $name             = $post->name;
-    $last_name        = $post->last_name;
-    $email            = $post->email;
-    $document_type    = $post->document_type;
-    $document_number  = $post->document_number;
-    $roles            = $post->roles;
-    $password         = $post->password;
+    $name             = $post->name 						?? "";
+    $last_name        = $post->last_name 				?? "";
+    $email            = $post->email 						?? "";
+    $document_type    = $post->document_type 		?? "";
+    $document_number  = $post->document_number 	?? "";
+    $roles            = $post->roles 						?? array();
+    $password         = $post->password 				?? "";
 
     if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
     if(empty($last_name))       return $this->response(array('error'=>'No se ha ingresado apellido'), REST_Controller::HTTP_BAD_REQUEST);
@@ -80,12 +80,12 @@ class UserController extends AuthController{
 
 		$post = json_decode(file_get_contents('php://input'));
 
-    $name             = $post->name;
-    $last_name        = $post->last_name;
-    $email            = $post->email;
-    $document_type    = $post->document_type;
-    $document_number  = $post->document_number;
-    $roles            = $post->roles;
+    $name             = $post->name 						?? "";
+    $last_name        = $post->last_name 				?? "";
+    $email            = $post->email 						?? "";
+    $document_type    = $post->document_type 		?? "";
+    $document_number  = $post->document_number 	?? "";
+    $roles            = $post->roles 						?? array();
 		$id								= (int) $this->get('id');
 
 		if(empty($name))            return $this->response(array('error'=>'No se ha ingresado nombre'), REST_Controller::HTTP_BAD_REQUEST);
@@ -109,7 +109,6 @@ class UserController extends AuthController{
     } else {
 			return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 		}
-
 
   }
 
@@ -181,8 +180,8 @@ class UserController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-			$document_type    = $post->document_type;
-			$document_number  = $post->document_number;
+			$document_type    = $post->document_type 		?? "";
+			$document_number  = $post->document_number 	?? "";
 
 			if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
 			if(empty($document_number)) return $this->response(array('error'=>'No se ha ingresado numero de documento'), REST_Controller::HTTP_BAD_REQUEST);
@@ -211,8 +210,8 @@ class UserController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-			$oldPassword = $post->oldPassword;
-			$newPassword = $post->newPassword;
+			$oldPassword = $post->oldPassword ?? "";
+			$newPassword = $post->newPassword ?? "";
 
 			if(empty($oldPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña antigua'), REST_Controller::HTTP_BAD_REQUEST);
 			if(empty($newPassword)) return $this->response(array('error'=>'No ha ingresado la contraseña nueva'), REST_Controller::HTTP_BAD_REQUEST);
@@ -248,7 +247,7 @@ class UserController extends AuthController{
 
 			$post = json_decode(file_get_contents('php://input'));
 
-			$roles = $post->roles;
+			$roles = $post->roles ?? array();
 			$id 	 = $this->get('id');
 
 			if($this->User->updateRoles($roles,$id)){

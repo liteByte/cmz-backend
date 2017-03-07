@@ -29,11 +29,11 @@ class BankController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-      $bank_code        = $post->bank_code;
-      $corporate_name   = $post->corporate_name;
-      $address          = $post->address;
-      $location         = $post->location;
-      $phone_number     = $post->phone_number;
+      $bank_code        = $post->bank_code				?? "";
+      $corporate_name   = $post->corporate_name		?? "";
+      $address          = $post->address					?? "";
+      $location         = $post->location					?? "";
+      $phone_number     = $post->phone_number			?? "";
 
       if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
       if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razon social'), REST_Controller::HTTP_BAD_REQUEST);
@@ -78,11 +78,11 @@ class BankController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-      $bank_code        = $post->bank_code;
-      $corporate_name   = $post->corporate_name;
-      $address          = $post->address;
-      $location         = $post->location;
-      $phone_number     = $post->phone_number;
+      $bank_code        = $post->bank_code				?? "";
+      $corporate_name   = $post->corporate_name		?? "";
+      $address          = $post->address					?? "";
+      $location         = $post->location					?? "";
+      $phone_number     = $post->phone_number			?? "";
       $id								= (int) $this->get('id');
 
       if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
