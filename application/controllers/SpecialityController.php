@@ -7,29 +7,29 @@ require APPPATH . '/controllers/AuthController.php';
 // use namespace
 use Restserver\Libraries\REST_Controller;
 
-class SpecialityController extends AuthController
-{
+class SpecialityController extends AuthController {
 
     private $token_valid;
 
-    function __construct()
-    {
+    function __construct() {
         parent::__construct();
         $this->load->model('Speciality');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
     //Create speciality
-    public function specialitys_post()
-    {
+    public function specialitys_post() {
 
+        //TODO figure out a way to do this for all endpoints
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
 
+        //TODO extract to helper
         //Validates if the user has permissions to do this action
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
             return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
 
+        //TODO extract to helper
         $post = json_decode(file_get_contents('php://input'));
 
         $speciality_code = $post->speciality_code ?? "";
@@ -43,7 +43,7 @@ class SpecialityController extends AuthController
 
         if (strcmp($error, "OK") != 0) return $this->response(array('error' => $error), REST_Controller::HTTP_BAD_REQUEST);
 
-        //If everything is valid, save the bank
+        //If everything is valid, save the speciality
         if ($this->Speciality->save($speciality_code, $description)) {
             return $this->response(array('msg' => 'Especialidad creada satisfactoriamente'), REST_Controller::HTTP_OK);
         } else {
@@ -53,8 +53,7 @@ class SpecialityController extends AuthController
     }
 
     //Show specialitys
-    public function specialitys_get()
-    {
+    public function specialitys_get() {
 
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -68,8 +67,7 @@ class SpecialityController extends AuthController
     }
 
     //Update speciality information
-    public function updateSpeciality_put()
-    {
+    public function updateSpeciality_put() {
 
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -92,7 +90,7 @@ class SpecialityController extends AuthController
 
         if (strcmp($error, "OK") != 0) return $this->response(array('error' => $error), REST_Controller::HTTP_BAD_REQUEST);
 
-        //If everything is valid, update the user
+        //If everything is valid, update the speciality
         if ($this->Speciality->update($speciality_code, $description, $id)) {
             return $this->response(array('msg' => 'Especialidad modificada satisfactoriamente'), REST_Controller::HTTP_OK);
         } else {
@@ -102,8 +100,7 @@ class SpecialityController extends AuthController
     }
 
     //Show specific speciality
-    public function getSpeciality_get()
-    {
+    public function getSpeciality_get() {
 
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -126,8 +123,7 @@ class SpecialityController extends AuthController
     }
 
     //Delete speciality
-    public function removeSpeciality_delete()
-    {
+    public function removeSpeciality_delete() {
 
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
