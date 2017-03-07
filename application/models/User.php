@@ -16,10 +16,10 @@ class User extends CI_Model{
   private $date_updated;
   private $date_created;
 
-	public function __construct(){
-		parent::__construct();
-    $this->load->library('hash');
-	}
+    public function __construct(){
+      parent::__construct();
+      $this->load->library('hash');
+    }
 
   //Get user information to sign in
   public function getUser($dni){
@@ -31,7 +31,7 @@ class User extends CI_Model{
   }
 
   //Creates the user in 'users' and then assigns the roles in 'user_role'
-	public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
+  public function save($name,$last_name,$document_type,$document_number,$email,$password,$roles){
 
     $now = date('Y-m-d H:i:s');
 
@@ -53,10 +53,10 @@ class User extends CI_Model{
 
     return $this->updateRoles($roles,$userID);
 
-	}
+  }
 
   //Updates the user in 'users', delete old roles and asign new ones
-	public function update($name,$last_name,$document_type,$document_number,$email,$id,$roles){
+  public function update($name,$last_name,$document_type,$document_number,$email,$id,$roles){
 
     $now = date('Y-m-d H:i:s');
 
@@ -74,7 +74,7 @@ class User extends CI_Model{
 
     return $this->updateRoles($roles,$id);
 
-	}
+  }
 
   //Delete user and role information in 'user_role'
   //TODO: verificar que el usuario no tenga auditorias antes de borrarlo
@@ -96,7 +96,7 @@ class User extends CI_Model{
     //Get user data
     $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
-    $result        = $query->row();
+    $result = $query->row();
     $result->roles = array();
 
     //Get user roles
