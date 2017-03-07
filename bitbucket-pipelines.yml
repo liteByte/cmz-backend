@@ -7,4 +7,4 @@ pipelines:
           script:
             - apt-get update
             - apt-get -qq install git-ftp
-            - git ftp init -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_ADDRESS/var/www/html/staging
+            - git ftp -vv init -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_ADDRESS/var/www/html/staging
