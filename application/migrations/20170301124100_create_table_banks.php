@@ -47,6 +47,56 @@ class Migration_Create_table_banks extends CI_Migration{
         ));
         $this->dbforge->add_key('bank_id', TRUE);
         $this->dbforge->create_table('banks');
+
+
+
+        $data = array(
+            array(
+                'bank_code' => "1",
+                'corporate_name' => "FRANCES -SUC ZARATE",
+                'address' => "19 DE MARZO Y BELGRANO",
+                'location' => "ZARATE",
+                'phone_number' => "",
+                'active' => "active",
+            ),
+            array(
+                'bank_code' => "2",
+                'corporate_name' => "BANCO RIO SUC-ZARATE",
+                'address' => "19 DE MARZO",
+                'location' => "ZARATE",
+                'phone_number' => "",
+                'active' => "active",
+            ),
+            array(
+                'bank_code' => "4",
+                'corporate_name' => "BCO.PROVINCIA ZARATE",
+                'address' => "INDEPENDENCIA Y J.LIMA",
+                'location' => "ZARATE",
+                'phone_number' => "",
+                'active' => "active",
+            ),
+            array(
+                'bank_code' => "5",
+                'corporate_name' => "BCO.CREDICOOP ZARATE",
+                'address' => "INDEPENDENCIA Y J.LIMA",
+                'location' => "ZARATE",
+                'phone_number' => "",
+                'active' => "active",
+            ),
+            array(
+                'bank_code' => "6",
+                'corporate_name' => "BANCO RIO CAMPANA",
+                'address' => "",
+                'location' => "",
+                'phone_number' => "",
+                'active' => "active",
+            ),
+        );
+
+        $this->db->insert_batch('banks', $data);
+
+
+
     }
 
 
