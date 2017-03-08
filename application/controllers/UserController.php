@@ -266,10 +266,15 @@ class UserController extends AuthController{
   // Send Mail with new Password
   public function sendMail($info, $newPassword){
 
-    $this->email->from('pruebalitebyte@gmail.com', 'CMZ');
-    $this->email->to($info['data']->email);
-    $this->email->subject('Recuperacion de contraseña');
-    $this->email->message('Se nueva contraseña es: '.$newPassword);
+		$data['password']= $newPassword;
+		$data['name']= $info['data']->name;
+
+		$this->email->from('pruebalitebyte@gmail.com', 'CMZ');
+		$this->email->to($info['data']->email);
+		$this->email->subject('Recuperacion de contraseña');
+		$this->email->message($this->load->view('email/recover_password', $data, true) );
+		$this->email->set_mailtype('html');
+
 
     if($this->email->send()){
         return $this->response(array('msg'=>$info['data']->email), REST_Controller::HTTP_OK);
