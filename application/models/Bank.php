@@ -10,9 +10,9 @@ class Bank extends CI_Model{
   private $location;
   private $phone_number;
 
-	public function __construct(){
-		parent::__construct();
-	}
+  public function __construct(){
+      parent::__construct();
+  }
 
   //Creates the bank in 'banks'
   public function save($bank_code,$corporate_name,$address,$location,$phone_number){
@@ -33,7 +33,7 @@ class Bank extends CI_Model{
   }
 
   //Updates the bank in 'banks'
-	public function update($bank_code,$corporate_name,$address,$location,$phone_number,$id){
+  public function update($bank_code,$corporate_name,$address,$location,$phone_number,$id){
 
     $data = array(
                   'bank_code'       => $bank_code,
@@ -48,7 +48,7 @@ class Bank extends CI_Model{
 
     return true;
 
-	}
+  }
 
   //Get all banks information
   public function getBanks(){
