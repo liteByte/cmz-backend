@@ -6,9 +6,9 @@ class Permission extends CI_Model{
 
   private $name;
 
-	public function __construct(){
-		parent::__construct();
-	}
+  public function __construct(){
+    parent::__construct();
+  }
 
   //Get all permissions
   public function getPermissions(){

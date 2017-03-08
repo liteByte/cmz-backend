@@ -7,9 +7,9 @@ class Role extends CI_Model{
   private $name;
   private $permissions;
 
-	public function __construct(){
-		parent::__construct();
-	}
+  public function __construct(){
+	  parent::__construct();
+  }
 
   //Get all roles
   public function getRoles(){
