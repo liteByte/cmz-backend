@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-    <title>Recupera tu contraseña!</title>
+    <title></title>
 </head>
 <body>
 <div width='100%' style='background-color: #eee; padding: 30px 0px; padding-bottom: 0;'>
@@ -11,7 +11,7 @@
         <tr style='height: 70px; background-color:  #0faddb'>
             <td>
                 <img style='display: block; margin: auto; width: 100%' src='http://www.circulomedicodezarate.org/img-web/img-top-logo.jpg' alt="cmz_logo"/>
-<!--                 <img style='display: block; margin: auto;' src='http://www.centromedicorondilla.com/images/logo.png' alt="cmz_logo"/>-->
+<!--                <img style='display: block; margin: auto;' src='http://www.centromedicorondilla.com/images/logo.png' alt="cmz_logo"/>-->
             </td>
         </tr>
     </table>
@@ -24,7 +24,7 @@
         </tr>
         <tr style='background-color: rgb(255, 255, 255);'>
             <td style='padding-bottom: 10px; color: black; font-weight: bold; font-size: 16px; text-align: center;'>
-                ¿Olvidaste tu contraseña?
+                Su usuario y contraseña han sido creados con éxito.
             </td>
         </tr>
     </table>
@@ -36,8 +36,8 @@
         <tr>
             <td width='50px'></td>
             <td width='600px' style='background-color:  #0faddb; text-align:center;'>
-                <p style='color: white; font-size: 16px; margin-left: 20px; margin-top: 20px;'>Tu nueva contraseña es <strong><?php echo $password; ?></strong></p>
-                <p style='color: white; font-size: 16px; margin-left: 20px;'>Recordá que podés modificarla ingresando al ingresar a tu perfil</p>
+                <p style='color: white; font-size: 16px; margin-left: 20px; margin-top: 20px;'>Su usuario es:  <strong><?php echo $document_number; ?></strong></p>
+                <p style='color: white; font-size: 16px; margin-left: 20px;'>Su Contraseña es:  <strong><?php echo $password; ?></strong></p>
             </td>
             <td width='50px'></td>
         </tr>
