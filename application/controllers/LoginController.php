@@ -44,7 +44,8 @@ class LoginController extends CI_Controller {
             $jwt = JWT::encode($user_data, '');
             $this->response_msg->setResponse([
                             'token' => $jwt,
-                            'permissions'  => $permissions
+                            'permissions'  => $permissions,
+                            'user' => $user_data->name." ".$user_data->last_name
             ], 200);
         }
     }

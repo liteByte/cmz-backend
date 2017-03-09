@@ -65,6 +65,9 @@ class CI_Controller {
 	 */
 	public function __construct()
 	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+		header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		self::$instance =& $this;
 
 		// Assign all the class objects that were instantiated by the
