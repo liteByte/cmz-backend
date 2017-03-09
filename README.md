@@ -14,9 +14,12 @@
    4.1 Connect to localhost:3306 with user "root" (if the db is not starting, 
    try changing the port, it's usually skype not letting 3306 go)
    4.2 Execute "CREATE DATABASE cmz"
-5. Copy the entire project to XAMP's htdocs folder (delete everything that was 
+5. Copy the .env.example file, name it .env and change the values as necessary
+6. Copy the entire project to XAMP's htdocs folder (delete everything that was 
    there before)
-6. Exectute migrations
+   NOTE: you will need to constantly upload changes to this folder or work 
+   directly on it.
+7. Exectute migrations
    http://localhost/migrate/up
 ```
 
