@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Restserver\Libraries\REST_Controller  as RC;
 class SendMail{
 
-    public  function recoverpassword($info, $newPassword){
+    public static function recoverpassword($info, $newPassword){
         $CI =& get_instance();
 
         $data['password']= $newPassword;
