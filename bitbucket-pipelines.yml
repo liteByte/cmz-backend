@@ -5,6 +5,4 @@ pipelines:
     staging:
       - step:
           script:
-            - apt-get update
-            - apt-get -qq install git-ftp
-            - git ftp -vv init -u $FTP_USERNAME -p $FTP_PASSWORD $FTP_ADDRESS:21/html/staging
+            - curl $ADDRESS/push.php
