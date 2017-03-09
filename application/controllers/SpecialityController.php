@@ -14,6 +14,7 @@ class SpecialityController extends AuthController {
     function __construct() {
         parent::__construct();
         $this->load->model('Speciality');
+        $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
@@ -32,11 +33,14 @@ class SpecialityController extends AuthController {
         //TODO extract to helper
         $post = json_decode(file_get_contents('php://input'));
 
-        $speciality_code = $post->speciality_code ?? "";
-        $description = $post->description         ?? "";
+        $speciality_code = $post->speciality_code     ?? "";
+        $description     = $post->description         ?? "";
 
         if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
-        if (empty($description)) return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
+
+        //Validations
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateData($speciality_code);
@@ -79,11 +83,14 @@ class SpecialityController extends AuthController {
         $post = json_decode(file_get_contents('php://input'));
 
         $speciality_code = $post->speciality_code ?? "";
-        $description = $post->description     ?? "";
-        $id = (int)$this->get('id');
+        $description     = $post->description     ?? "";
+        $id              = (int)$this->get('id');
 
         if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
-        if (empty($description)) return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
+
+        //Validations
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateDataOnUpdate($speciality_code, $id);
