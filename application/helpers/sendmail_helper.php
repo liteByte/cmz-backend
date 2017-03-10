@@ -19,7 +19,7 @@ class SendMail{
 
 
         if($CI->email->send()){
-            return $CI->response(array('msg'=>$info['data']->email), RC::HTTP_OK);
+            return $CI->response(array('msg'=>"Email enviado correctamente"), RC::HTTP_OK);
         } else {
             return $CI->response(array('error'=>show_error($CI->email->print_debugger())), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -40,7 +40,7 @@ class SendMail{
 
 
         if($CI->email->send()){
-            return $CI->response(array('msg'=>'Problemas en el envio de email'), RC::HTTP_OK);
+            return $CI->response(array('msg'=>'Email enviado correctamente'), RC::HTTP_OK);
         } else {
             return $CI->response(array('error'=>show_error($CI->email->print_debugger())), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
