@@ -11,7 +11,7 @@ class SendMail{
         $data['password']= $newPassword;
         $data['name']= $info['data']->name;
 
-        $CI ->email->from('info@cmz.com.ar', 'CMZ');
+        $CI ->email->from('info@4isolutions.com.ar', 'CMZ');
         $CI ->email->to($info['data']->email);
         $CI->email->subject('Recuperacion de contraseña');
         $CI->email->message($CI->load->view('email/recover_password', $data, true) );
@@ -32,7 +32,7 @@ class SendMail{
         $data['email'] =  $email;
         $data['password'] =  $password;
 
-        $CI ->email->from('info@cmz.com.ar', 'CMZ');
+        $CI ->email->from('info@4isolutions.com.ar', 'CMZ');
         $CI ->email->to($data['email']);
         $CI->email->subject('Usuario CMZ');
         $CI->email->message($CI->load->view('email/signin', $data, true) );
