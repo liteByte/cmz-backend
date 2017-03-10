@@ -38,6 +38,9 @@ class BankController extends AuthController{
       if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
       if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razon social'), REST_Controller::HTTP_BAD_REQUEST);
 
+      //Validations
+      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+
       //Valid repeated bank code
       $error = $this->Bank->validateData($bank_code);
 
@@ -87,6 +90,9 @@ class BankController extends AuthController{
 
       if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
       if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razon social'), REST_Controller::HTTP_BAD_REQUEST);
+
+      //Validations
+      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated bank code
       $error = $this->Bank->validateDataOnUpdate($bank_code,$id);

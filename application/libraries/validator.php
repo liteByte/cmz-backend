@@ -24,4 +24,12 @@ class Validator{
       }
     }
 
+    public function validateSpecialityLength($code){
+        return strlen($code)<=2;
+    }
+
+    public function validateBankLength($code){
+        return strlen($code)<=2;
+    }
+
 }

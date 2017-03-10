@@ -15,8 +15,6 @@ class UserController extends AuthController{
         parent::__construct();
         $this->load->model('User');
         $this->load->model('Role');
-        $this->load->helper('email');
-        $this->load->library('email');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
@@ -60,7 +58,8 @@ class UserController extends AuthController{
 
     //If everything is valid, save the user
     if($this->User->save($name,$last_name,$document_type,$document_number,$email,$password,$roles)){
-      return $this->response(array('msg'=>'Usuario creado satisfactoriamente'), REST_Controller::HTTP_OK);
+        SendMail::signin($name, $document_number, $email, $password);
+        return $this->response(array('msg'=>'Usuario creado satisfactoriamente'), REST_Controller::HTTP_OK);
     } else {
         return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -171,12 +170,9 @@ class UserController extends AuthController{
   //Send recovery mail to user
   public function recoverPassword_post(){
 
-    //Validates if the user is logged and the token sent is valid.
-    if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
     $post = json_decode(file_get_contents('php://input'));
 
-    $document_type    = $post->document_type         ?? "";
+    $document_type    = $post->document_type       ?? "";
     $document_number  = $post->document_number     ?? "";
 
     if(empty($document_type))   return $this->response(array('error'=>'No se ha ingresado tipo de documento'), REST_Controller::HTTP_BAD_REQUEST);
@@ -192,7 +188,7 @@ class UserController extends AuthController{
 
     $newPassword = $this->generatePassword();
     if($this->User->changePassword($info['data']->user_id,$newPassword)){
-        $this->sendMail($info, $newPassword);
+        SendMail::recoverpassword($info, $newPassword);
     } else {
         return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -264,24 +260,6 @@ class UserController extends AuthController{
   }
 
   // Send Mail with new Password
-  public function sendMail($info, $newPassword){
 
-		$data['password']= $newPassword;
-		$data['name']= $info['data']->name;
-
-		$this->email->from('pruebalitebyte@gmail.com', 'CMZ');
-		$this->email->to($info['data']->email);
-		$this->email->subject('Recuperacion de contraseña');
-		$this->email->message($this->load->view('email/recover_password', $data, true) );
-		$this->email->set_mailtype('html');
-
-
-    if($this->email->send()){
-        return $this->response(array('msg'=>$info['data']->email), REST_Controller::HTTP_OK);
-    } else {
-        return $this->response(array('error'=>show_error($this->email->print_debugger())), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
-  }
 
 }
