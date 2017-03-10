@@ -5,12 +5,9 @@ cd "staging"
 # Pull latest changes from the staging branch
 git pull origin staging
 
-#echo "start"
-#until $(curl --silent --fail curl 208.68.39.205/staging/migrate/down); do
-#    printf '.'
-#    sleep 5
-#done
-#echo "done"
+# Run migrations
+php index.php Migrate down
+php index.php Migrate up
 
 # Create push.txt and store last commit pulled data and current date
 today=`date '+%Y-%m-%dT%H:%M:%S'`
