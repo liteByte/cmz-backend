@@ -5,6 +5,9 @@ cd "staging"
 # Pull latest changes from the staging branch
 git pull origin staging
 
+# Compose
+composer
+
 # Run migrations
 php index.php Migrate down
 php index.php Migrate up
