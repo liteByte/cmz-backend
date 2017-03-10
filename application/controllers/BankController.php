@@ -14,6 +14,7 @@ class BankController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->model('Bank');
+        $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
