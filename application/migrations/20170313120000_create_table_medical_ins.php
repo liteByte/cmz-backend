@@ -92,37 +92,37 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                 ),
                 'ret_socios_honorarios' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'ret_socios_gastos' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'ret_nosocios_honorarios' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'ret_nosocios_gastos' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'ret_adherente_honorarios' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'ret_adherente_gastos' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'cobertura_fer_noct' => array(
                     'type'          =>  'DECIMAL',
-                    'constraint'    =>  '3,2',
+                    'constraint'    =>  '5,2',
                     'null'          => FALSE
                 ),
                 'active'            => array(
