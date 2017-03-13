@@ -112,7 +112,9 @@ class MedicalInsurance extends CI_Model{
 
     $result = array();
 
-    $query = $this->db->get_where('medical_insurance', array('active' => "active"));
+    $this->db->where(array('active' => "active"));
+    $this->db->order_by("denomination", "asc");
+    $query = $this->db->get('medical_insurance');
 
     foreach ($query->result_array('MedicalInsurance') as $row)
     {

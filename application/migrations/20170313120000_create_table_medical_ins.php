@@ -154,11 +154,4 @@ class Migration_Create_table_medical_ins extends CI_Migration{
     }
 
 
-
-
-
-
-
-
-
 }

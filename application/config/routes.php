@@ -91,5 +91,8 @@ $route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsura
 $route['insurances/remove/(:num)']    = 'MedicalInsuranceController/removeInsurance/id/$1';
 $route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance/id/$1';
 
+////////////////////////IVA routes////////////////////////
+$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+
 ////////////////////////Login routes////////////////////////
 $route['login']["post"]         = 'LoginController/login';
