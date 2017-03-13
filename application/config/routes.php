@@ -85,5 +85,11 @@ $route['specialitys/update/(:num)']   = 'SpecialityController/updateSpeciality/i
 $route['specialitys/remove/(:num)']   = 'SpecialityController/removeSpeciality/id/$1';
 $route['specialitys/(:num)']          = 'SpecialityController/getSpeciality/id/$1';
 
+////////////////////////Medical Insurances routes////////////////////////
+$route['insurances']                  = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
+$route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsurance/id/$1';
+$route['insurances/remove/(:num)']    = 'MedicalInsuranceController/removeInsurance/id/$1';
+$route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance/id/$1';
+
 ////////////////////////Login routes////////////////////////
 $route['login']["post"]         = 'LoginController/login';
