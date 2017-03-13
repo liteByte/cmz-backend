@@ -6,10 +6,10 @@
     <style type="text/css">
 
         .enjoy-css {
-            display: inline-block;
-            -webkit-box-sizing: content-box;
-            -moz-box-sizing: content-box;
-            box-sizing: content-box;
+            /*display: inline-block;*/
+            /*-webkit-box-sizing: content-box;*/
+            /*-moz-box-sizing: content-box;*/
+            /*box-sizing: content-box;*/
             margin: 6px;
             padding: 5px;
             border: none;
@@ -18,6 +18,8 @@
             -o-text-overflow: ellipsis;
             text-overflow: ellipsis;
             background: #0faddb;
+            align:center;
+            text-align: center;
         }
 
 

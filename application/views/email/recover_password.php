@@ -6,10 +6,10 @@
     <style type="text/css">
 
         .enjoy-css {
-            display: inline-block;
-            -webkit-box-sizing: content-box;
-            -moz-box-sizing: content-box;
-            box-sizing: content-box;
+            /*display: inline-block;*/
+            /*-webkit-box-sizing: content-box;*/
+            /*-moz-box-sizing: content-box;*/
+            /*box-sizing: content-box;*/
             margin: 6px;
             padding: 5px;
             border: none;
@@ -18,6 +18,8 @@
             -o-text-overflow: ellipsis;
             text-overflow: ellipsis;
             background: #0faddb;
+            align:center;
+            text-align: center;
         }
 
 
@@ -29,7 +31,7 @@
 
     <table border='0' cellspacing='0' cellpadding='0' width='700' align='center' style='color: #CCCCCC;'>
         <tr style='height: 70px; background-color:  #0faddb'>
-            <td>
+            <td align='center'>
 <!--                <img style='display: block; margin: auto; width: 100%' src='http://www.circulomedicodezarate.org/img-web/img-top-logo.jpg' alt="cmz_logo"/>-->
 <!--                 <img style='display: block; margin: auto;' src='http://www.centromedicorondilla.com/images/logo.png' alt="cmz_logo"/>-->
                 <div class="enjoy-css">Centro Medico Zarate</div>
