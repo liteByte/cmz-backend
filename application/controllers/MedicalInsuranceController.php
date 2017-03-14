@@ -81,13 +81,13 @@ class MedicalInsuranceController extends AuthController{
 
       //Validations
       if($payment_deadline <= 0)                                            return $this->response(['error'=>'El plazo de pago debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_socios_honorarios < 0    || $ret_socios_honorarios > 100)     return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_socios_gastos < 0        || $ret_socios_gastos > 100)         return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_nosocios_honorarios < 0  || $ret_nosocios_honorarios > 100)   return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_socios_honorarios < 0    || $ret_socios_honorarios > 100)     return $this->response(['error'=>'Porcentaje de retencion de honorarios de socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_socios_gastos < 0        || $ret_socios_gastos > 100)         return $this->response(['error'=>'Porcentaje de retencion de gastos de socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_nosocios_honorarios < 0  || $ret_nosocios_honorarios > 100)   return $this->response(['error'=>'Porcentaje de retencion de honorarios de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de retencion de gastos de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de retencion de honorarios de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de retencion de gastos de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if($femeba == 1){
           if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federacion ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
           if($admin_rights < 0         || $admin_rights > 100)              return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
@@ -185,13 +185,13 @@ class MedicalInsuranceController extends AuthController{
 
       //Validations
       if($payment_deadline <= 0)                                            return $this->response(['error'=>'El plazo de pago debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_socios_honorarios < 0    || $ret_socios_honorarios > 100)     return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_socios_gastos < 0        || $ret_socios_gastos > 100)         return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_nosocios_honorarios < 0  || $ret_nosocios_honorarios > 100)   return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_socios_honorarios < 0    || $ret_socios_honorarios > 100)     return $this->response(['error'=>'Porcentaje de retencion de honorarios de socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_socios_gastos < 0        || $ret_socios_gastos > 100)         return $this->response(['error'=>'Porcentaje de retencion de gastos de socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_nosocios_honorarios < 0  || $ret_nosocios_honorarios > 100)   return $this->response(['error'=>'Porcentaje de retencion de honorarios de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de retencion de gastos de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de retencion de honorarios de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de retencion de gastos de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if($femeba == 1){
           if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federacion ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
           if($admin_rights < 0         || $admin_rights > 100)              return $this->response(['error'=>'Porcentaje de derechos de admin ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
