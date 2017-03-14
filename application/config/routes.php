@@ -86,16 +86,16 @@ $route['specialitys/remove/(:num)']   = 'SpecialityController/removeSpeciality/i
 $route['specialitys/(:num)']          = 'SpecialityController/getSpeciality/id/$1';
 
 ////////////////////////Login routes////////////////////////
-$route['login']["post"]         = 'LoginController/login';
+$route['login']["post"]               = 'LoginController/login';
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
 ////////////////////////Femeba routes////////////////////////
-$route['categoryfemeba']        = 'CategoryFemebaController/femeba';
+$route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 
 ////////////////////////Category Circle routes////////////////////////
-$route['categorycircle']        = 'CategoryCircleController/category_circle';
+$route['categorycircle']              = 'CategoryCircleController/category_circle';
 
 ////////////////////////Payment Types routes////////////////////////
-$route['paymenttypes']        = 'PaymentTypesController/payment_types';
+$route['paymenttypes']                = 'PaymentTypesController/payment_types';

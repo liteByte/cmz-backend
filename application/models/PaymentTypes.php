@@ -6,9 +6,7 @@ Class PaymentTypes extends CI_Model{
     public function __construct(){
         parent::__construct();
     }
-
-
-    //Get Payment Types
+    
     public function getPaymentTypes(){
 
         $result = array();

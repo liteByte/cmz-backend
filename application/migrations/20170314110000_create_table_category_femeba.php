@@ -11,7 +11,7 @@ class Migration_Create_table_category_femeba extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'auto_increment'=>  TRUE
             ),
-            'desription_femeba'   => array(
+            'desription_femeba'  => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  50,
                 'null'          => FALSE
