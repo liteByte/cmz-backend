@@ -1,21 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-Class CategoryCircle extends CI_Model{
+Class MedicalCareer extends CI_Model{
 
     public function __construct(){
         parent::__construct();
     }
 
-
-    //Category Circle
-    public function getCategoryCircle(){
+    
+    public function getMedicalCareer(){
 
         $result = array();
 
-        $query = $this->db->get('category_circle');
+        $query = $this->db->get('medical_career');
 
-        foreach ($query->result_array('category') as $row){
+        foreach ($query->result_array('medical') as $row){
             array_push($result,$row);
         }
 

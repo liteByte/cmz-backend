@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_category_circle extends CI_Migration{
+class Migration_Create_table_medical_career extends CI_Migration{
 
     public function up(){
         $this->dbforge->add_field(array(
@@ -18,7 +18,7 @@ class Migration_Create_table_category_circle extends CI_Migration{
             )
         ));
         $this->dbforge->add_key('id_category_circle', TRUE);
-        $this->dbforge->create_table('category_circle');
+        $this->dbforge->create_table('medical_career');
 
         $data = array(
             array(
@@ -32,12 +32,12 @@ class Migration_Create_table_category_circle extends CI_Migration{
             )
         );
 
-        $this->db->insert_batch('category_circle', $data);
+        $this->db->insert_batch('medical_career', $data);
     }
 
 
     public function down(){
-        $this->dbforge->drop_table('category_circle');
+        $this->dbforge->drop_table('medical_career');
     }
 
 

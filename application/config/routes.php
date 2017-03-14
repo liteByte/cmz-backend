@@ -95,7 +95,7 @@ $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 $route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 
 ////////////////////////Category Circle routes////////////////////////
-$route['categorycircle']              = 'CategoryCircleController/category_circle';
+$route['medicalcareer']              = 'MedicalCareerController/medical_career';
 
 ////////////////////////Payment Types routes////////////////////////
 $route['paymenttypes']                = 'PaymentTypesController/payment_types';
