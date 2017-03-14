@@ -136,6 +136,7 @@ class MedicalInsurance extends CI_Model{
   }
 
   //Delete medical insurance information in 'medical_insurance'
+  //TODO:El sistema valida que la Obra Social al ser eliminada no esté relacionada a liquidaciones actuales o históricas de prestaciones a profesionales.
   public function delete($insuranceID,$userID){
 
     //Delete insurance

@@ -13,9 +13,14 @@ class Migration_Create_table_iva extends CI_Migration{
                     'unsigned'      =>  TRUE,
                     'auto_increment'=>  TRUE
                 ),
-                'type' => array(
+                'description' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  40,
+                    'null'          =>  FALSE
+                ),
+                'type' => array(
+                    'type'          =>  'VARCHAR',
+                    'constraint'    =>  2,
                     'null'          =>  FALSE
                 )
         ));
@@ -24,22 +29,28 @@ class Migration_Create_table_iva extends CI_Migration{
 
         $data = array(
             array(
-                'type' => "EXCENTO"
+                'description' => "EXCENTO",
+                'type'        => "EX"
             ),
             array(
-                'type' => "RESP. INSCRIPTO"
+                'description' => "RESP. INSCRIPTO",
+                'type'        => "RI"
             ),
             array(
-                'type' => "RESP. NO INSCRIPTO"
+                'description' => "RESP. NO INSCRIPTO",
+                'type'        => "NI"
             ),
             array(
-                'type' => "CONSUMIDOR FINAL"
+                'description' => "CONSUMIDOR FINAL",
+                'type'        => "CF"
             ),
             array(
-                'type' => "NO ALCANZADO"
+                'description' => "NO ALCANZADO",
+                'type'        => "NA"
             ),
             array(
-                'type' => "MONOTRIBUTISTA"
+                'description' => "MONOTRIBUTISTA",
+                'type'        => "MT"
             )
         );
 

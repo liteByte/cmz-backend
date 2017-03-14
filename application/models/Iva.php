@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Iva extends CI_Model{
 
   private $type;
+  private $description;
 
   public function __construct(){
 	  parent::__construct();
