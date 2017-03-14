@@ -65,9 +65,10 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                     'constraint'    =>  3,
                     'null'          => FALSE
                 ),
-                'scope' => array(
+                'scope_id' => array(
                     'type'          =>  'INT',
-                    'constraint'    =>  1,
+                    'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          => FALSE
                 ),
                 'femeba' => array(
@@ -142,6 +143,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                 ),
         ));
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (iva_id) REFERENCES iva(iva_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (scope_id) REFERENCES scopes(scope_id)');
         $this->dbforge->add_key('medical_insurance_id', TRUE);
         $this->dbforge->create_table('medical_insurance');
 
@@ -157,7 +159,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                   'iva_id'                      => 2,
                   'gross_income'                => 1234,
                   'payment_deadline'            => 15,
-                  'scope'                       => 1,
+                  'scope_id'                    => 1,
                   'femeba'                      => 1,
                   'ret_jub_femeba'              => 1,
                   'federation_funds'            => '5.5',

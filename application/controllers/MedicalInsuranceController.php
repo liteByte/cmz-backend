@@ -40,7 +40,7 @@ class MedicalInsuranceController extends AuthController{
       $iva_id                   = $post->iva_id                     ?? "";
       $gross_income             = $post->gross_income               ?? "";
       $payment_deadline         = $post->payment_deadline           ?? "";
-      $scope                    = $post->scope                      ?? "";
+      $scope_id                 = $post->scope_id                   ?? "";
       $femeba                   = $post->femeba                     ?? "";
       $ret_jub_femeba           = $post->ret_jub_femeba             ?? "";
       $federation_funds         = $post->federation_funds           ?? "";
@@ -62,7 +62,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
-      if(strlen($scope) <> 1)               return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($scope_id))                  return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($femeba) <> 1)              return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($ret_socios_honorarios))     return $this->response(['error'=>'No se ha ingresado retencion de honorarios de socios'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($ret_socios_gastos))         return $this->response(['error'=>'No se ha ingresado retencion de gastos de socios'], REST_Controller::HTTP_BAD_REQUEST);
@@ -99,7 +99,7 @@ class MedicalInsuranceController extends AuthController{
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, save the insurance
-      if($this->MedicalInsurance->save($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct)){
+      if($this->MedicalInsurance->save($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct)){
         return $this->response(['msg'=>'Obra social creada satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -143,7 +143,7 @@ class MedicalInsuranceController extends AuthController{
       $iva_id                   = $post->iva_id                     ?? "";
       $gross_income             = $post->gross_income               ?? "";
       $payment_deadline         = $post->payment_deadline           ?? "";
-      $scope                    = $post->scope                      ?? "";
+      $scope_id                 = $post->scope_id                   ?? "";
       $femeba                   = $post->femeba                     ?? "";
       $ret_jub_femeba           = $post->ret_jub_femeba             ?? "";
       $federation_funds         = $post->federation_funds           ?? "";
@@ -166,7 +166,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
-      if(strlen($scope) <> 1)               return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($scope_id))                  return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($femeba) <> 1)              return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($ret_socios_honorarios))     return $this->response(['error'=>'No se ha ingresado retencion de honorarios de socios'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($ret_socios_gastos))         return $this->response(['error'=>'No se ha ingresado retencion de gastos de socios'], REST_Controller::HTTP_BAD_REQUEST);
@@ -203,7 +203,7 @@ class MedicalInsuranceController extends AuthController{
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, update the insurance
-      if($this->MedicalInsurance->update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$this->token_valid->user_id)){
+      if($this->MedicalInsurance->update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$this->token_valid->user_id)){
         return $this->response(['msg'=>'Obra social modificada satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

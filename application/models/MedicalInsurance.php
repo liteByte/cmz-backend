@@ -14,7 +14,7 @@ class MedicalInsurance extends CI_Model{
   private $iva_id;
   private $gross_income;
   private $payment_deadline;
-  private $scope;
+  private $scope_id;
   private $femeba;
   private $ret_jub_femeba;
   private $federation_funds;
@@ -32,7 +32,7 @@ class MedicalInsurance extends CI_Model{
   }
 
   //Creates the medical insurace in 'medical_insurance'
-  public function save($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct){
+  public function save($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct){
 
     $data = array(
                   'denomination'                => $denomination,
@@ -45,7 +45,7 @@ class MedicalInsurance extends CI_Model{
                   'iva_id'                      => $iva_id,
                   'gross_income'                => $gross_income,
                   'payment_deadline'            => $payment_deadline,
-                  'scope'                       => $scope,
+                  'scope_id'                    => $scope_id,
                   'femeba'                      => $femeba,
                   'ret_jub_femeba'              => $ret_jub_femeba,
                   'federation_funds'            => $federation_funds,
@@ -68,7 +68,7 @@ class MedicalInsurance extends CI_Model{
   }
 
   //Updates the medical insurance in 'medical_insurance'
-  public function update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$userID){
+  public function update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$userID){
 
       $now = date('Y-m-d H:i:s');
 
@@ -83,7 +83,7 @@ class MedicalInsurance extends CI_Model{
                     'iva_id'                      => $iva_id,
                     'gross_income'                => $gross_income,
                     'payment_deadline'            => $payment_deadline,
-                    'scope'                       => $scope,
+                    'scope_id'                    => $scope_id,
                     'femeba'                      => $femeba,
                     'ret_jub_femeba'              => $ret_jub_femeba,
                     'federation_funds'            => $federation_funds,
