@@ -9,7 +9,7 @@ Class PaymentTypes extends CI_Model{
 
 
     //Get Payment Types
-    public function getCategoryCircle(){
+    public function getPaymentTypes(){
 
         $result = array();
 

@@ -22,7 +22,7 @@ class PaymentTypesController extends AuthController{
         //Validates Token
         if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
 
-        $circle = $this->PaymentTypes->getCategoryCircle();
+        $circle = $this->PaymentTypes->getPaymentTypes();
         return $this->response($circle, RC::HTTP_OK);
     }
 
