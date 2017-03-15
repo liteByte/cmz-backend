@@ -35,11 +35,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'type'          =>  'INT',
                 'constraint'    =>  5,
             ),
-            'monotributo' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 2,
-                'null'          => FALSE
-            ),
             'retention_vat' => array(
                 'type'          => 'VARCHAR',
                 'constraint'    => 2,
@@ -66,7 +61,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'iibb_percentage' => '10',
                 'gain' => 'S',
                 'iva_id' => '1',
-                'monotributo' => 'N',
                 'retention_vat' => '',
                 'retention_gain' => '',
             ),
@@ -77,7 +71,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'iibb_percentage' => '10',
                 'gain' => 'N',
                 'iva_id' => '5',
-                'monotributo' => 'S',
                 'retention_vat' => 'S',
                 'retention_gain' => 'S',
             ),

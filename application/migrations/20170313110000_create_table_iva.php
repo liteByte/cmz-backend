@@ -51,6 +51,10 @@ class Migration_Create_table_iva extends CI_Migration{
             array(
                 'description' => "MONOTRIBUTISTA",
                 'type'        => "MT"
+            ),
+            array(
+                'description' => "RESPONS.INSCRIPTO",
+                'type'        => "RE"
             )
         );
 

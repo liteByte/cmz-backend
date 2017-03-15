@@ -96,7 +96,7 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'type'          =>  'INT',
                 'constraint'    =>  5,
             ),
-            'id_circle_category' => array(
+            'id_medical_career' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
             ),
@@ -107,15 +107,31 @@ class Migration_Create_table_professionals extends CI_Migration{
             'bank_id' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5
-            )
+            ),
+            'active'        => array(
+                'type'          => 'VARCHAR',
+                'constraint'    =>  150,
+                'null'          => FALSE
+            ),
+            'date_update'  => array(
+                'type'          => 'TIMESTAMP',
+                'null'          => TRUE,
+            ),
+            'down_user_id' => array(
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          => TRUE
+            ),
         ));
 
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_legal_locality)       REFERENCES locality(id_locality)');
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_office_locality)       REFERENCES locality(id_locality)');
+        $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (cuit)       REFERENCES fiscal_data(cuit)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (speciality_id)       REFERENCES specialitys(speciality_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_category_femeba)       REFERENCES category_femeba(id_category_femeba)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_circle_category)       REFERENCES category_círcle(id_circle_category)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_career)       REFERENCES medical_career(id_medical_career)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_payment_type)       REFERENCES payment_type(id_payment_type)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (bank_id)       REFERENCES banks(bank_id)');
 
@@ -141,9 +157,10 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'speciality_id' => '',
                 'type_partner' => 'SOCIO',
                 'id_category_femeba' => '1',
-                'id_circle_category' => '1',
+                'id_medical_career' => '1',
                 'id_payment_type' => '1',
                 'bank_id' => '1',
+                'active' => 'active'
             ),
             array(
                 'registration_number'  => '96857412',
@@ -163,9 +180,10 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'speciality_id' => '',
                 'type_partner' => 'NO SOCIO',
                 'id_category_femeba' => '2',
-                'id_circle_category' => '2',
+                'id_medical_career' => '2',
                 'id_payment_type' => '2',
                 'bank_id' => '2',
+                'active' => 'active'
             )
         );
 

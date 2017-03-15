@@ -95,7 +95,12 @@ $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 $route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 
 ////////////////////////Category Circle routes////////////////////////
-$route['medicalcareer']              = 'MedicalCareerController/medical_career';
+$route['medicalcareer']               = 'MedicalCareerController/medical_career';
 
 ////////////////////////Payment Types routes////////////////////////
 $route['paymenttypes']                = 'PaymentTypesController/payment_types';
+
+////////////////////////Professionals routes////////////////////////
+$route['professionals']                = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
+$route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
+$route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';

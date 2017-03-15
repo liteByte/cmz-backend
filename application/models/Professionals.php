@@ -1,0 +1,170 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Professionals extends CI_Model{
+
+    public function __construct(){
+        parent::__construct();
+    }
+
+    public function validateData($document_number, $speciality_id, $id_category_femeba, $id_medical_career, $id_payment_type, $bank_id){
+        $query = $this->db->get_where('professionals', array('document_number' => $document_number));
+        if ($query->num_rows() > 0) return "El numero de documento ya esta registrado";
+
+        $query = $this->db->get_where('specialitys', array('speciality_id' => $speciality_id));
+        if ($query->num_rows() == 0) return "La especilidad no registrada";
+
+        if($id_category_femeba <> '')
+            $query = $this->db->get_where('category_femeba', array('id_category_femeba' => $id_category_femeba));
+            if ($query->num_rows() == 0) return "Categoria FEMEBA, no registrada";
+
+        if($id_medical_career <> '')
+            $query = $this->db->get_where('medical_career', array('id_medical_career' => $id_medical_career));
+            if ($query->num_rows() == 0) return "Carrera medica no registrada";
+
+        $query = $this->db->get_where('payment_type', array('id_payment_type' => $id_payment_type));
+        if ($query->num_rows() == 0) return "Tipo de pago no registrado";
+
+        $query = $this->db->get_where('banks', array('bank_id' => $bank_id));
+        if ($query->num_rows() == 0) return "Banco no registrado";
+
+        return "OK";
+    }
+    
+    public function save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain ){
+        
+        $data = array(
+            "registration_number"   =>$registration_number,
+            "name"                  =>$name,
+            "last_name"             =>$last_name,
+            "document_type"         =>$document_type,
+            "document_number"       =>$document_number,
+            "date_birth"            => $date_birth,
+            "legal_address"         =>$legal_address,
+            "legal_locality"        =>$legal_locality,
+            "zip_code"              =>$zip_code,
+            "phone_number"          =>$phone_number,
+            "email"                 =>$email,
+            "office_address"        =>$office_address,
+            "office_locality"       =>$office_locality,
+            "cuit"                  =>$cuit,
+            "speciality_id"         =>$speciality_id,
+            "type_partner"          =>$type_partner,
+            "id_category_femeba"    =>$id_category_femeba,
+            "id_medical_career"     =>$id_medical_career,
+            "id_payment_type"       =>$id_payment_type,
+            "bank_id"               =>$bank_id,
+            "active"                =>"active"
+        );
+
+        $result =  $this->db->insert('professionals', $data);
+        if(!$result){
+            $result = "Error al intentar crear nuevo Profesional";
+            return $result;
+        }
+
+        //Obtain last inserted user id
+        $userID = $this->db->insert_id();
+
+        if($userID){
+            $data = array(
+                "cuit"=>$cuit,
+                "date_start_activity"=>$date_start_activity,
+                "iibb"=>$iibb,
+                "iibb_percentage"=>$iibb_percentage,
+                "gain"=>$gain,
+                "iva_id"=> $iva_id,
+                "retention_vat"=>$retention_vat,
+                "retention_gain"=>$retention_gain
+            );
+
+            $result =  $this->db->insert('fiscal_data', $data);
+
+            if(!$result){
+                $result = "Error al intentar crear nuevo Profesional";
+                return $result;
+            }
+        }
+        return "OK";
+    }
+
+    public function getProfessionals(){
+        $result = array();
+
+        $this->db->select();
+        $this->db->join('fiscal_data', 'professionals.cuit = fiscal_data.cuit');
+        $this->db->order_by("name", "asc");
+        $query = $this->db->get_where('professionals', array('active' => "active"));
+
+        foreach ($query->result_array('Professionals') as $row){
+            array_push($result,$row);
+        }
+        return $result;
+    }
+
+    public function getProfessionalsById($id){
+        $result = array();
+
+        $this->db->select();
+        $this->db->join('fiscal_data', 'professionals.cuit = fiscal_data.cuit');
+        $this->db->order_by("name", "asc");
+        $query = $this->db->get_where('professionals', array('active' => "active", 'id_professional_data' => $id ));
+
+        foreach ($query->result_array('Professionals') as $row){
+            array_push($result,$row);
+        }
+        return $result;
+
+    }
+
+    public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain){
+
+        $data = array(
+            "registration_number"   =>$registration_number,
+            "name"                  =>$name,
+            "last_name"             =>$last_name,
+            "document_type"         =>$document_type,
+            "document_number"       =>$document_number,
+            "date_birth"            => $date_birth,
+            "legal_address"         =>$legal_address,
+            "legal_locality"        =>$legal_locality,
+            "zip_code"              =>$zip_code,
+            "phone_number"          =>$phone_number,
+            "email"                 =>$email,
+            "office_address"        =>$office_address,
+            "office_locality"       =>$office_locality,
+            "cuit"                  =>$cuit,
+            "speciality_id"         =>$speciality_id,
+            "type_partner"          =>$type_partner,
+            "id_category_femeba"    =>$id_category_femeba,
+            "id_medical_career"     =>$id_medical_career,
+            "id_payment_type"       =>$id_payment_type,
+            "bank_id"               =>$bank_id,
+            "active"                =>"active"
+        );
+
+        $this->db->where('id_professional_data', $id);
+        $result = $this->db->update('professionals', $data);
+        if(!$result){
+            $result = "Error al intentar crear nuevo Profesional";
+            return $result;
+        }
+        // Update table fiscal_data
+        $data = array(
+                "cuit"=>$cuit,
+                "date_start_activity"=>$date_start_activity,
+                "iibb"=>$iibb,
+                "iibb_percentage"=>$iibb_percentage,
+                "gain"=>$gain,
+                "iva_id"=> $iva_id,
+                "retention_vat"=>$retention_vat,
+                "retention_gain"=>$retention_gain
+        );
+
+        $this->db->where('cuit', $cuit);
+        $result = $this->db->update('fiscal_data', $data);
+
+        return true;
+    }
+    
+}
