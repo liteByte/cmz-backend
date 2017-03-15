@@ -82,13 +82,13 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                     'null'          => TRUE
                 ),
                 'federation_funds' => array(
-                    'type'          =>  'INT',
-                    'constraint'    =>  3,
+                    'type'          =>  'DECIMAL',
+                    'constraint'    =>  '5,2',
                     'null'          => TRUE
                 ),
                 'admin_rights' => array(
-                    'type'          =>  'INT',
-                    'constraint'    =>  3,
+                    'type'          =>  'DECIMAL',
+                    'constraint'    =>  '5,2',
                     'null'          => TRUE
                 ),
                 'ret_socios_honorarios' => array(
