@@ -35,7 +35,13 @@ class Migration_Create_table_permissions extends CI_Migration{
             ),
             array(
                 'name' => "ABMobrassociales"
-            )
+            ),
+            array(
+                'name' => "ABMespecialidades"
+            ),
+            array(
+                'name' => "ABMprofesionales"
+            )   
         );
 
         $this->db->insert_batch('permissions', $data);

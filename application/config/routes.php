@@ -99,3 +99,22 @@ $route['scopes']                      = 'ScopeController/scopes';  //Get -> show
 
 ////////////////////////Login routes////////////////////////
 $route['login']["post"]               = 'LoginController/login';
+
+////////////////////////IVA routes////////////////////////
+$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+
+////////////////////////Femeba routes////////////////////////
+$route['categoryfemeba']              = 'CategoryFemebaController/femeba';
+
+////////////////////////Category Circle routes////////////////////////
+$route['medicalcareer']               = 'MedicalCareerController/medical_career';
+
+////////////////////////Payment Types routes////////////////////////
+$route['paymenttypes']                = 'PaymentTypesController/payment_types';
+
+////////////////////////Professionals routes////////////////////////
+$route['professionals']                = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
+$route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
+$route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
+$route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';
+

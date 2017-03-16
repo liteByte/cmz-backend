@@ -11,8 +11,9 @@ class Iva extends CI_Model{
 	  parent::__construct();
   }
 
-  //Get all iva types
-  public function getIva(){
+
+
+  public function  getIvaTypes(){
 
     $result = array();
 

@@ -21,9 +21,11 @@ class IvaController extends AuthController{
     public function iva_get(){
 
       //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
-      $iva = $this->Iva->getIva();
+      if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
+
+      $iva = $this->Iva->getIvaTypes();
+
       return $this->response($iva, REST_Controller::HTTP_OK);
     }
 
