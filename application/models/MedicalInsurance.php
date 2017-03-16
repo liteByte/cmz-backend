@@ -117,8 +117,7 @@ class MedicalInsurance extends CI_Model{
     $this->db->order_by("denomination", "asc");
     $query = $this->db->get('medical_insurance');
 
-    foreach ($query->result_array('MedicalInsurance') as $row)
-    {
+    foreach ($query->result_array('MedicalInsurance') as $row){
        array_push($result,$row);
     }
 
@@ -137,7 +136,7 @@ class MedicalInsurance extends CI_Model{
   }
 
   //Delete medical insurance information in 'medical_insurance'
-  //TODO:El sistema valida que la Obra Social al ser eliminada no esté relacionada a liquidaciones actuales o históricas de prestaciones a profesionales.
+  //TODO:El sistema valida que la Obra Social al ser eliminada no esté relacionada a liquidaciónes actuales o históricas de prestaciones a profesionales.
   public function delete($insuranceID,$userID){
 
     //Delete insurance
@@ -152,7 +151,7 @@ class MedicalInsurance extends CI_Model{
 
     //CUIT validation
     $query = $this->db->get_where('medical_insurance', array('cuit' => $cuit));
-    if ($query->num_rows() > 0) return "El CUIT ingresado esta siendo utilizado";
+    if ($query->num_rows() > 0) return "El CUIT ingresado está siendo utilizado";
 
     return "OK";
 
@@ -162,7 +161,7 @@ class MedicalInsurance extends CI_Model{
 
     //CUIT validation
     $query = $this->db->get_where('medical_insurance', array('cuit' => $cuit,'medical_insurance_id !='=>$id));
-    if ($query->num_rows() > 0) return "El CUIT ingresado esta siendo utilizado";
+    if ($query->num_rows() > 0) return "El CUIT ingresado está siendo utilizado";
 
     return "OK";
 

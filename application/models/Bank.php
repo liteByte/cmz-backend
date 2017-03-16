@@ -91,7 +91,7 @@ class Bank extends CI_Model{
 
     //Bank code validation
     $query = $this->db->get_where('banks', array('bank_code' => $bank_code));
-    if ($query->num_rows() > 0) return "El codigo de banco ingresado esta siendo utilizado";
+    if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
 
     return "OK";
 
@@ -101,7 +101,7 @@ class Bank extends CI_Model{
 
     //Bank code validation
     $query = $this->db->get_where('banks', array('bank_code' => $bank_code,'bank_id !='=>$id));
-    if ($query->num_rows() > 0) return "El codigo de banco ingresado esta siendo utilizado";
+    if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
 
     return "OK";
 

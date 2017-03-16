@@ -95,7 +95,7 @@ $route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
 ////////////////////////Scope routes////////////////////////
-$route['scopes']                       = 'ScopeController/scopes';  //Get -> show scopes
+$route['scopes']                      = 'ScopeController/scopes';  //Get -> show scopes
 
 ////////////////////////Login routes////////////////////////
-$route['login']["post"]         = 'LoginController/login';
+$route['login']["post"]               = 'LoginController/login';

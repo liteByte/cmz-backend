@@ -17,8 +17,7 @@ class Scope extends CI_Model{
 
     $query = $this->db->get('scopes');
 
-    foreach ($query->result_array('Scope') as $row)
-    {
+    foreach ($query->result_array('Scope') as $row){
       array_push($result,$row);
     }
 

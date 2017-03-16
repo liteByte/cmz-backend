@@ -18,8 +18,7 @@ class Iva extends CI_Model{
 
     $query = $this->db->get('iva');
 
-    foreach ($query->result_array('Iva') as $row)
-    {
+    foreach ($query->result_array('Iva') as $row){
       array_push($result,$row);
     }
 

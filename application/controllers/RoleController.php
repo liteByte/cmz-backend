@@ -60,7 +60,7 @@ class RoleController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMroles",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
       $post = json_decode(file_get_contents('php://input'));
 
