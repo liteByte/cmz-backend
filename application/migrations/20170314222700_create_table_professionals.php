@@ -77,36 +77,47 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'type'          => 'VARCHAR',
                 'constraint'    => 50
             ),
-            'cuit' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 20,
-                'unique'        => TRUE,
+            'id_fiscal_data' => array(
+                'type'          => 'INT',
+                'constraint'    => 5,
+                'unsigned'      => TRUE,
                 'null'          => FALSE
             ),
             'speciality_id' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'type_partner' => array(
                 'type'          => 'VARCHAR',
                 'constraint'    => 20,
-                'null'          => FALSE
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'id_category_femeba' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'id_medical_career' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'id_payment_type' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'bank_id' => array(
                 'type'          =>  'INT',
-                'constraint'    =>  5
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'active'        => array(
                 'type'          => 'VARCHAR',
@@ -128,7 +139,7 @@ class Migration_Create_table_professionals extends CI_Migration{
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_legal_locality)       REFERENCES locality(id_locality)');
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_office_locality)       REFERENCES locality(id_locality)');
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (cuit)       REFERENCES fiscal_data(cuit)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_fiscal_data)       REFERENCES fiscal_data(id_fiscal_data)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (speciality_id)       REFERENCES specialitys(speciality_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_category_femeba)       REFERENCES category_femeba(id_category_femeba)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_career)       REFERENCES medical_career(id_medical_career)');
