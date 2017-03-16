@@ -39,7 +39,7 @@ class Professionals extends CI_Model{
             "last_name"             =>$last_name,
             "document_type"         =>$document_type,
             "document_number"       =>$document_number,
-            "date_birth"            => $date_birth,
+            "date_birth"            =>$date_birth,
             "legal_address"         =>$legal_address,
             "legal_locality"        =>$legal_locality,
             "zip_code"              =>$zip_code,
@@ -125,7 +125,7 @@ class Professionals extends CI_Model{
             "last_name"             =>$last_name,
             "document_type"         =>$document_type,
             "document_number"       =>$document_number,
-            "date_birth"            => $date_birth,
+            "date_birth"            =>$date_birth,
             "legal_address"         =>$legal_address,
             "legal_locality"        =>$legal_locality,
             "zip_code"              =>$zip_code,
@@ -184,7 +184,7 @@ class Professionals extends CI_Model{
     public function validateDataUpdate($id, $document_number){
 
         $query = $this->db->get_where('professionals', array('document_number' => $document_number, 'id_professional_data !=' => $id ));
-        if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
+        if ($query->num_rows() > 0) return "El número de documento ingresado ya está en uso";
 
         return "OK";
     }
