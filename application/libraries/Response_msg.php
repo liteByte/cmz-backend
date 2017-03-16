@@ -26,11 +26,11 @@ class Response_msg{
             $this->msg = $msg;
         }
         http_response_code($this->error_code);
-        //$result_json = $this->msg;
-        $result_json  = ['error'=>$this->msg];
-        echo $json = json_encode($result_json, JSON_UNESCAPED_UNICODE);
-        
-        exit;   
+        $result_json = $this->msg;
+        //$result_json  = ['error'=>$this->msg];
+        echo $json= json_encode($result_json, JSON_UNESCAPED_UNICODE);
+
+        exit;
 
     }
 
