@@ -201,6 +201,10 @@ class ProfessionalsController extends AuthController{
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
 
+        //Valid Document number
+        $error = $this->Professionals->validateDataUpdate($id, $document_number);
+        if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
+
         if($this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain)){
             return $this->response(array('msg'=>'Profesional actualizado de forma correcta'), RC::HTTP_INTERNAL_SERVER_ERROR);
         }else {
@@ -208,6 +212,24 @@ class ProfessionalsController extends AuthController{
         }
 
 
+
+    }
+
+    public function removeProfessional_delete(){
+
+        //Validate Token.
+        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
+
+        //Validates permissions
+        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+        $id = (int) $this->get('id');
+
+        if($this->Professionals->delete($id, $this->token_valid->user_id )){
+            return $this->response(array('msg'=>'Profesional eliminado satisfactoriamente'), RC::HTTP_OK);
+        }else {
+            return $this->response(array('error'=>'Error al intentar eliminar profesional'), RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
     }
 

@@ -104,3 +104,4 @@ $route['paymenttypes']                = 'PaymentTypesController/payment_types';
 $route['professionals']                = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
 $route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
 $route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
+$route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';

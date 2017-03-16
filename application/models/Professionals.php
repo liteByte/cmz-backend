@@ -166,5 +166,27 @@ class Professionals extends CI_Model{
 
         return true;
     }
+
+    public function delete($professionalId, $downUserId){
+
+        $now = date('Y-m-d H:i:s');
+
+        //Delete Profesionals
+        $this->db->where('id_professional_data', $professionalId);
+        $this->db->update('professionals', array('active' => 'inactive', 'date_update' => $now, 'down_user_id' => $downUserId));
+        $afftectedRows = $this->db->affected_rows();
+        if(!$afftectedRows){
+            return false;
+        }
+        return true;
+    }
     
+    public function validateDataUpdate($id, $document_number){
+
+        $query = $this->db->get_where('professionals', array('document_number' => $document_number, 'id_professional_data !=' => $id ));
+        if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
+
+        return "OK";
+    }
+
 }
