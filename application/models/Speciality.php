@@ -85,7 +85,7 @@ class Speciality extends CI_Model {
 
         //Speciality code validation
         $query = $this->db->get_where('specialitys', array('speciality_code' => $speciality_code));
-        if ($query->num_rows() > 0) return "El codigo de especialidad ingresado esta siendo utilizado";
+        if ($query->num_rows() > 0) return "El código de especialidad ingresado esta siendo utilizado";
 
         return "OK";
 
@@ -95,7 +95,7 @@ class Speciality extends CI_Model {
 
         //Speciality code validation
         $query = $this->db->get_where('specialitys', array('speciality_code' => $speciality_code, 'speciality_id !=' => $id));
-        if ($query->num_rows() > 0) return "El codigo de especialidad ingresado esta siendo utilizado";
+        if ($query->num_rows() > 0) return "El código de especialidad ingresado esta siendo utilizado";
 
         return "OK";
 

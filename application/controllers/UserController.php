@@ -27,7 +27,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $post = json_decode(file_get_contents('php://input'));
 
@@ -74,7 +74,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $post = json_decode(file_get_contents('php://input'));
 
@@ -118,7 +118,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $id = (int) $this->get('id');
 
@@ -138,7 +138,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $users = $this->User->getUsers();
     return $this->response($users, REST_Controller::HTTP_OK);
@@ -152,7 +152,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $id = $this->get('id');
 
@@ -235,7 +235,7 @@ class UserController extends AuthController{
 
     //Validates if the user has permissions to do this action
     if(!in_array("ABMusuarios",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $post = json_decode(file_get_contents('php://input'));
 

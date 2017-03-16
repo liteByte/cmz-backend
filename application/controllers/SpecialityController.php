@@ -28,7 +28,7 @@ class SpecialityController extends AuthController {
         //TODO extract to helper
         //Validates if the user has permissions to do this action
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
         //TODO extract to helper
         $post = json_decode(file_get_contents('php://input'));
@@ -36,11 +36,11 @@ class SpecialityController extends AuthController {
         $speciality_code = $post->speciality_code     ?? "";
         $description     = $post->description         ?? "";
 
-        if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado código de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
         if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateData($speciality_code);
@@ -64,7 +64,7 @@ class SpecialityController extends AuthController {
 
         //Validates if the user has permissions to do this action
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
         $specialitys = $this->Speciality->getSpecialitys();
         return $this->response($specialitys, REST_Controller::HTTP_OK);
@@ -78,7 +78,7 @@ class SpecialityController extends AuthController {
 
         //Validates if the user has permissions to do this action
         if (!in_array("ABMbancos", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
         $post = json_decode(file_get_contents('php://input'));
 
@@ -86,11 +86,11 @@ class SpecialityController extends AuthController {
         $description     = $post->description     ?? "";
         $id              = (int)$this->get('id');
 
-        if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado codigo de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado código de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
         if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateDataOnUpdate($speciality_code, $id);
@@ -114,7 +114,7 @@ class SpecialityController extends AuthController {
 
         //Validates if the user has permissions to do this action
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
         $id = $this->get('id');
 
@@ -137,7 +137,7 @@ class SpecialityController extends AuthController {
 
         //Validates if the user has permissions to do this action
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_UNAUTHORIZED);
+            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
         $id = (int)$this->get('id');
 

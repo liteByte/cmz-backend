@@ -26,7 +26,7 @@ class BankController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMbancos",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -36,11 +36,11 @@ class BankController extends AuthController{
       $location         = $post->location         ?? "";
       $phone_number     = $post->phone_number     ?? "";
 
-      if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razon social'), REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado código de banco'), REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razón social'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Validations
-      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated bank code
       $error = $this->Bank->validateData($bank_code);
@@ -64,7 +64,7 @@ class BankController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMbancos",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
       $banks = $this->Bank->getBanks();
       return $this->response($banks, REST_Controller::HTTP_OK);
@@ -78,7 +78,7 @@ class BankController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMbancos",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -89,11 +89,11 @@ class BankController extends AuthController{
       $phone_number     = $post->phone_number     ?? "";
       $id               = (int) $this->get('id');
 
-      if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado codigo de banco'), REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razon social'), REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado código de banco'), REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razón social'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Validations
-      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El codigo ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+      if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated bank code
       $error = $this->Bank->validateDataOnUpdate($bank_code,$id);
@@ -117,7 +117,7 @@ class BankController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMbancos",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
       $id = $this->get('id');
 
@@ -140,7 +140,7 @@ class BankController extends AuthController{
 
       //Validates if the user has permissions to do this action
       if(!in_array("ABMbancos",$this->token_valid->permissions))
-        return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), REST_Controller::HTTP_FORBIDDEN);
+        return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
       $id = (int) $this->get('id');
 

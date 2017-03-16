@@ -32,6 +32,26 @@ class Migration_Create_table_specialitys extends CI_Migration{
         ));
         $this->dbforge->add_key('speciality_id', TRUE);
         $this->dbforge->create_table('specialitys');
+
+        $data = array(
+            array(
+                'speciality_code' => "10",
+                'description' => "Oftalmologia",
+                'active' => "active"
+            ),
+            array(
+                'speciality_code' => "11",
+                'description' => "Cardiologia",
+                'active' => "active"
+            ),
+            array(
+                'speciality_code' => "12",
+                'description' => "Urologia",
+                'active' => "active"
+            ),
+        );
+
+        $this->db->insert_batch('specialitys', $data);
     }
 
 
