@@ -82,8 +82,8 @@ class ProfessionalsController extends AuthController{
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
 
         // Validate Monotributo
-        if($iva_id == 6 && empty($retention_vat) || empty($retention_gain))
-            return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia  y/o aportar iva '), RC::HTTP_BAD_REQUEST);
+        if($iva_id == 6 && (empty($retention_vat))|| (empty($retention_gain)))
+            return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia y/o aportar iva '), RC::HTTP_BAD_REQUEST);
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
@@ -196,7 +196,7 @@ class ProfessionalsController extends AuthController{
 
         // Validate Monotributo
         if($iva_id == 6 && empty($retention_vat) || empty($retention_gain))
-            return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia  y/o aportar iva '), RC::HTTP_BAD_REQUEST);
+            return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia y/o aportar iva '), RC::HTTP_BAD_REQUEST);
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
