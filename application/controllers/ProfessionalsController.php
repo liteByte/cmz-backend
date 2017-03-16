@@ -207,12 +207,9 @@ class ProfessionalsController extends AuthController{
 
         if($this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain)){
             return $this->response(array('msg'=>'Profesional actualizado de forma correcta'), RC::HTTP_INTERNAL_SERVER_ERROR);
-        }else {
+        }else{
             return $this->response(array('error'=>'Error de base de datos'), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-
-
     }
 
     public function removeProfessional_delete(){
@@ -230,9 +227,7 @@ class ProfessionalsController extends AuthController{
         }else {
             return $this->response(array('error'=>'Error al intentar eliminar profesional'), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
-
 
 }
 
