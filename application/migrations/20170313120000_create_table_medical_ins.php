@@ -30,7 +30,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                 ),
                 'location' => array(
                     'type'          =>  'VARCHAR',
-                    'constraint'    =>  35,
+                    'constraint'    =>  100,
                     'null'          =>  FALSE
                 ),
                 'postal_code' => array(

@@ -112,6 +112,7 @@ class MedicalInsurance extends CI_Model{
 
     $result = array();
 
+    $this->db->select('medical_insurance_id,denomination,femeba,location,address,cuit');
     $this->db->where(array('active' => "active"));
     $this->db->order_by("denomination", "asc");
     $query = $this->db->get('medical_insurance');
