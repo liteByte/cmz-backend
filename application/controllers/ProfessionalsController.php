@@ -224,7 +224,7 @@ class ProfessionalsController extends AuthController{
 
         if($this->Professionals->delete($id, $this->token_valid->user_id )){
             return $this->response(array('msg'=>'Profesional eliminado satisfactoriamente'), RC::HTTP_OK);
-        }else {
+        }else{
             return $this->response(array('error'=>'Error al intentar eliminar profesional'), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
