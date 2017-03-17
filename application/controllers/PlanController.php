@@ -39,12 +39,12 @@ class PlanController extends AuthController{
       if(empty($medical_insurance_id))      return $this->response(['error'=>'No se ha ingresado el ID de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated description
-      $error = $this->Plan->validateData($description,$medical_insurance_id);
+      $error = $this->Plan->validateData($description, $medical_insurance_id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, save the plan
-      if($this->Plan->save($description,$medical_insurance_denom,$medical_insurance_id)){
+      if($this->Plan->save($description, $medical_insurance_denom, $medical_insurance_id)){
         return $this->response(['msg'=>'Plan creado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -90,12 +90,12 @@ class PlanController extends AuthController{
       if(empty($medical_insurance_id))      return $this->response(['error'=>'No se ha ingresado el ID de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated description
-      $error = $this->Plan->validateDataOnUpdate($description,$medical_insurance_id,$id);
+      $error = $this->Plan->validateDataOnUpdate($description, $medical_insurance_id, $id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, update the plan
-      if($this->Plan->update($description,$medical_insurance_denom,$medical_insurance_id,$id,$this->token_valid->user_id)){
+      if($this->Plan->update($description, $medical_insurance_denom, $medical_insurance_id, $id, $this->token_valid->user_id)){
         return $this->response(['msg'=>'Plan modificado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -110,7 +110,7 @@ class PlanController extends AuthController{
       if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
       //Validates if the user has permissions to do this action
-      if(!in_array("ABMplanes",$this->token_valid->permissions))
+      if(!in_array("ABMplanes", $this->token_valid->permissions))
          return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $id = $this->get('id');
@@ -138,7 +138,7 @@ class PlanController extends AuthController{
 
       $id = (int) $this->get('id');
 
-      if($this->Plan->delete($id,$this->token_valid->user_id)){
+      if($this->Plan->delete($id, $this->token_valid->user_id)){
         return $this->response(['msg'=>'Plan eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

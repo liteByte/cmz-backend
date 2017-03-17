@@ -27,22 +27,22 @@ class Migration_Create_table_plans extends CI_Migration{
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'active'            => array(
-                    'type'          => 'VARCHAR',
+                    'type'          =>  'VARCHAR',
                     'constraint'    =>  30,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'update_date'  => array(
-                    'type'          => 'TIMESTAMP',
-                    'null'          => TRUE,
+                    'type'          =>  'TIMESTAMP',
+                    'null'          =>  TRUE,
                 ),
                 'modify_user_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => TRUE
+                    'null'          =>  TRUE
                 )
         ));
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id) REFERENCES medical_insurance(medical_insurance_id)');
