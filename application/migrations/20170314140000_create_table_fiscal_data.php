@@ -41,7 +41,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          => FALSE
+                'null'          =>  FALSE
             ),
             'retention_vat' => array(
                 'type'          => 'VARCHAR',

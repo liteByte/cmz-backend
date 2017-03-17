@@ -139,12 +139,12 @@ class Migration_Create_table_professionals extends CI_Migration{
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_legal_locality)       REFERENCES locality(id_locality)');
 //        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_office_locality)       REFERENCES locality(id_locality)');
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_fiscal_data)       REFERENCES fiscal_data(id_fiscal_data)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (speciality_id)       REFERENCES specialitys(speciality_id)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_category_femeba)       REFERENCES category_femeba(id_category_femeba)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_fiscal_data)          REFERENCES fiscal_data(id_fiscal_data)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (speciality_id)           REFERENCES specialitys(speciality_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_category_femeba)      REFERENCES category_femeba(id_category_femeba)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_career)       REFERENCES medical_career(id_medical_career)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_payment_type)       REFERENCES payment_type(id_payment_type)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (bank_id)       REFERENCES banks(bank_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_payment_type)         REFERENCES payment_type(id_payment_type)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (bank_id)                 REFERENCES banks(bank_id)');
 
         $this->dbforge->add_key('id_professional_data', TRUE);
         $this->dbforge->create_table('professionals');
