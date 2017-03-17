@@ -98,11 +98,16 @@ class Professionals extends CI_Model{
     public function getProfessionals(){
         $result = array();
 
-        $this->db->select();
-        $this->db->join('fiscal_data', 'professionals.id_fiscal_data = fiscal_data.id_fiscal_data');
+        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name' );
+        $this->db->from ( 'professionals' );
+        $this->db->join('fiscal_data', 'fiscal_data.id_fiscal_data = professionals.id_fiscal_data');
+        $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
         $this->db->order_by("name", "asc");
-        $query = $this->db->get_where('professionals', array('active' => "active"));
+        $this->db->where('professionals.active',"active");
+        $query =  $this->db->get();
 
+        if(!$query->row()){ return "No existen información"; }
+        
         foreach ($query->result_array('Professionals') as $row){
             array_push($result,$row);
         }
@@ -112,16 +117,19 @@ class Professionals extends CI_Model{
     public function getProfessionalsById($id){
         $result = array();
 
-        $this->db->select();
+        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.*, payment_type.*, category_femeba.*' );
         $this->db->join('fiscal_data', 'professionals.id_fiscal_data = fiscal_data.id_fiscal_data');
+        $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
+        $this->db->join('specialitys', 'specialitys.speciality_id = professionals.speciality_id');
+        $this->db->join('payment_type', 'payment_type.id_payment_type = professionals.id_payment_type');
+        $this->db->join('category_femeba', 'category_femeba.id_category_femeba = professionals.id_category_femeba');
         $this->db->order_by("name", "asc");
-        $query = $this->db->get_where('professionals', array('active' => "active", 'id_professional_data' => $id ));
+        $query = $this->db->get_where('professionals', array('professionals.active' => "active", 'id_professional_data' => $id ));
 
         foreach ($query->result_array('Professionals') as $row){
             array_push($result,$row);
         }
         return $result;
-
     }
 
     public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit){
@@ -177,9 +185,7 @@ class Professionals extends CI_Model{
     }
 
     public function delete($professionalId, $downUserId){
-
         $now = date('Y-m-d H:i:s');
-
         //Delete Profesionals
         $this->db->where('id_professional_data', $professionalId);
         $this->db->update('professionals', array('active' => 'inactive', 'date_update' => $now, 'down_user_id' => $downUserId));

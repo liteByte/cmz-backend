@@ -107,8 +107,10 @@ class ProfessionalsController extends AuthController{
         if(!in_array("ABMprofesionales",$this->token_valid->permissions))
             return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
 
-        $users = $this->Professionals->getProfessionals();
-        return $this->response($users, RC::HTTP_OK);
+        $profesionals_result = $this->Professionals->getProfessionals();
+        if(strcmp($profesionals_result,"OK") != 0) return $this->response(array('error'=>$profesionals_result), RC::HTTP_BAD_REQUEST);
+
+        return $this->response($profesionals_result, RC::HTTP_OK);
 
     }
 
