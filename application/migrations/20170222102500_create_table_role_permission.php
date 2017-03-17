@@ -49,11 +49,15 @@ class Migration_Create_table_role_permission extends CI_Migration{
                 'role_id' => "1"
             ),
             array(
-                'permission_id' => "2",
+                'permission_id' => "5",
                 'role_id' => "1"
             ),
             array(
-                'permission_id' => "3",
+                'permission_id' => "6",
+                'role_id' => "1"
+            ),
+            array(
+                'permission_id' => "7",
                 'role_id' => "1"
             ),
             array(
@@ -63,10 +67,6 @@ class Migration_Create_table_role_permission extends CI_Migration{
             array(
                 'permission_id' => "2",
                 'role_id' => "2"
-            ),
-            array(
-                'permission_id' => "4",
-                'role_id' => "1"
             )
         );
 

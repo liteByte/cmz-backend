@@ -91,6 +91,13 @@ $route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsura
 $route['insurances/remove/(:num)']    = 'MedicalInsuranceController/removeInsurance/id/$1';
 $route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance/id/$1';
 
+////////////////////////Plans routes////////////////////////
+$route['plans']                       = 'PlanController/plans';  //post -> create plan
+$route['plansByInsurance/(:num)']     = 'PlanController/plansByInsurance/id/$1';  //get -> get plans by insurance
+$route['plans/update/(:num)']         = 'PlanController/updatePlan/id/$1';
+$route['plans/remove/(:num)']         = 'PlanController/removePlan/id/$1';
+$route['plans/(:num)']                = 'PlanController/getPlan/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
@@ -117,4 +124,3 @@ $route['professionals']                = 'ProfessionalsController/professionals'
 $route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
 $route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
 $route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';
-
