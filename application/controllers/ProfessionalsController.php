@@ -155,13 +155,14 @@ class ProfessionalsController extends AuthController{
         $email                      = $post->email                      ?? "";
         $office_address             = $post->office_address             ?? "";
         $office_locality            = $post->office_locality            ?? "";
-        $cuit                       = $post->cuit                       ?? "";
+        $id_fiscal_data             = $post->id_fiscal_data             ?? "";
         $speciality_id              = $post->speciality_id              ?? "";
         $type_partner               = $post->type_partner               ?? "";
         $id_category_femeba         = $post->id_category_femeba         ?? "";
         $id_medical_career          = $post->id_medical_career          ?? "";
         $id_payment_type            = $post->id_payment_type            ?? "";
         $bank_id                    = $post->bank_id                    ?? "";
+        $cuit                       = $post->cuit                       ?? "";
         $date_start_activity        = $post->date_start_activity        ?? "";
         $iibb                       = $post->iibb                       ?? "";
         $iibb_percentage            = $post->iibb_percentage            ?? "";
@@ -182,7 +183,7 @@ class ProfessionalsController extends AuthController{
         if(empty($email))                          return $this->response(array('error'=>'No se ha ingresado el correo electrónico'), RC::HTTP_BAD_REQUEST);
         if(empty($office_address))                 return $this->response(array('error'=>'No se ha ingresado la dirección de consulta'), RC::HTTP_BAD_REQUEST);
         if(empty($office_locality))                return $this->response(array('error'=>'No se ha ingresado la localidad de consulta'), RC::HTTP_BAD_REQUEST);
-        if(empty($cuit))                           return $this->response(array('error'=>'No se ha ingresado el CUIT'), RC::HTTP_BAD_REQUEST);
+        if(empty($id_fiscal_data))                 return $this->response(array('error'=>'Datos incompletos'), RC::HTTP_BAD_REQUEST);
         if(empty($speciality_id))                  return $this->response(array('error'=>'No se ha ingresado la especialidad médica'), RC::HTTP_BAD_REQUEST);
         if(empty($type_partner))                   return $this->response(array('error'=>'No se ha ingresado el tipo de socio'), RC::HTTP_BAD_REQUEST);
         if(empty($id_medical_career))              return $this->response(array('error'=>'No se ha ingresado la categoría del Profesional'), RC::HTTP_BAD_REQUEST);
@@ -193,6 +194,7 @@ class ProfessionalsController extends AuthController{
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($gain))                           return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
+        if(empty($cuit))                           return $this->response(array('error'=>'No se ha ingresado el numero de CUIT'), RC::HTTP_BAD_REQUEST);
 
         // Validate Monotributo
         if($iva_id == 6 && (empty($retention_vat)) ||(empty($retention_gain)))
@@ -205,7 +207,7 @@ class ProfessionalsController extends AuthController{
         $error = $this->Professionals->validateDataUpdate($id, $document_number);
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
-        if($this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain)){
+        if($this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit)){
             return $this->response(array('msg'=>'Profesional actualizado de forma correcta'), RC::HTTP_INTERNAL_SERVER_ERROR);
         }else{
             return $this->response(array('error'=>'Error de base de datos'), RC::HTTP_INTERNAL_SERVER_ERROR);
