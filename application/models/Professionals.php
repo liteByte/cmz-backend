@@ -47,7 +47,6 @@ class Professionals extends CI_Model{
             "email"                 =>$email,
             "office_address"        =>$office_address,
             "office_locality"       =>$office_locality,
-            "cuit"                  =>$cuit,
             "speciality_id"         =>$speciality_id,
             "type_partner"          =>$type_partner,
             "id_category_femeba"    =>$id_category_femeba,
@@ -58,15 +57,12 @@ class Professionals extends CI_Model{
         );
 
         $result =  $this->db->insert('professionals', $data);
-        if(!$result){
-            $result = "Error al intentar crear nuevo Profesional";
-            return $result;
-        }
+        if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
 
         //Obtain last inserted user id
-        $userID = $this->db->insert_id();
+        $userIdProfessional = $this->db->insert_id();
 
-        if($userID){
+        if($userIdProfessional){
             $data = array(
                 "cuit"=>$cuit,
                 "date_start_activity"=>$date_start_activity,
@@ -80,10 +76,21 @@ class Professionals extends CI_Model{
 
             $result =  $this->db->insert('fiscal_data', $data);
 
-            if(!$result){
-                $result = "Error al intentar crear nuevo Profesional";
-                return $result;
+            if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
+
+            //Obtain last inserted user id
+            $userIdFiscal = $this->db->insert_id();
+
+            if($userIdFiscal){
+                $data = array(
+                    "id_fiscal_data"   =>  $userIdFiscal
+                );
+
+                $this->db->where('id_professional_data', $userIdProfessional);
+                $result = $this->db->update('professionals', $data);
+                if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
             }
+
         }
         return "OK";
     }
@@ -91,11 +98,16 @@ class Professionals extends CI_Model{
     public function getProfessionals(){
         $result = array();
 
-        $this->db->select();
-        $this->db->join('fiscal_data', 'professionals.cuit = fiscal_data.cuit');
+        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name' );
+        $this->db->from ( 'professionals' );
+        $this->db->join('fiscal_data', 'fiscal_data.id_fiscal_data = professionals.id_fiscal_data');
+        $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
         $this->db->order_by("name", "asc");
-        $query = $this->db->get_where('professionals', array('active' => "active"));
+        $this->db->where('professionals.active',"active");
+        $query =  $this->db->get();
 
+        if(!$query->row()){ return "No existen información"; }
+        
         foreach ($query->result_array('Professionals') as $row){
             array_push($result,$row);
         }
@@ -105,19 +117,22 @@ class Professionals extends CI_Model{
     public function getProfessionalsById($id){
         $result = array();
 
-        $this->db->select();
-        $this->db->join('fiscal_data', 'professionals.cuit = fiscal_data.cuit');
+        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.*, payment_type.*, category_femeba.*' );
+        $this->db->join('fiscal_data', 'professionals.id_fiscal_data = fiscal_data.id_fiscal_data');
+        $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
+        $this->db->join('specialitys', 'specialitys.speciality_id = professionals.speciality_id');
+        $this->db->join('payment_type', 'payment_type.id_payment_type = professionals.id_payment_type');
+        $this->db->join('category_femeba', 'category_femeba.id_category_femeba = professionals.id_category_femeba');
         $this->db->order_by("name", "asc");
-        $query = $this->db->get_where('professionals', array('active' => "active", 'id_professional_data' => $id ));
+        $query = $this->db->get_where('professionals', array('professionals.active' => "active", 'id_professional_data' => $id ));
 
         foreach ($query->result_array('Professionals') as $row){
             array_push($result,$row);
         }
         return $result;
-
     }
 
-    public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain){
+    public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit){
 
         $data = array(
             "registration_number"   =>$registration_number,
@@ -133,21 +148,19 @@ class Professionals extends CI_Model{
             "email"                 =>$email,
             "office_address"        =>$office_address,
             "office_locality"       =>$office_locality,
-            "cuit"                  =>$cuit,
-            "speciality_id"         =>$speciality_id,
             "type_partner"          =>$type_partner,
             "id_category_femeba"    =>$id_category_femeba,
             "id_medical_career"     =>$id_medical_career,
             "id_payment_type"       =>$id_payment_type,
-            "bank_id"               =>$bank_id,
-            "active"                =>"active"
+            "bank_id"               =>$bank_id
         );
+
 
         $this->db->where('id_professional_data', $id);
         $result = $this->db->update('professionals', $data);
+
         if(!$result){
-            $result = "Error al intentar crear nuevo Profesional";
-            return $result;
+            return false;
         }
         // Update table fiscal_data
         $data = array(
@@ -161,16 +174,18 @@ class Professionals extends CI_Model{
                 "retention_gain"=>$retention_gain
         );
 
-        $this->db->where('cuit', $cuit);
-        $result = $this->db->update('fiscal_data', $data);
+        $this->db->where("id_fiscal_data", $id_fiscal_data);
+        $this->db->update('fiscal_data', $data);
+        $afftectedRows = $this->db->affected_rows();
 
+        if(!$afftectedRows){
+            return false;
+        }
         return true;
     }
 
     public function delete($professionalId, $downUserId){
-
         $now = date('Y-m-d H:i:s');
-
         //Delete Profesionals
         $this->db->where('id_professional_data', $professionalId);
         $this->db->update('professionals', array('active' => 'inactive', 'date_update' => $now, 'down_user_id' => $downUserId));
@@ -184,7 +199,7 @@ class Professionals extends CI_Model{
     public function validateDataUpdate($id, $document_number){
 
         $query = $this->db->get_where('professionals', array('document_number' => $document_number, 'id_professional_data !=' => $id ));
-        if ($query->num_rows() > 0) return "El número de documento ingresado ya está en uso";
+        if ($query->num_rows() > 0) return "El número de documento ingresado ya está en usos";
 
         return "OK";
     }

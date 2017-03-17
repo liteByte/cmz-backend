@@ -5,6 +5,12 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
 
     public function up(){
         $this->dbforge->add_field(array(
+            'id_fiscal_data' => array(
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'auto_increment'=>  TRUE
+            ),
             'cuit' => array(
                 'type'          => 'VARCHAR',
                 'constraint'    => 20,
@@ -34,6 +40,8 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             'iva_id' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
             ),
             'retention_vat' => array(
                 'type'          => 'VARCHAR',
@@ -49,8 +57,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
         ));
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (iva_id)       REFERENCES iva(iva_id)');
-
-        $this->dbforge->add_key('cuit', TRUE);
+        $this->dbforge->add_key('id_fiscal_data', TRUE);
         $this->dbforge->create_table('fiscal_data');
 
         $data = array(
