@@ -54,7 +54,10 @@ class Plan extends CI_Model{
 
     $result = array();
 
-    $query = $this->db->get_where('plans', array('active' => "active",'medical_insurance_id' => $medicalInsuranceID));
+    $this->db->where(array('active' => "active",'medical_insurance_id' => $medicalInsuranceID));
+    $this->db->order_by("description", "asc");
+    $this->db->order_by("medical_insurance_denom", "asc");
+    $query = $this->db->get('plans');
 
     foreach ($query->result_array('Plan') as $row){
        array_push($result,$row);
