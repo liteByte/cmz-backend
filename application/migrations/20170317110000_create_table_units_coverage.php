@@ -25,7 +25,7 @@ class Migration_Create_table_units_coverage extends CI_Migration{
             ),
             'type_unit' => array(
                 'type'          =>  'VARCHAR',
-                'constraint'    =>  10,
+                'constraint'    =>  15,
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
@@ -58,6 +58,14 @@ class Migration_Create_table_units_coverage extends CI_Migration{
                 'expenses'          => 20,
 
             ),
+            array(
+                'id_coverage'       => 2,
+                'unit'              => "C",
+                'type_unit'         => "ambulatorio",
+                'honorary'          => 5,
+                'expenses'          => 20,
+
+            )
         );
 
         $this->db->insert_batch('units_coverage', $data);

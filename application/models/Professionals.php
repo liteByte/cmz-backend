@@ -101,10 +101,9 @@ class Professionals extends CI_Model{
     public function getProfessionals(){
         $result = array();
 
-        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.description as specialty, medical_career.*' );
+        $this->db->select('professionals.* , fiscal_data.*, specialitys.description as specialty, medical_career.*' );
         $this->db->from ( 'professionals' );
         $this->db->join('fiscal_data',      'fiscal_data.id_fiscal_data = professionals.id_fiscal_data');
-        $this->db->join('banks',            'banks.bank_id = professionals.bank_id');
         $this->db->join('specialitys',      'specialitys.speciality_id = professionals.speciality_id');
         $this->db->join('medical_career',   'medical_career.id_medical_career = professionals.id_medical_career');
         $this->db->order_by("name", "asc");
@@ -122,9 +121,18 @@ class Professionals extends CI_Model{
     public function getProfessionalsById($id){
         $result = array();
 
-        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.*, payment_type.*, category_femeba.*, medical_career.*' );
+        $this->db->select('professionals.bank_id' );
+        $query = $this->db->get_where('professionals', array('professionals.active' => "active", 'id_professional_data' => $id ));
+        $bank_result = $query->row()->bank_id;
+
+
+        if($bank_result != 0 )
+            $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.*, payment_type.*, category_femeba.*, medical_career.*' );
+        else
+            $this->db->select('professionals.* , fiscal_data.*, specialitys.*, payment_type.*, category_femeba.*, medical_career.*' );
         $this->db->join('fiscal_data', 'professionals.id_fiscal_data = fiscal_data.id_fiscal_data');
-        $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
+        if($bank_result != 0 )
+            $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
         $this->db->join('medical_career', 'medical_career.id_medical_career = professionals.id_medical_career');
         $this->db->join('specialitys', 'specialitys.speciality_id = professionals.speciality_id');
         $this->db->join('payment_type', 'payment_type.id_payment_type = professionals.id_payment_type');
@@ -139,7 +147,7 @@ class Professionals extends CI_Model{
     }
 
     public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number){
-      
+        die("hola");
         $data = array(
             "registration_number"   =>$registration_number,
             "name"                  =>$name,

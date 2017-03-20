@@ -127,3 +127,5 @@ $route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessi
 
 ////////////////////////Coverage routes////////////////////////
 $route['coverages']                     = 'CoverageController/coverages';
+$route['coverages/(:num)']              = 'CoverageController/getCoverage/id/$1';
+$route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';
