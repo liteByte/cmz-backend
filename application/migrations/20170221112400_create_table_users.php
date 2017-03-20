@@ -30,7 +30,6 @@ class Migration_Create_table_users extends CI_Migration{
                 'document_number' => array(
                     'type'          => 'VARCHAR',
                     'constraint'    => 50,
-                    'unique'        => TRUE,
                     'null'          => FALSE
                 ),
                 'name' => array(
@@ -66,15 +65,16 @@ class Migration_Create_table_users extends CI_Migration{
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => TRUE                    
+                    'null'          => TRUE
                 ),
         ));
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_key('user_id', TRUE);
+        $this->dbforge->add_field('UNIQUE KEY user_key (document_type,document_number)');
         $this->dbforge->create_table('users');
 
 
-       
+
             $data = array(
                 array(
                     'document_type' => "DNI",
@@ -97,7 +97,7 @@ class Migration_Create_table_users extends CI_Migration{
                 );
 
             $this->db->insert_batch('users', $data);
-     
+
 
     }
 
