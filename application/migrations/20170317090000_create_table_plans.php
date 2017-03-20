@@ -62,6 +62,12 @@ class Migration_Create_table_plans extends CI_Migration{
                 'medical_insurance_denom'       => "OSDE",
                 'medical_insurance_id'          => "1",
                 'active'                        => 'active'
+            ),
+            array(
+                'description'                   => "Omint Plus",
+                'medical_insurance_denom'       => "Omint",
+                'medical_insurance_id'          => "2",
+                'active'                        => 'active'
             )
         );
 
