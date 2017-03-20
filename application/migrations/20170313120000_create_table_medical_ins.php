@@ -53,7 +53,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'gross_income' => array(
                     'type'          =>  'VARCHAR',
@@ -63,83 +63,89 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                 'payment_deadline' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  3,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'scope_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
-                'femeba' => array(
+                'maternal_plan' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  1,
-                    'null'          => FALSE
-                ),
-                'ret_jub_femeba' => array(
-                    'type'          =>  'INT',
-                    'constraint'    =>  1,
-                    'null'          => TRUE
-                ),
-                'federation_funds' => array(
-                    'type'          =>  'DECIMAL',
-                    'constraint'    =>  '5,2',
-                    'null'          => TRUE
+                    'unsigned'      =>  TRUE,
+                    'null'          =>  FALSE
                 ),
                 'admin_rights' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => TRUE
+                    'null'          =>  FALSE
+                ),
+                'femeba' => array(
+                    'type'          =>  'INT',
+                    'constraint'    =>  1,
+                    'null'          =>  FALSE
+                ),
+                'ret_jub_femeba' => array(
+                    'type'          =>  'INT',
+                    'constraint'    =>  1,
+                    'null'          =>  TRUE
+                ),
+                'federation_funds' => array(
+                    'type'          =>  'DECIMAL',
+                    'constraint'    =>  '5,2',
+                    'null'          =>  TRUE
                 ),
                 'ret_socios_honorarios' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'ret_socios_gastos' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'ret_nosocios_honorarios' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'ret_nosocios_gastos' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'ret_adherente_honorarios' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'ret_adherente_gastos' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'cobertura_fer_noct' => array(
                     'type'          =>  'DECIMAL',
                     'constraint'    =>  '5,2',
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'active'            => array(
-                    'type'          => 'VARCHAR',
+                    'type'          =>  'VARCHAR',
                     'constraint'    =>  30,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'update_date'  => array(
-                    'type'          => 'TIMESTAMP',
-                    'null'          => TRUE,
+                    'type'          =>  'TIMESTAMP',
+                    'null'          =>  TRUE,
                 ),
                 'modify_user_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
-                    'null'          => TRUE
+                    'null'          =>  TRUE
                 ),
         ));
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (iva_id) REFERENCES iva(iva_id)');
@@ -160,10 +166,11 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                   'gross_income'                => 1234,
                   'payment_deadline'            => 15,
                   'scope_id'                    => 1,
+                  'maternal_plan'               => 0,
+                  'admin_rights'                => '25.41',
                   'femeba'                      => 1,
                   'ret_jub_femeba'              => 1,
                   'federation_funds'            => '5.5',
-                  'admin_rights'                => '12.6',
                   'ret_socios_honorarios'       => '12.6',
                   'ret_socios_gastos'           => '12.6',
                   'ret_nosocios_honorarios'     => '12.6',
@@ -172,7 +179,33 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                   'ret_adherente_gastos'        => '12.6',
                   'cobertura_fer_noct'          => '12.6',
                   'active'                      => 'active'
-              )
+              ),
+              array(
+                  'denomination'                => "Omint",
+                  'settlement_name'             => "Omint S.A",
+                  'address'                     => "Carabobo 500",
+                  'location'                    => "CABA",
+                  'postal_code'                 => "1612",
+                  'website'                     => "www.Omint.com",
+                  'cuit'                        => "9876543",
+                  'iva_id'                      => 2,
+                  'gross_income'                => 1234,
+                  'payment_deadline'            => 15,
+                  'scope_id'                    => 1,
+                  'maternal_plan'               => 0,
+                  'admin_rights'                => '25.41',
+                  'femeba'                      => 1,
+                  'ret_jub_femeba'              => 1,
+                  'federation_funds'            => '5.5',
+                  'ret_socios_honorarios'       => '12.6',
+                  'ret_socios_gastos'           => '12.6',
+                  'ret_nosocios_honorarios'     => '12.6',
+                  'ret_nosocios_gastos'         => '12.6',
+                  'ret_adherente_honorarios'    => '12.6',
+                  'ret_adherente_gastos'        => '12.6',
+                  'cobertura_fer_noct'          => '12.6',
+                  'active'                      => 'active'
+                )
         );
 
         $this->db->insert_batch('medical_insurance', $data);
