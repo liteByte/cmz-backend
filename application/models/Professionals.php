@@ -32,7 +32,7 @@ class Professionals extends CI_Model{
         return "OK";
     }
     
-    public function save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain ){
+    public function save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number ){
         
         $data = array(
             "registration_number"   =>$registration_number,
@@ -54,11 +54,13 @@ class Professionals extends CI_Model{
             "id_medical_career"     =>$id_medical_career,
             "id_payment_type"       =>$id_payment_type,
             "bank_id"               =>$bank_id,
+            "account_number"        =>$account_number,
+            "cbu_number"            =>$cbu_number,
             "active"                =>"active"
         );
 
         $result =  $this->db->insert('professionals', $data);
-        if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
+        if(!$result){ $result = "1 Error al intentar crear nuevo Profesional"; return $result; }
 
         //Obtain last inserted user id
         $userIdProfessional = $this->db->insert_id();
@@ -77,7 +79,7 @@ class Professionals extends CI_Model{
 
             $result =  $this->db->insert('fiscal_data', $data);
 
-            if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
+            if(!$result){ $result = "2 Error al intentar crear nuevo Profesional"; return $result; }
 
             //Obtain last inserted user id
             $userIdFiscal = $this->db->insert_id();
@@ -89,7 +91,7 @@ class Professionals extends CI_Model{
 
                 $this->db->where('id_professional_data', $userIdProfessional);
                 $result = $this->db->update('professionals', $data);
-                if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
+                if(!$result){ $result = "3 Error al intentar crear nuevo Profesional"; return $result; }
             }
 
         }

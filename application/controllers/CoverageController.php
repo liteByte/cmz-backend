@@ -14,6 +14,13 @@ class CoverageController extends AuthController{
     }
 
     public function coverages_get(){
+        //Validate Token.
+        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
+
+        //Validates permissions
+        if(!in_array("ABMcoverages",$this->token_valid->permissions))
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+
         
     }
 

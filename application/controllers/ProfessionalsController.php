@@ -85,7 +85,7 @@ class ProfessionalsController extends AuthController{
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
 
         $gain = (boolval($gain) ? 'true' : 'false');
-        if(is_null($gain) || !isset($gain))
+        if(empty($gain))
             return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         $retention_vat_valid  = (boolval($retention_vat) ? 'true' : 'false');
         $retention_gain_valid = (boolval($retention_gain) ? 'true' : 'false');
@@ -95,17 +95,16 @@ class ProfessionalsController extends AuthController{
             return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia y/o aportar iva '), RC::HTTP_BAD_REQUEST);
 
         if($id_payment_type == 2 || $id_payment_type == 4){
-            if(empty($account_number))             return $this->response(array('error'=>'Se debe indicar el numero de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
-            if(empty($bank_id))                    return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($bank_id))                 return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($account_number))          return $this->response(array('error'=>'Se debe indicar el numero de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
         if($id_payment_type == 5){
-            if(empty($cbu_number))             return $this->response(array('error'=>'Se debe indicar el numero de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
-            if(empty($bank_id))                       return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($cbu_number))              return $this->response(array('error'=>'Se debe indicar el numero de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
-        if($id_payment_type != 1 && (empty($account_number) || empty($cbu_number) )){
-            return $this->response(array('error'=>'Debe ingresar el numero de Cuentas o Numero de CBU'));
+        if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
+            return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Numero de CBU'));
         }
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
@@ -116,7 +115,7 @@ class ProfessionalsController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
         //save the Professionals
-        $result = $this->Professionals->save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain );
+        $result = $this->Professionals->save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number);
         if($result != 1 )
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>'Profesional creado satisfactoriamente'), RC::HTTP_OK);
