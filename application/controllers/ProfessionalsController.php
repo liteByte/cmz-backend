@@ -57,8 +57,10 @@ class ProfessionalsController extends AuthController{
         $iva_id                     = $post->iva_id                     ?? "";
         $retention_vat              = $post->retention_vat              ?? "";
         $retention_gain             = $post->retention_gain             ?? "";
+        $account_number             = $post->account_number             ?? "";
+        $cbu_number                 = $post->cbu_number                 ?? "";
 
-        if(!isset($post->gain ))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
+        if(!isset($post->gain))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         $gain                       = $post->gain                       ?? "";
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado numero de matricula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
@@ -77,7 +79,6 @@ class ProfessionalsController extends AuthController{
         if(empty($type_partner))                   return $this->response(array('error'=>'No se ha ingresado el tipo de socio'), RC::HTTP_BAD_REQUEST);
         if(empty($id_medical_career))              return $this->response(array('error'=>'No se ha ingresado la categoría del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($id_payment_type))                return $this->response(array('error'=>'No se ha ingresado la forma de pago'), RC::HTTP_BAD_REQUEST);
-        if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el numero de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
@@ -86,14 +87,26 @@ class ProfessionalsController extends AuthController{
         $gain = (boolval($gain) ? 'true' : 'false');
         if(is_null($gain) || !isset($gain))
             return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
-
         $retention_vat_valid  = (boolval($retention_vat) ? 'true' : 'false');
         $retention_gain_valid = (boolval($retention_gain) ? 'true' : 'false');
-
 
         // Validate Monotributo
         if($iva_id == 6 && (empty($retention_vat_valid)) || (empty($retention_gain_valid)))
             return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia y/o aportar iva '), RC::HTTP_BAD_REQUEST);
+
+        if($id_payment_type == 2 || $id_payment_type == 4){
+            if(empty($account_number))             return $this->response(array('error'=>'Se debe indicar el numero de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($bank_id))                    return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+        }
+
+        if($id_payment_type == 5){
+            if(empty($cbu_number))             return $this->response(array('error'=>'Se debe indicar el numero de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($bank_id))                       return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+        }
+
+        if($id_payment_type != 1 && (empty($account_number) || empty($cbu_number) )){
+            return $this->response(array('error'=>'Debe ingresar el numero de Cuentas o Numero de CBU'));
+        }
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);

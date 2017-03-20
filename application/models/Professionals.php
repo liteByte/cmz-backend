@@ -25,8 +25,9 @@ class Professionals extends CI_Model{
         $query = $this->db->get_where('payment_type', array('id_payment_type' => $id_payment_type));
         if ($query->num_rows() == 0) return "Tipo de pago no registrado";
 
-        $query = $this->db->get_where('banks', array('bank_id' => $bank_id));
-        if ($query->num_rows() == 0) return "Banco no registrado";
+        if(!empty($bank_id))
+            $query = $this->db->get_where('banks', array('bank_id' => $bank_id));
+            if ($query->num_rows() == 0) return "Banco no registrado";
 
         return "OK";
     }
