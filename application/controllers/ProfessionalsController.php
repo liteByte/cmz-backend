@@ -29,6 +29,8 @@ class ProfessionalsController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
+
+
         $registration_number        = $post->registration_number        ?? "";
         $name                       = $post->name                       ?? "";
         $last_name                  = $post->last_name                  ?? "";
@@ -52,11 +54,12 @@ class ProfessionalsController extends AuthController{
         $date_start_activity        = $post->date_start_activity        ?? "";
         $iibb                       = $post->iibb                       ?? "";
         $iibb_percentage            = $post->iibb_percentage            ?? "";
-        $gain                       = $post->gain                       ?? "";
         $iva_id                     = $post->iva_id                     ?? "";
         $retention_vat              = $post->retention_vat              ?? "";
         $retention_gain             = $post->retention_gain             ?? "";
 
+        if(!isset($post->gain ))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
+        $gain                       = $post->gain                       ?? "";
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado numero de matricula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
         if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
@@ -78,11 +81,18 @@ class ProfessionalsController extends AuthController{
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el numero de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
-        if(empty($gain))                           return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
 
+        $gain = (boolval($gain) ? 'true' : 'false');
+        if(is_null($gain) || !isset($gain))
+            return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
+
+        $retention_vat_valid  = (boolval($retention_vat) ? 'true' : 'false');
+        $retention_gain_valid = (boolval($retention_gain) ? 'true' : 'false');
+
+
         // Validate Monotributo
-        if($iva_id == 6 && (empty($retention_vat))|| (empty($retention_gain)))
+        if($iva_id == 6 && (empty($retention_vat_valid)) || (empty($retention_gain_valid)))
             return $this->response(array('error'=>'Se debe indicar si es necesario retener ganancia y/o aportar iva '), RC::HTTP_BAD_REQUEST);
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
@@ -108,8 +118,6 @@ class ProfessionalsController extends AuthController{
             return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
 
         $profesionals_result = $this->Professionals->getProfessionals();
-        if(strcmp($profesionals_result,"OK") != 0) return $this->response(array('error'=>$profesionals_result), RC::HTTP_BAD_REQUEST);
-
         return $this->response($profesionals_result, RC::HTTP_OK);
 
     }

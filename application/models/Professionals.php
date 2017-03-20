@@ -98,10 +98,11 @@ class Professionals extends CI_Model{
     public function getProfessionals(){
         $result = array();
 
-        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name' );
+        $this->db->select('professionals.* , fiscal_data.*, banks.bank_id, banks.bank_code, banks.corporate_name, specialitys.description as specialty' );
         $this->db->from ( 'professionals' );
         $this->db->join('fiscal_data', 'fiscal_data.id_fiscal_data = professionals.id_fiscal_data');
         $this->db->join('banks', 'banks.bank_id = professionals.bank_id');
+        $this->db->join('specialitys', 'specialitys.speciality_id = professionals.speciality_id');
         $this->db->order_by("name", "asc");
         $this->db->where('professionals.active',"active");
         $query =  $this->db->get();
@@ -199,7 +200,7 @@ class Professionals extends CI_Model{
     public function validateDataUpdate($id, $document_number){
 
         $query = $this->db->get_where('professionals', array('document_number' => $document_number, 'id_professional_data !=' => $id ));
-        if ($query->num_rows() > 0) return "El número de documento ingresado ya está en usos";
+        if ($query->num_rows() > 0) return "El número de documento ingresado ya está en uso";
 
         return "OK";
     }

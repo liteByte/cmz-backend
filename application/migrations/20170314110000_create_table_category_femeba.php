@@ -11,7 +11,7 @@ class Migration_Create_table_category_femeba extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'auto_increment'=>  TRUE
             ),
-            'desription_femeba'  => array(
+            'description_femeba'  => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  50,
                 'null'          => FALSE
@@ -22,16 +22,16 @@ class Migration_Create_table_category_femeba extends CI_Migration{
 
         $data = array(
             array(
-                'desription_femeba' => "básica"
+                'description_femeba' => "básica"
             ),
             array(
-                'desription_femeba' => "básica 1"
+                'description_femeba' => "básica 1"
             ),
             array(
-                'desription_femeba' => "especialista"
+                'description_femeba' => "especialista"
             ),
             array(
-                'desription_femeba' => "jerarquizado"
+                'description_femeba' => "jerarquizado"
             )
         );
 
