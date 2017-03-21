@@ -130,3 +130,9 @@ $route['professionals']                = 'ProfessionalsController/professionals'
 $route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
 $route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
 $route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';
+
+////////////////////////Coverage routes////////////////////////
+$route['coverages']                     = 'CoverageController/coverages';
+$route['coverages/(:num)']              = 'CoverageController/getCoverage/id/$1';
+$route['coverages/update/(:num)']       = 'CoverageController/updateCoverage/id/$1';
+$route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';

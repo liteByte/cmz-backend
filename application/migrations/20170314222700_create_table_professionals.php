@@ -119,6 +119,18 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
+            'account_number' => array(
+                'type'          =>  'VARCHAR',
+                'constraint'    =>  15,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
+            ),
+            'cbu_number' => array(
+                'type'          =>  'VARCHAR',
+                'constraint'    =>  22,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
+            ),
             'active'        => array(
                 'type'          => 'VARCHAR',
                 'constraint'    =>  150,

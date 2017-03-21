@@ -33,8 +33,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'null'          => FALSE
             ),
             'gain' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 2,
+                'type'          => 'BOOLEAN',
                 'null'          => FALSE
             ),
             'iva_id' => array(
@@ -44,13 +43,11 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'null'          =>  FALSE
             ),
             'retention_vat' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 2,
+                'type'          => 'BOOLEAN',
                 'null'          => FALSE
             ),
             'retention_gain' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 2,
+                'type'          => 'BOOLEAN',
                 'null'          => FALSE
             ),
 
@@ -66,20 +63,20 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
                 'date_start_activity' => '01/01/2017',
                 'iibb' => '100000',
                 'iibb_percentage' => '10',
-                'gain' => 'S',
+                'gain' => TRUE,
                 'iva_id' => '1',
-                'retention_vat' => '',
-                'retention_gain' => '',
+                'retention_vat' => FALSE,
+                'retention_gain' => FALSE,
             ),
             array(
                 'cuit'  => '85745212458900',
                 'date_start_activity' => '02/01/2017',
                 'iibb' => '100000',
                 'iibb_percentage' => '10',
-                'gain' => 'N',
+                'gain' => FALSE,
                 'iva_id' => '5',
-                'retention_vat' => 'S',
-                'retention_gain' => 'S',
+                'retention_vat' => FALSE,
+                'retention_gain' => FALSE,
             ),
         );
 
