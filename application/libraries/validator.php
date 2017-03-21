@@ -32,4 +32,9 @@ class Validator{
         return strlen($code)<=2;
     }
 
+    public function validateCuit($cuit){
+        return (strlen($cuit)==11 && $cuit != 00000000000);
+
+    }
+
 }
