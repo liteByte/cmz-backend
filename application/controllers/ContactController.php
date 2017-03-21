@@ -34,7 +34,7 @@ class ContactController extends AuthController{
       $phone_number     = $post->phone_number   ?? "";
       $email            = $post->email          ?? "";
 
-      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominacion'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($sector))            return $this->response(['error'=>'No se ha ingresado sector/referente'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Email validation
@@ -83,7 +83,7 @@ class ContactController extends AuthController{
       $email            = $post->email          ?? "";
       $id               = (int) $this->get('id');
 
-      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominacion'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($sector))            return $this->response(['error'=>'No se ha ingresado sector/referente'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Email validation
