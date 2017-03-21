@@ -61,7 +61,7 @@ class Migration_Create_table_contacts extends CI_Migration{
                 'active'                => 'active'
             ),
             array(
-                'denomination'          => "OMINT",
+                'denomination'          => "Omint",
                 'sector'                => "Administracion",
                 'phone_number'          => "5555-5555",
                 'email'                 => "adminOmint@omint.com",
