@@ -16,17 +16,17 @@ class Contact extends CI_Model{
   //Creates the contact in 'contacts'
   public function save($denomination, $sector, $phone_number, $email){
 
-    $data = array(
+      $data = array(
                   'denomination'  => $denomination,
                   'sector'        => $sector,
                   'phone_number'  => $phone_number,
                   'email'         => $email,
                   'active'        => 'active'
-    );
+      );
 
-    $this->db->insert('contacts', $data);
+      $this->db->insert('contacts', $data);
 
-    return true;
+      return true;
 
   }
 
@@ -45,10 +45,10 @@ class Contact extends CI_Model{
                     'modify_user_id'  => $userID
       );
 
-    $this->db->where('contact_id', $id);
-    $this->db->update('contacts', $data);
+      $this->db->where('contact_id', $id);
+      $this->db->update('contacts', $data);
 
-    return true;
+      return true;
 
   }
 
@@ -70,23 +70,23 @@ class Contact extends CI_Model{
   //Get a specific contact information
   public function getContactById($contactID){
 
-    $result = array();
+      $result = array();
 
-    $query = $this->db->get_where('contacts', array("contact_id" => $contactID));
+      $query = $this->db->get_where('contacts', array("contact_id" => $contactID));
 
-    return $query->row();
+      return $query->row();
   }
 
   //Delete contact information in 'contacs'
   public function delete($contactID,$userID){
 
-    $now = date('Y-m-d H:i:s');
+      $now = date('Y-m-d H:i:s');
 
-    //Delete contact
-    $this->db->where('contact_id', $contactID);
-    $this->db->update('contacts', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
+      //Delete contact
+      $this->db->where('contact_id', $contactID);
+      $this->db->update('contacts', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
 
-    return true;
+      return true;
 
   }
 
