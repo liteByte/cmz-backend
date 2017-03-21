@@ -193,7 +193,7 @@ class Professionals extends CI_Model{
         $this->db->update('fiscal_data', $data);
         $afftectedRows = $this->db->affected_rows();
 
-        if(!$afftectedRows){ return false;}
+        if(!$afftectedRows) return false;
         return true;
     }
 

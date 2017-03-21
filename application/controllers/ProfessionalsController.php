@@ -94,15 +94,15 @@ class ProfessionalsController extends AuthController{
 
         if($id_payment_type == 2 || $id_payment_type == 4){
             if(empty($bank_id))                 return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
-            if(empty($account_number))          return $this->response(array('error'=>'Se debe indicar el numero de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($account_number))          return $this->response(array('error'=>'Se debe indicar el número de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
         if($id_payment_type == 5){
-            if(empty($cbu_number))              return $this->response(array('error'=>'Se debe indicar el numero de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($cbu_number))              return $this->response(array('error'=>'Se debe indicar el número de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
-            return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Numero de CBU'));
+            return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Número de CBU'));
         }
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
@@ -194,7 +194,7 @@ class ProfessionalsController extends AuthController{
         if(!isset($post->gain))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         $gain                       = $post->gain                       ?? "";
 
-        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado numero de matricula'), RC::HTTP_BAD_REQUEST);
+        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matricula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
         if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
@@ -213,10 +213,10 @@ class ProfessionalsController extends AuthController{
         if(empty($id_payment_type))                return $this->response(array('error'=>'No se ha ingresado la forma de pago'), RC::HTTP_BAD_REQUEST);
         if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
-        if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el numero de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
+        if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el número de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
-        if(empty($cuit))                           return $this->response(array('error'=>'No se ha ingresado el numero de CUIT'), RC::HTTP_BAD_REQUEST);
+        if(empty($cuit))                           return $this->response(array('error'=>'No se ha ingresado el número de CUIT'), RC::HTTP_BAD_REQUEST);
 
         $gain = (boolval($gain) ? 'true' : 'false');
         if(empty($gain))
@@ -230,11 +230,11 @@ class ProfessionalsController extends AuthController{
 
         if($id_payment_type == 2 || $id_payment_type == 4){
             if(empty($bank_id))                 return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
-            if(empty($account_number))          return $this->response(array('error'=>'Se debe indicar el numero de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($account_number))          return $this->response(array('error'=>'Se debe indicar el número de cuenta del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
         if($id_payment_type == 5){
-            if(empty($cbu_number))              return $this->response(array('error'=>'Se debe indicar el numero de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
+            if(empty($cbu_number))              return $this->response(array('error'=>'Se debe indicar el número de CBU del Profesional'), RC::HTTP_BAD_REQUEST);
         }
 
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){

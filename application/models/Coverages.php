@@ -51,7 +51,7 @@ class Coverages extends CI_Model{
         $this->db->where('coverages.status', 1);
         $query =  $this->db->get();
         
-        if(!$query){ return false;  }
+        if(!$query) return false;  
         
         foreach ($query->result_array('Coverages') as $row){
             array_push($result,$row);

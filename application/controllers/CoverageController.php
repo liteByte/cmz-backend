@@ -73,10 +73,10 @@ class CoverageController extends AuthController{
         //Save Data
         $result = $this->Coverages->save($plan_id, $medical_insurance_id,$data);
 
-        if($result != 1 )
+        if($result != 1 ){
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
+        }
         return $this->response(array('msg'=>'Cobertura creada satisfactoriamente'), RC::HTTP_OK);
-
     }
 
     public function coverages_get(){
@@ -90,7 +90,7 @@ class CoverageController extends AuthController{
         if($coverages_result = $this->Coverages->getCoverages())
             return $this->response($coverages_result, RC::HTTP_OK);
         else
-            return $this->response(array('error'=>'No hay informacion para mostrar'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'No hay Información para mostrar'), RC::HTTP_FORBIDDEN);
 
     }
 
@@ -100,7 +100,7 @@ class CoverageController extends AuthController{
 
         //Validates permissions
         if(!in_array("ABMcoverages",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
 
         $id = $this->get('id');
 
@@ -109,7 +109,7 @@ class CoverageController extends AuthController{
         if($coverage = $this->Coverages->getCoveragesById($id)){
             return $this->response($coverage, RC::HTTP_OK);
         }else{
-            return $this->response(array('error'=>'Numero de cobertura no encontrado'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'Número de cobertura no encontrado'), RC::HTTP_FORBIDDEN);
 
         }
     }
@@ -120,7 +120,7 @@ class CoverageController extends AuthController{
 
         //Validates permissions
         if(!in_array("ABMcoverages",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
 
         $id = $this->get('id');
         
@@ -137,7 +137,7 @@ class CoverageController extends AuthController{
 
         //Validates permissions
         if(!in_array("ABMcoverages",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
 
 
         $post = json_decode(file_get_contents('php://input'));
@@ -193,12 +193,10 @@ class CoverageController extends AuthController{
 
         //Update data
         $result = $this->Coverages->update($id, $plan_id,  $medical_insurance_id, $id_units_coverage, $data);
-        if($result != 1 )
+        if($result != 1 ){
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
+        }
         return $this->response(array('msg'=>'Cobertura actualizada satisfactoriamente'), RC::HTTP_OK);
-
-
-
     }
     
 }
