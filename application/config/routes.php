@@ -98,6 +98,12 @@ $route['plans/update/(:num)']         = 'PlanController/updatePlan/id/$1';
 $route['plans/remove/(:num)']         = 'PlanController/removePlan/id/$1';
 $route['plans/(:num)']                = 'PlanController/getPlan/id/$1';
 
+////////////////////////Contact routes////////////////////////
+$route['contacts']                    = 'ContactController/contacts';  //Get -> show contacts  & post -> create contact
+$route['contacts/update/(:num)']      = 'ContactController/updateContact/id/$1';
+$route['contacts/remove/(:num)']      = 'ContactController/removeContact/id/$1';
+$route['contacts/(:num)']             = 'ContactController/getContact/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
