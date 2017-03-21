@@ -57,10 +57,12 @@ class Contact extends CI_Model{
 
       $result = array();
 
-      $query = $this->db->get_where('contacts', array('active' => "active"));
+      $this->db->where(array('active' => "active"));
+      $this->db->order_by("denomination", "asc");
+      $query = $this->db->get('contacts');
 
-      foreach ($query->result_array('Contact') as $row){
-         array_push($result,$row);
+      foreach ($query->result_array('Contact') as $row) {
+          array_push($result, $row);
       }
 
       return $result;
