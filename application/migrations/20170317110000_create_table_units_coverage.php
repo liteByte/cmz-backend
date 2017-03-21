@@ -33,44 +33,41 @@ class Migration_Create_table_units_coverage extends CI_Migration{
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'null'          =>  FALSE,
+                'default'       => 100
             ),
             'expenses' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'null'          =>  FALSE,
+                'default'       => 100
             ),
-
-
         ));
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_coverage)              REFERENCES coverage(id_coverage)');
         $this->dbforge->add_key('id_units_coverage', TRUE);
+        $this->dbforge->add_field('UNIQUE KEY units_key (id_coverage,unit,type_unit )');
         $this->dbforge->create_table('units_coverage');
 
         $data = array(
             array(
                 'id_coverage'       => 1,
                 'unit'              => "A",
-                'type_unit'         => "internacion",
+                'type_unit'         => "Internacion",
                 'honorary'          => 5,
                 'expenses'          => 20,
-
             ),
             array(
                 'id_coverage'       => 2,
-                'unit'              => "C",
-                'type_unit'         => "ambulatorio",
+                'unit'              => "B",
+                'type_unit'         => "Ambulatorio",
                 'honorary'          => 5,
                 'expenses'          => 20,
-
             )
         );
 
         $this->db->insert_batch('units_coverage', $data);
-
-
     }
     public function down(){
         $this->dbforge->drop_table('units_coverage');

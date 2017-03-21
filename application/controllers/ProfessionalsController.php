@@ -185,7 +185,6 @@ class ProfessionalsController extends AuthController{
         $date_start_activity        = $post->date_start_activity        ?? "";
         $iibb                       = $post->iibb                       ?? "";
         $iibb_percentage            = $post->iibb_percentage            ?? "";
-//      $gain                       = $post->gain                       ?? "";
         $iva_id                     = $post->iva_id                     ?? "";
         $retention_vat              = $post->retention_vat              ?? "";
         $retention_gain             = $post->retention_gain             ?? "";

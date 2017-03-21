@@ -8,7 +8,37 @@ class Coverages extends CI_Model{
         parent::__construct();
     }
     
-    
+
+    public function save($plan_id, $medical_insurance_id,$data ){
+
+        $new_coverage = [
+            "plan_id"               =>$plan_id,
+            "medical_insurance_id"  =>$medical_insurance_id,
+            "status"                => 1,
+        ];
+
+        $result = $this->db->insert('coverages', $new_coverage);
+
+        if(!$result){ $result = "Error al intentar crear nueva Cobertura"; return $result; }
+
+        //Obtain last inserted user id
+        $id_coverage = $this->db->insert_id();
+
+        foreach ($data as $new_units_coverage){
+            $new_row = [
+                "id_coverage"   => $id_coverage,
+                "type_unit"     => $new_units_coverage->type_units,
+                "unit"          => $new_units_coverage->units,
+                "honorary"      => $new_units_coverage->honorary,
+                "expenses"      => $new_units_coverage->expense,
+            ];
+            $result = $this->db->insert('units_coverage', $new_row);
+        }
+
+        if(!$result){ $result = "Error al intentar crear nueva Cobertura"; return $result; }
+        return "OK";
+    }
+
     public function getCoverages(){
         $result = array();
 
@@ -29,7 +59,6 @@ class Coverages extends CI_Model{
         }
         return $result;
     }
-
 
     public function getCoveragesById($id)
     {
@@ -70,5 +99,40 @@ class Coverages extends CI_Model{
         }
         return true;
     }
-    
+
+    public function update($id, $plan_id,  $medical_insurance_id, $id_units_coverage, $data ){
+
+        $update_coverage = [
+            "plan_id"               =>$plan_id,
+            "medical_insurance_id"  =>$medical_insurance_id
+        ];
+
+        $this->db->where('id_coverage', $id);
+        $result = $this->db->update('coverages', $update_coverage);
+
+        if(!$result){ return "Error al intentar actualizar datos";}
+
+
+
+        //Update table "units_coverage"
+
+        foreach ($data as $update_units_coverage){
+            $update_row = [
+                "unit"                  => $update_units_coverage->units,
+                "type_unit"             => $update_units_coverage->type_units,
+                "honorary"              => $update_units_coverage->honorary,
+                "expenses"              => $update_units_coverage->expense
+            ];
+            $this->db->where('id_units_coverage', $id_units_coverage);
+            $this->db->update('units_coverage', $update_row);
+        }
+
+        $afftectedRows = $this->db->affected_rows();
+
+        if(!$afftectedRows){
+            return  "No se actualizaron registros";;
+        }
+        return true;
+
+    }
 }

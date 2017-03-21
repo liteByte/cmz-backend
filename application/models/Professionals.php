@@ -60,7 +60,7 @@ class Professionals extends CI_Model{
         );
 
         $result =  $this->db->insert('professionals', $data);
-        if(!$result){ $result = "1 Error al intentar crear nuevo Profesional"; return $result; }
+        if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
 
         //Obtain last inserted user id
         $userIdProfessional = $this->db->insert_id();
@@ -79,7 +79,7 @@ class Professionals extends CI_Model{
 
             $result =  $this->db->insert('fiscal_data', $data);
 
-            if(!$result){ $result = "2 Error al intentar crear nuevo Profesional"; return $result; }
+            if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
 
             //Obtain last inserted user id
             $userIdFiscal = $this->db->insert_id();
@@ -91,11 +91,11 @@ class Professionals extends CI_Model{
 
                 $this->db->where('id_professional_data', $userIdProfessional);
                 $result = $this->db->update('professionals', $data);
-                if(!$result){ $result = "3 Error al intentar crear nuevo Profesional"; return $result; }
+                if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
             }
 
         }
-        return "OK";
+        return 1;
     }
 
     public function getProfessionals(){
@@ -147,7 +147,7 @@ class Professionals extends CI_Model{
     }
 
     public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number){
-        die("hola");
+
         $data = array(
             "registration_number"   =>$registration_number,
             "name"                  =>$name,
@@ -171,7 +171,6 @@ class Professionals extends CI_Model{
             "cbu_number"            =>$cbu_number,
         );
 
-
         $this->db->where('id_professional_data', $id);
         $result = $this->db->update('professionals', $data);
 
@@ -194,9 +193,7 @@ class Professionals extends CI_Model{
         $this->db->update('fiscal_data', $data);
         $afftectedRows = $this->db->affected_rows();
 
-        if(!$afftectedRows){
-            return false;
-        }
+        if(!$afftectedRows){ return false;}
         return true;
     }
 

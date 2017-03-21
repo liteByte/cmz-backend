@@ -45,6 +45,7 @@ class Migration_Create_table_coverage extends CI_Migration{
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)              REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id) REFERENCES medical_insurance(medical_insurance_id)');
+        $this->dbforge->add_field('UNIQUE KEY coverage_key (plan_id,medical_insurance_id)');
         $this->dbforge->add_key('id_coverage', TRUE);
         $this->dbforge->create_table('coverages');
 
