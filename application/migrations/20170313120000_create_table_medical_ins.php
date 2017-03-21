@@ -44,9 +44,10 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                     'null'          =>  TRUE
                 ),
                 'cuit' => array(
-                    'type'          =>  'VARCHAR',
-                    'constraint'    =>  13,
+                    'type'          =>  'BIGINT',
+                    'constraint'    =>  11,
                     'unique'        =>  TRUE,
+                    'unsigned'      =>  TRUE,
                     'null'          =>  FALSE
                 ),
                 'iva_id' => array(
@@ -161,7 +162,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                   'location'                    => "CABA",
                   'postal_code'                 => "1612",
                   'website'                     => "www.osde.com",
-                  'cuit'                        => "123456789",
+                  'cuit'                        => 12345678911,
                   'iva_id'                      => 2,
                   'gross_income'                => 1234,
                   'payment_deadline'            => 15,
@@ -187,7 +188,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
                   'location'                    => "CABA",
                   'postal_code'                 => "1612",
                   'website'                     => "www.Omint.com",
-                  'cuit'                        => "9876543",
+                  'cuit'                        => 98765432100,
                   'iva_id'                      => 2,
                   'gross_income'                => 1234,
                   'payment_deadline'            => 15,
