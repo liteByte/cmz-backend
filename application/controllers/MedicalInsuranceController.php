@@ -63,7 +63,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($scope_id))                  return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(strlen($scope_id) <> 1)            return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($maternal_plan) <> 1)       return $this->response(['error'=>'No se ha ingresado plan maternal'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($admin_rights))              return $this->response(['error'=>'No se han ingresado derechos de admin'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($femeba) <> 1)              return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
@@ -75,7 +75,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($ret_adherente_gastos))      return $this->response(['error'=>'No se ha ingresado retención de gastos de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($cobertura_fer_noct))        return $this->response(['error'=>'No se ha ingresado cobertura nocturna/feriados'], REST_Controller::HTTP_BAD_REQUEST);
 
-      //If femeba is true, check for other necessaryparameters
+      //If femeba is true, check for other necessary parameters
       if($femeba == 1){
           if(strlen($ret_jub_femeba) <> 1)  return $this->response(['error'=>'Se ha ingresado retención de jubilación de FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
           if(empty($federation_funds))      return $this->response(['error'=>'No se han ingresado fondos de federación'], REST_Controller::HTTP_BAD_REQUEST);
@@ -94,6 +94,7 @@ class MedicalInsuranceController extends AuthController{
       if($femeba == 1){
           if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federación ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       }
+      if(!$this->validator->validateCuit($cuit))                            return $this->response(['error'=>'Se ha ingresado un formato inválido de CUIT'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated cuit
       $error = $this->MedicalInsurance->validateData($cuit);
@@ -169,7 +170,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($scope_id))                  return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(strlen($scope_id) <> 1)            return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($maternal_plan) <> 1)       return $this->response(['error'=>'No se ha ingresado plan maternal'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($admin_rights))              return $this->response(['error'=>'No se han ingresado derechos de admin'], REST_Controller::HTTP_BAD_REQUEST);
       if(strlen($femeba) <> 1)              return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
@@ -200,6 +201,7 @@ class MedicalInsuranceController extends AuthController{
       if($femeba == 1){
           if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federación ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       }
+      if(!$this->validator->validateCuit($cuit))                            return $this->response(['error'=>'Se ha ingresado un formato inválido de CUIT'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated cuit
       $error = $this->MedicalInsurance->validateDataOnUpdate($cuit,$id);
