@@ -38,7 +38,7 @@ class PlanController extends AuthController{
       if(empty($medical_insurance_denom))   return $this->response(['error'=>'No se ha ingresado el nombre de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($medical_insurance_id))      return $this->response(['error'=>'No se ha ingresado el ID de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
 
-      //Valid repeated description
+      //Valid fields
       $error = $this->Plan->validateData($description, $medical_insurance_id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
@@ -89,7 +89,7 @@ class PlanController extends AuthController{
       if(empty($medical_insurance_denom))   return $this->response(['error'=>'No se ha ingresado el nombre de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($medical_insurance_id))      return $this->response(['error'=>'No se ha ingresado el ID de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
 
-      //Valid repeated description
+      //Valid fields
       $error = $this->Plan->validateDataOnUpdate($description, $medical_insurance_id, $id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
