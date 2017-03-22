@@ -19,7 +19,7 @@ class SpecialityController extends AuthController {
     }
 
     //Create speciality
-    public function specialitys_post() {
+    public function specialities_post() {
 
         //TODO figure out a way to do this for all endpoints
         //Validates if the user is logged and the token sent is valid.
@@ -56,8 +56,8 @@ class SpecialityController extends AuthController {
 
     }
 
-    //Show specialitys
-    public function specialitys_get() {
+    //Show specialities
+    public function specialities_get() {
 
         //Validates if the user is logged and the token sent is valid.
         if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
@@ -66,8 +66,8 @@ class SpecialityController extends AuthController {
         if (!in_array("ABMespecialidades", $this->token_valid->permissions))
             return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_UNAUTHORIZED);
 
-        $specialitys = $this->Speciality->getSpecialitys();
-        return $this->response($specialitys, REST_Controller::HTTP_OK);
+        $specialities = $this->Speciality->getspecialities();
+        return $this->response($specialities, REST_Controller::HTTP_OK);
     }
 
     //Update speciality information
