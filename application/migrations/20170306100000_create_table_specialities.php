@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_specialitys extends CI_Migration{
+class Migration_Create_table_specialities extends CI_Migration{
 
     public function up(){
 
@@ -31,7 +31,7 @@ class Migration_Create_table_specialitys extends CI_Migration{
                 )
         ));
         $this->dbforge->add_key('speciality_id', TRUE);
-        $this->dbforge->create_table('specialitys');
+        $this->dbforge->create_table('specialities');
 
         $data = array(
             array(
@@ -51,13 +51,13 @@ class Migration_Create_table_specialitys extends CI_Migration{
             ),
         );
 
-        $this->db->insert_batch('specialitys', $data);
+        $this->db->insert_batch('specialities', $data);
     }
 
 
     public function down(){
 
-        $this->dbforge->drop_table('specialitys');
+        $this->dbforge->drop_table('specialities');
 
     }
 
