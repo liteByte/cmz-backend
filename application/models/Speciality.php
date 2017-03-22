@@ -27,10 +27,9 @@ class Speciality extends CI_Model {
     }
 
     //Updates the speciality in 'specialities'
-    public function update($speciality_code, $description, $id) {
+    public function update($description, $id) {
 
         $data = array(
-            'speciality_code' => $speciality_code,
             'description' => $description
         );
 
@@ -85,16 +84,6 @@ class Speciality extends CI_Model {
 
         //Speciality code validation
         $query = $this->db->get_where('specialities', array('speciality_code' => $speciality_code));
-        if ($query->num_rows() > 0) return "El código de especialidad ingresado esta siendo utilizado";
-
-        return "OK";
-
-    }
-
-    public function validateDataOnUpdate($speciality_code, $id) {
-
-        //Speciality code validation
-        $query = $this->db->get_where('specialities', array('speciality_code' => $speciality_code, 'speciality_id !=' => $id));
         if ($query->num_rows() > 0) return "El código de especialidad ingresado esta siendo utilizado";
 
         return "OK";
