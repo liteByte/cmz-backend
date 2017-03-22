@@ -25,7 +25,7 @@ class AuthController extends REST_Controller{
             } catch (Exception $e) {
                 $token_valid = new stdClass();
                 $token_valid->status = "error";
-                $token_valid->message = "Token de Autenticacion no valido";
+                $token_valid->message = "Token de autenticación no válido";
                 return $token_valid;
             }
 
@@ -36,7 +36,7 @@ class AuthController extends REST_Controller{
 
             $token_valid = new stdClass();
             $token_valid->status = "error";
-            $token_valid->message = "Token de Autenticacion no enviado";
+            $token_valid->message = "Token de autenticación no enviado";
             return $token_valid;
 
         }

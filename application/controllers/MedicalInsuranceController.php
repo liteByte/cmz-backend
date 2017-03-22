@@ -59,7 +59,7 @@ class MedicalInsuranceController extends AuthController{
       if(empty($address))                   return $this->response(['error'=>'No se ha ingresado dirección'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($location))                  return $this->response(['error'=>'No se ha ingresado localidad'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($postal_code))               return $this->response(['error'=>'No se ha ingresado código postal'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($cuit))                      return $this->response(['error'=>'No se ha ingresado cuit'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($cuit))                      return $this->response(['error'=>'No se ha ingresado CUIT'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);

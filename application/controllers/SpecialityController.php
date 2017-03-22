@@ -40,7 +40,7 @@ class SpecialityController extends AuthController {
         if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (máximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateData($speciality_code);
@@ -90,7 +90,7 @@ class SpecialityController extends AuthController {
         if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (máximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid repeated speciality code
         $error = $this->Speciality->validateDataOnUpdate($speciality_code, $id);
