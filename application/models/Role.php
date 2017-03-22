@@ -75,7 +75,7 @@ class Role extends CI_Model{
 
     //Name validation
     $query = $this->db->get_where('roles', array('name' => $name));
-    if ($query->num_rows() > 0) return "El rol ya existe";
+    if ($query->num_rows() > 0) return "El rol ingresado ya ha sido creado";
 
     return "OK";
 

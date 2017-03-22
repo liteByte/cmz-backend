@@ -97,7 +97,7 @@ class MedicalInsuranceController extends AuthController{
       if(!$this->validator->validateCuit($cuit))                            return $this->response(['error'=>'Se ha ingresado un formato inválido de CUIT'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Valid repeated cuit
-      $error = $this->MedicalInsurance->validateData($cuit);
+      $error = $this->MedicalInsurance->validateData($cuit, $iva_id, $scope_id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
@@ -203,8 +203,8 @@ class MedicalInsuranceController extends AuthController{
       }
       if(!$this->validator->validateCuit($cuit))                            return $this->response(['error'=>'Se ha ingresado un formato inválido de CUIT'], REST_Controller::HTTP_BAD_REQUEST);
 
-      //Valid repeated cuit
-      $error = $this->MedicalInsurance->validateDataOnUpdate($cuit,$id);
+      //Valid fields
+      $error = $this->MedicalInsurance->validateDataOnUpdate($cuit, $iva_id, $scope_id, $id);
 
       if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
