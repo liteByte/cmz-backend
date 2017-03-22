@@ -16,7 +16,7 @@ class LoginController extends CI_Controller {
     public function login(){
         $methodHTTP    =  $this->input->method();
             if( strtolower($methodHTTP) != 'post'){
-                $this->response_msg->setResponse(['error'=> 'Metodo no aceptado'],400);
+                $this->response_msg->setResponse(['error'=> 'Método no aceptado'],400);
             }
 
         $_POST = json_decode(file_get_contents('php://input'), true);
