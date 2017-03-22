@@ -82,23 +82,13 @@ class SpecialityController extends AuthController {
 
         $post = json_decode(file_get_contents('php://input'));
 
-        $speciality_code = $post->speciality_code ?? "";
         $description     = $post->description     ?? "";
         $id              = (int)$this->get('id');
 
-        if (empty($speciality_code)) return $this->response(array('error' => 'No se ha ingresado código de especialidad'), REST_Controller::HTTP_BAD_REQUEST);
         if (empty($description))     return $this->response(array('error' => 'No se ha ingresado descripcion'), REST_Controller::HTTP_BAD_REQUEST);
 
-        //Validations
-        if(!$this->validator->validateSpecialityLength($speciality_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (máximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
-
-        //Valid repeated speciality code
-        $error = $this->Speciality->validateDataOnUpdate($speciality_code, $id);
-
-        if (strcmp($error, "OK") != 0) return $this->response(array('error' => $error), REST_Controller::HTTP_BAD_REQUEST);
-
         //If everything is valid, update the speciality
-        if ($this->Speciality->update($speciality_code, $description, $id)) {
+        if ($this->Speciality->update($description, $id)) {
             return $this->response(array('msg' => 'Especialidad modificada satisfactoriamente'), REST_Controller::HTTP_OK);
         } else {
             return $this->response(array('error' => 'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
