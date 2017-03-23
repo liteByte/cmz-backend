@@ -33,10 +33,9 @@ class Bank extends CI_Model{
   }
 
   //Updates the bank in 'banks'
-  public function update($bank_code,$corporate_name,$address,$location,$phone_number,$id){
+  public function update($corporate_name,$address,$location,$phone_number,$id){
 
     $data = array(
-                  'bank_code'       => $bank_code,
                   'corporate_name'  => $corporate_name,
                   'address'         => $address,
                   'location'        => $location,
@@ -98,16 +97,6 @@ class Bank extends CI_Model{
 
     //Bank code validation
     $query = $this->db->get_where('banks', array('bank_code' => $bank_code));
-    if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
-
-    return "OK";
-
-  }
-
-  public function validateDataOnUpdate($bank_code,$id){
-
-    //Bank code validation
-    $query = $this->db->get_where('banks', array('bank_code' => $bank_code,'bank_id !='=>$id));
     if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
 
     return "OK";

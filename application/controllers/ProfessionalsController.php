@@ -60,15 +60,15 @@ class ProfessionalsController extends AuthController{
 
         if(!isset($post->gain))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         $gain                       = $post->gain                       ?? "";
-        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado numero de matricula'), RC::HTTP_BAD_REQUEST);
+        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
         if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
-        if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el numero de documento'), RC::HTTP_BAD_REQUEST);
+        if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
         if(empty($legal_address))                  return $this->response(array('error'=>'No se ha ingresado la dirección de domicilio'), RC::HTTP_BAD_REQUEST);
         if(empty($legal_locality))                 return $this->response(array('error'=>'No se ha ingresado la localidad de domicilio'), RC::HTTP_BAD_REQUEST);
-        if(empty($zip_code))                       return $this->response(array('error'=>'No se ha ingresado el codigo postal'), RC::HTTP_BAD_REQUEST);
+        if(empty($zip_code))                       return $this->response(array('error'=>'No se ha ingresado el código postal'), RC::HTTP_BAD_REQUEST);
         if(empty($email))                          return $this->response(array('error'=>'No se ha ingresado el correo electrónico'), RC::HTTP_BAD_REQUEST);
         if(empty($office_address))                 return $this->response(array('error'=>'No se ha ingresado la dirección de consulta'), RC::HTTP_BAD_REQUEST);
         if(empty($office_locality))                return $this->response(array('error'=>'No se ha ingresado la localidad de consulta'), RC::HTTP_BAD_REQUEST);
@@ -78,7 +78,7 @@ class ProfessionalsController extends AuthController{
         if(empty($id_medical_career))              return $this->response(array('error'=>'No se ha ingresado la categoría del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($id_payment_type))                return $this->response(array('error'=>'No se ha ingresado la forma de pago'), RC::HTTP_BAD_REQUEST);
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
-        if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el numero de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
+        if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el número de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
 
@@ -102,12 +102,12 @@ class ProfessionalsController extends AuthController{
         }
 
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
-            return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Número de CBU'));
+            return $this->response(array('error'=>'Debe ingresar el número de Cuenta o Número de CBU'));
         }
         if($id_payment_type === '1') $bank_id = NULL;
 
 
-        if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o número de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
 
         //Valid if document number exist
@@ -124,7 +124,7 @@ class ProfessionalsController extends AuthController{
     public function professionals_get(){
         //Validate Token.
         if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-        
+
         //Validates permissions
         if(!in_array("ABMprofesionales",$this->token_valid->permissions))
             return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
@@ -147,7 +147,7 @@ class ProfessionalsController extends AuthController{
         $professional = $this->Professionals->getProfessionalsById($id);
 
         if(empty($professional)){
-            return $this->response(array('error'=>'No se encontro el ID del profesional'), RC::HTTP_BAD_REQUEST);
+            return $this->response(array('error'=>'No se encontró el ID del profesional'), RC::HTTP_BAD_REQUEST);
         } else {
             return $this->response($professional, RC::HTTP_OK);
         }
@@ -196,15 +196,15 @@ class ProfessionalsController extends AuthController{
         if(!isset($post->gain))                   return $this->response(array('error'=>'Se debe indicar si es necesario retenerle o no ganancia al Profesional'), RC::HTTP_BAD_REQUEST);
         $gain                       = $post->gain                       ?? "";
 
-        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matricula'), RC::HTTP_BAD_REQUEST);
+        if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
         if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
-        if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el numero de documento'), RC::HTTP_BAD_REQUEST);
+        if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
         if(empty($legal_address))                  return $this->response(array('error'=>'No se ha ingresado la dirección de domicilio'), RC::HTTP_BAD_REQUEST);
         if(empty($legal_locality))                 return $this->response(array('error'=>'No se ha ingresado la localidad de domicilio'), RC::HTTP_BAD_REQUEST);
-        if(empty($zip_code))                       return $this->response(array('error'=>'No se ha ingresado el codigo postal'), RC::HTTP_BAD_REQUEST);
+        if(empty($zip_code))                       return $this->response(array('error'=>'No se ha ingresado el código postal'), RC::HTTP_BAD_REQUEST);
         if(empty($email))                          return $this->response(array('error'=>'No se ha ingresado el correo electrónico'), RC::HTTP_BAD_REQUEST);
         if(empty($office_address))                 return $this->response(array('error'=>'No se ha ingresado la dirección de consulta'), RC::HTTP_BAD_REQUEST);
         if(empty($office_locality))                return $this->response(array('error'=>'No se ha ingresado la localidad de consulta'), RC::HTTP_BAD_REQUEST);
@@ -241,12 +241,13 @@ class ProfessionalsController extends AuthController{
         }
 
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
-            return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Numero de CBU'));
+            return $this->response(array('error'=>'Debe ingresar el número de Cuenta o número de CBU'));
         }
 
         if($id_payment_type === '1') $bank_id = NULL;
 
-        if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o número de documento'), RC::HTTP_BAD_REQUEST);
+
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
 
         //Valid Document number
@@ -278,9 +279,3 @@ class ProfessionalsController extends AuthController{
     }
 
 }
-
-
-
-
-
-

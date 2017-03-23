@@ -20,7 +20,7 @@ class CoverageController extends AuthController{
 
         //Validates permissions
         if(!in_array("ABMcoverages",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
 
         $unit_default = ["A", "B", "E", "G", "P", "Q", "R", "V"];
 
@@ -85,8 +85,8 @@ class CoverageController extends AuthController{
 
         //Validates permissions
         if(!in_array("ABMcoverages",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
-        
+            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
+
         if($coverages_result = $this->Coverages->getCoverages())
             return $this->response($coverages_result, RC::HTTP_OK);
         else
@@ -123,14 +123,14 @@ class CoverageController extends AuthController{
             return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), RC::HTTP_FORBIDDEN);
 
         $id = $this->get('id');
-        
+
         if(!$this->Coverages->delete($id, $this->token_valid->user_id)){
             return $this->response(array('msg'=>'Error al intentar eliminar Cobertura'), RC::HTTP_OK);
         }else{
             return $this->response(array('msg'=>'Cobertura eliminada satisfactoriamente'), RC::HTTP_OK);
         }
     }
-        
+
     public function updateCoverage_put(){
         //Validate Token.
         if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
@@ -198,5 +198,5 @@ class CoverageController extends AuthController{
         }
         return $this->response(array('msg'=>'Cobertura actualizada satisfactoriamente'), RC::HTTP_OK);
     }
-    
+
 }

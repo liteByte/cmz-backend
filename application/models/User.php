@@ -132,7 +132,7 @@ class User extends CI_Model{
 
     } else {
 
-      return array('status'=>'error','data'=>'No se ha encontrado un usuario con la informacion especificada');
+      return array('status'=>'error','data'=>'No se ha encontrado un usuario con la información especificada');
 
     }
   }
@@ -227,7 +227,7 @@ class User extends CI_Model{
 
     //Document validation
     $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type));
-    if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
+    if ($query->num_rows() > 0) return "El número de documento ingresado ya está en uso";
 
     return "OK";
 
@@ -241,7 +241,7 @@ class User extends CI_Model{
 
     //Document validation
     $query = $this->db->get_where('users', array('document_number' => $document_number, 'document_type' => $document_type,'user_id !='=>$id));
-    if ($query->num_rows() > 0) return "El numero de documento ingresado ya esta en uso";
+    if ($query->num_rows() > 0) return "El número de documento ingresado ya está en uso";
 
     return "OK";
 

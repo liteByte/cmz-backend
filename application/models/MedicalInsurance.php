@@ -149,21 +149,37 @@ class MedicalInsurance extends CI_Model{
 
   }
 
-  public function validateData($cuit){
+  public function validateData($cuit, $iva_id, $scope_id){
 
     //CUIT validation
     $query = $this->db->get_where('medical_insurance', array('cuit' => $cuit));
     if ($query->num_rows() > 0) return "El CUIT ingresado está siendo utilizado";
 
+    //Iva existance validation
+    $query = $this->db->get_where('iva', array('iva_id' => $iva_id));
+    if ($query->num_rows() == 0) return "El tipo de IVA ingresado no existe";
+
+    //Scope existance validation
+    $query = $this->db->get_where('scopes', array('scope_id' => $scope_id));
+    if ($query->num_rows() == 0) return "El tipo de alcance ingresado no existe";
+
     return "OK";
 
   }
 
-  public function validateDataOnUpdate($cuit,$id){
+  public function validateDataOnUpdate($cuit, $iva_id, $scope_id, $id){
 
     //CUIT validation
     $query = $this->db->get_where('medical_insurance', array('cuit' => $cuit,'medical_insurance_id !='=>$id));
     if ($query->num_rows() > 0) return "El CUIT ingresado está siendo utilizado";
+
+    //Iva existance validation
+    $query = $this->db->get_where('iva', array('iva_id' => $iva_id));
+    if ($query->num_rows() == 0) return "El tipo de IVA ingresado no existe";
+
+    //Scope existance validation
+    $query = $this->db->get_where('scopes', array('scope_id' => $scope_id));
+    if ($query->num_rows() == 0) return "El tipo de alcance ingresado no existe";
 
     return "OK";
 

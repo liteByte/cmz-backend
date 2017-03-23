@@ -39,6 +39,7 @@ class BankController extends AuthController{
         if(empty($bank_code))        return $this->response(array('error'=>'No se ha ingresado código de banco'), REST_Controller::HTTP_BAD_REQUEST);
         if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razón social'), REST_Controller::HTTP_BAD_REQUEST);
 
+
         //Validations
         if(!$this->validator->validateBankLength($bank_code)) return $this->response(array('error'=>'El código ingresado es demasiado largo (maximo 2 digitos)'), REST_Controller::HTTP_BAD_REQUEST);
 
@@ -82,6 +83,7 @@ class BankController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
+
         $bank_code        = $post->bank_code        ?? "";
         $corporate_name   = $post->corporate_name   ?? "";
         $address          = $post->address          ?? "";
@@ -106,6 +108,21 @@ class BankController extends AuthController{
         } else {
             return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+      $corporate_name   = $post->corporate_name   ?? "";
+      $address          = $post->address          ?? "";
+      $location         = $post->location         ?? "";
+      $phone_number     = $post->phone_number     ?? "";
+      $id               = (int) $this->get('id');
+
+      if(empty($corporate_name))   return $this->response(array('error'=>'No se ha ingresado razón social'), REST_Controller::HTTP_BAD_REQUEST);
+
+      //If everything is valid, update the user
+      if($this->Bank->update($corporate_name,$address,$location,$phone_number,$id)){
+        return $this->response(array('msg'=>'Banco modificado satisfactoriamente'), REST_Controller::HTTP_OK);
+      } else {
+        return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+      }
 
     }
 
