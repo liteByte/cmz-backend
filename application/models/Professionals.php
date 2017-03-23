@@ -33,67 +33,58 @@ class Professionals extends CI_Model{
     }
     
     public function save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number ){
-        
-        $data = array(
-            "registration_number"   =>$registration_number,
-            "name"                  =>$name,
-            "last_name"             =>$last_name,
-            "document_type"         =>$document_type,
-            "document_number"       =>$document_number,
-            "date_birth"            =>$date_birth,
-            "legal_address"         =>$legal_address,
-            "legal_locality"        =>$legal_locality,
-            "zip_code"              =>$zip_code,
-            "phone_number"          =>$phone_number,
-            "email"                 =>$email,
-            "office_address"        =>$office_address,
-            "office_locality"       =>$office_locality,
-            "speciality_id"         =>$speciality_id,
-            "type_partner"          =>$type_partner,
-            "id_category_femeba"    =>$id_category_femeba,
-            "id_medical_career"     =>$id_medical_career,
-            "id_payment_type"       =>$id_payment_type,
-            "bank_id"               =>$bank_id,
-            "account_number"        =>$account_number,
-            "cbu_number"            =>$cbu_number,
-            "active"                =>"active"
+
+        $fiscal_data = array(
+            "cuit"=>$cuit,
+            "date_start_activity"=>$date_start_activity,
+            "iibb"=>$iibb,
+            "iibb_percentage"=>$iibb_percentage,
+            "gain"=>$gain,
+            "iva_id"=> $iva_id,
+            "retention_vat"=>$retention_vat,
+            "retention_gain"=>$retention_gain
         );
 
-        $result =  $this->db->insert('professionals', $data);
-        if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
+        $result =  $this->db->insert('fiscal_data', $fiscal_data);
 
-        //Obtain last inserted user id
-        $userIdProfessional = $this->db->insert_id();
+        if(!$result) return "Error al intentar crear nuevo Profesionals";
 
-        if($userIdProfessional){
-            $data = array(
-                "cuit"=>$cuit,
-                "date_start_activity"=>$date_start_activity,
-                "iibb"=>$iibb,
-                "iibb_percentage"=>$iibb_percentage,
-                "gain"=>$gain,
-                "iva_id"=> $iva_id,
-                "retention_vat"=>$retention_vat,
-                "retention_gain"=>$retention_gain
+        //Obtain last inserted fiscal data id
+        $id_fiscal_data= $this->db->insert_id();
+
+        if($id_fiscal_data){
+            $professional_data = array(
+                "registration_number"   =>$registration_number,
+                "name"                  =>$name,
+                "last_name"             =>$last_name,
+                "document_type"         =>$document_type,
+                "document_number"       =>$document_number,
+                "date_birth"            =>$date_birth,
+                "legal_address"         =>$legal_address,
+                "legal_locality"        =>$legal_locality,
+                "zip_code"              =>$zip_code,
+                "phone_number"          =>$phone_number,
+                "email"                 =>$email,
+                "office_address"        =>$office_address,
+                "office_locality"       =>$office_locality,
+                "speciality_id"         =>$speciality_id,
+                "type_partner"          =>$type_partner,
+                "id_category_femeba"    =>$id_category_femeba,
+                "id_medical_career"     =>$id_medical_career,
+                "id_payment_type"       =>$id_payment_type,
+                "bank_id"               =>$bank_id,
+                "account_number"        =>$account_number,
+                "cbu_number"            =>$cbu_number,
+                "id_fiscal_data"        =>$id_fiscal_data,
+                "active"                =>"active"
             );
 
-            $result =  $this->db->insert('fiscal_data', $data);
+            $result =  $this->db->insert('professionals', $professional_data);
+            $errors = $this->db->error();
+
+  
 
             if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
-
-            //Obtain last inserted user id
-            $userIdFiscal = $this->db->insert_id();
-
-            if($userIdFiscal){
-                $data = array(
-                    "id_fiscal_data"   =>  $userIdFiscal
-                );
-
-                $this->db->where('id_professional_data', $userIdProfessional);
-                $result = $this->db->update('professionals', $data);
-                if(!$result){ $result = "Error al intentar crear nuevo Profesional"; return $result; }
-            }
-
         }
         return 1;
     }

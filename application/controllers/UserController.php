@@ -121,13 +121,10 @@ class UserController extends AuthController{
         return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
     $id = (int) $this->get('id');
+    $result = $this->User->delete($id,$this->token_valid->user_id);
 
-    if($this->User->delete($id,$this->token_valid->user_id)){
-        return $this->response(array('msg'=>'Usuario eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
-    } else {
-        return $this->response(array('error'=>'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
+    if(strcmp($result, 1) != 0) return $this->response(array('error'=>$result), REST_Controller::HTTP_BAD_REQUEST);
+    return $this->response(array('msg'=>'Usuario eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
   }
 
   //Show users

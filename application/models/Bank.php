@@ -79,12 +79,19 @@ class Bank extends CI_Model{
   //Delete bank information in 'banks'
   public function delete($bankID){
 
-    //Delete bank
-    $this->db->where('bank_id', $bankID);
-    $this->db->update('banks', array('active' => 'inactive'));
+      $query = $this->db->get_where('banks', array("bank_id" => $bankID));
 
-    return true;
-
+      if($query->num_rows()){
+          //Delete bank
+          $this->db->where('bank_id', $bankID);
+          $result = $this->db->delete('banks');
+          $errors = $this->db->error();
+          if($errors['code'] == '1451') return "No se puede eliminar el banco, ya que posee información relacionada";
+          if(!$result) return "Error al intentar Banco";
+      }else{
+          return "El Id del banco no existe en la base de datos";
+      }
+      return true;
   }
 
   public function validateData($bank_code){

@@ -63,7 +63,8 @@ class Coverages extends CI_Model{
     {
         $result = [];
 
-        $this->db->select();
+//        $this->db->select();
+        $this->db->select('coverages.id_coverage , coverages.plan_id , coverages.plan_id , units_coverage.*, medical_insurance.medical_insurance_id,medical_insurance.denomination , plans.plan_id, plans.description ');
         $this->db->from('coverages');
         $this->db->join('units_coverage', 'units_coverage.id_coverage = coverages.id_coverage');
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = coverages.medical_insurance_id');

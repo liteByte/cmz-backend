@@ -78,16 +78,21 @@ class User extends CI_Model{
 
   //Delete user and role information in 'user_role'
   //TODO: verificar que el usuario no tenga auditorias antes de borrarlo
-  public function delete($userID,$downUserID){
+  public function delete($userID){
 
-    $now = date('Y-m-d H:i:s');
+    $query = $this->db->get_where('users', array("user_id" => $userID));
 
-    //Delete user
-    $this->db->where('user_id', $userID);
-    $this->db->update('users', array('active' => 'inactive','date_update'=>$now,'down_user_id'=>$downUserID));
-
+    if($query->num_rows()){
+      //Delete user
+      $this->db->where('user_id', $userID);
+      $result = $this->db->delete('users');
+      $errors = $this->db->error();
+      if($errors['code'] == '1451') return "No se puede eliminar el Usuario, ya que posee información relacionada";
+      if(!$result) return "Error al intentar Usuario";
+    }else{
+      return "El Id del usuario no existe en la base de datos";
+    }
     return true;
-
   }
 
   //Get a specific user information

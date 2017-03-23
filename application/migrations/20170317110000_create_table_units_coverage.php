@@ -26,26 +26,23 @@ class Migration_Create_table_units_coverage extends CI_Migration{
             'type_unit' => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  15,
-                'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'unsigned'      =>  TRUE
             ),
             'honorary' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE,
-                'default'       => 100
+                'null'          =>  FALSE
             ),
             'expenses' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE,
-                'default'       => 100
+                'null'          =>  FALSE
             ),
         ));
 
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_coverage)              REFERENCES coverage(id_coverage)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_coverage)    REFERENCES coverages(id_coverage)');
         $this->dbforge->add_key('id_units_coverage', TRUE);
         $this->dbforge->add_field('UNIQUE KEY units_key (id_coverage,unit,type_unit )');
         $this->dbforge->create_table('units_coverage');

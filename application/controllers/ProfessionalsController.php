@@ -104,6 +104,8 @@ class ProfessionalsController extends AuthController{
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
             return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Número de CBU'));
         }
+        if($id_payment_type === '1') $bank_id = NULL;
+
 
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
@@ -211,12 +213,13 @@ class ProfessionalsController extends AuthController{
         if(empty($type_partner))                   return $this->response(array('error'=>'No se ha ingresado el tipo de socio'), RC::HTTP_BAD_REQUEST);
         if(empty($id_medical_career))              return $this->response(array('error'=>'No se ha ingresado la categoría del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($id_payment_type))                return $this->response(array('error'=>'No se ha ingresado la forma de pago'), RC::HTTP_BAD_REQUEST);
-        if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+       // if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el número de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iva_id))                         return $this->response(array('error'=>'Se debe indicar la situacion frente al iva del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($cuit))                           return $this->response(array('error'=>'No se ha ingresado el número de CUIT'), RC::HTTP_BAD_REQUEST);
+
 
         $gain = (boolval($gain) ? 'true' : 'false');
         if(empty($gain))
@@ -240,6 +243,9 @@ class ProfessionalsController extends AuthController{
         if($id_payment_type != 1 && (empty($account_number) && empty($cbu_number) )){
             return $this->response(array('error'=>'Debe ingresar el numero de Cuenta o Numero de CBU'));
         }
+
+        if($id_payment_type === '1') $bank_id = NULL;
+
         if(!$this->validator->validateDocument($document_type,$document_number))    return $this->response(array('error'=>'Se ha ingresado mal el tipo y/o numero de documento'), RC::HTTP_BAD_REQUEST);
         if(!filter_var($email, FILTER_VALIDATE_EMAIL))                              return $this->response(array('error'=>'El formato de email no es correcto'), RC::HTTP_BAD_REQUEST);
 

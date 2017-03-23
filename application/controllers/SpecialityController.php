@@ -141,12 +141,8 @@ class SpecialityController extends AuthController {
 
         $id = (int)$this->get('id');
 
-        if ($this->Speciality->delete($id)) {
-            return $this->response(array('msg' => 'Especialidad eliminada satisfactoriamente'), REST_Controller::HTTP_OK);
-        } else {
-            return $this->response(array('error' => 'Error de base de datos'), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
+        $result = $this->Speciality->delete($id);
+        if(strcmp($result, 1) != 0) return $this->response(array('error'=>$result), REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response(array('msg'=>'Especialidad eliminada satisfactoriamente'), REST_Controller::HTTP_OK);
     }
-
 }

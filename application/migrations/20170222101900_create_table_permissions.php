@@ -46,9 +46,6 @@ class Migration_Create_table_permissions extends CI_Migration{
                 'name' => "ABMcontactos"
             ),
             array(
-                'name' => "ABMplanes"
-            ),
-            array(
                 'name' => "ABMcoverages"
             )
         );

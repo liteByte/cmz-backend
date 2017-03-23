@@ -73,12 +73,19 @@ class Speciality extends CI_Model {
     //TODO:Validar que la Especialidad Médica al ser eliminada no tenga prestaciones valoradas actual e histórica con esta especialidad.
     public function delete($specialityID) {
 
-        //Delete bank
-        $this->db->where('speciality_id', $specialityID);
-        $this->db->update('specialitys', array('active' => 'inactive'));
+        $query = $this->db->get_where('specialitys', array("speciality_id" => $specialityID));
 
+        if($query->num_rows()){
+            //Delete bank
+            $this->db->where('speciality_id', $specialityID);
+            $result = $this->db->delete('specialitys');
+            $errors = $this->db->error();
+            if($errors['code'] == '1451') return "No se puede eliminar la especialidad, ya que posee información relacionada";
+            if(!$result) return "Error al intentar especialidad";
+        }else{
+            return "El Id de la especialidad no existe en la base de datos";
+        }
         return true;
-
     }
 
     public function validateData($speciality_code) {

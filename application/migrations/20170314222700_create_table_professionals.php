@@ -117,7 +117,8 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'type'          =>  'INT',
                 'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'null'          =>  TRUE,
+                'default'       => NULL
             ),
             'account_number' => array(
                 'type'          =>  'VARCHAR',
