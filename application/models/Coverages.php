@@ -42,12 +42,15 @@ class Coverages extends CI_Model{
     public function getCoverages(){
         $result = array();
 
-        $this->db->select('coverages.id_coverage , coverages.plan_id , coverages.plan_id , units_coverage.*, medical_insurance.medical_insurance_id,medical_insurance.denomination , plans.plan_id, plans.description ');
+        $this->db->select('coverages.id_coverage , medical_insurance.medical_insurance_id,medical_insurance.denomination, plans.plan_id,  plans.description , units_coverage.*');
         $this->db->from('coverages');
         $this->db->join('units_coverage', 'units_coverage.id_coverage = coverages.id_coverage');
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = coverages.medical_insurance_id');
         $this->db->join('plans', 'plans.plan_id = coverages.plan_id');
-        $this->db->order_by("medical_insurance.settlement_name", "asc");
+        $this->db->order_by("medical_insurance.denomination", "asc");
+        $this->db->order_by("plans.description", "asc");
+        $this->db->order_by("units_coverage.type_unit", "asc");
+        $this->db->order_by("units_coverage.unit", "asc");
         $this->db->where('coverages.status', 1);
         $query =  $this->db->get();
         
@@ -63,13 +66,15 @@ class Coverages extends CI_Model{
     {
         $result = [];
 
-//        $this->db->select();
-        $this->db->select('coverages.id_coverage , coverages.plan_id , coverages.plan_id , units_coverage.*, medical_insurance.medical_insurance_id,medical_insurance.denomination , plans.plan_id, plans.description ');
+        $this->db->select('coverages.id_coverage , medical_insurance.medical_insurance_id,medical_insurance.denomination, plans.plan_id,  plans.description , units_coverage.*');
         $this->db->from('coverages');
         $this->db->join('units_coverage', 'units_coverage.id_coverage = coverages.id_coverage');
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = coverages.medical_insurance_id');
         $this->db->join('plans', 'plans.plan_id = coverages.plan_id');
-        $this->db->order_by("medical_insurance.settlement_name", "asc");
+        $this->db->order_by("medical_insurance.denomination", "asc");
+        $this->db->order_by("plans.description", "asc");
+        $this->db->order_by("units_coverage.type_unit", "asc");
+        $this->db->order_by("units_coverage.unit", "asc");
         $this->db->where('coverages.id_coverage', $id);
         $this->db->where('coverages.status', 1);
         $query = $this->db->get();
