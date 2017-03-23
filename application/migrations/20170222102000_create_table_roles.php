@@ -25,16 +25,16 @@ class Migration_Create_table_roles extends CI_Migration{
 
         $data = array(
             array(
-                'name' => "administrador"
+                'name' => "Administrador"
             ),
             array(
-                'name' => "operador"
+                'name' => "Operador"
             ),
             array(
-                'name' => "gerencial"
+                'name' => "Gerencial"
             ),
             array(
-                'name' => "profesional"
+                'name' => "Profesional"
             )
         );
 

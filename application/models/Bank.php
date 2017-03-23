@@ -33,10 +33,9 @@ class Bank extends CI_Model{
   }
 
   //Updates the bank in 'banks'
-  public function update($bank_code,$corporate_name,$address,$location,$phone_number,$id){
+  public function update($corporate_name,$address,$location,$phone_number,$id){
 
     $data = array(
-                  'bank_code'       => $bank_code,
                   'corporate_name'  => $corporate_name,
                   'address'         => $address,
                   'location'        => $location,
@@ -79,29 +78,26 @@ class Bank extends CI_Model{
   //Delete bank information in 'banks'
   public function delete($bankID){
 
-    //Delete bank
-    $this->db->where('bank_id', $bankID);
-    $this->db->update('banks', array('active' => 'inactive'));
+      $query = $this->db->get_where('banks', array("bank_id" => $bankID));
 
-    return true;
-
+      if($query->num_rows()){
+          //Delete bank
+          $this->db->where('bank_id', $bankID);
+          $result = $this->db->delete('banks');
+          $errors = $this->db->error();
+          if($errors['code'] == '1451') return "No se puede eliminar el banco, ya que posee información relacionada";
+          if(!$result) return "Error al intentar Banco";
+      }else{
+          return "El Id del banco no existe en la base de datos";
+      }
+      return true;
   }
 
   public function validateData($bank_code){
 
     //Bank code validation
     $query = $this->db->get_where('banks', array('bank_code' => $bank_code));
-    if ($query->num_rows() > 0) return "El codigo de banco ingresado esta siendo utilizado";
-
-    return "OK";
-
-  }
-
-  public function validateDataOnUpdate($bank_code,$id){
-
-    //Bank code validation
-    $query = $this->db->get_where('banks', array('bank_code' => $bank_code,'bank_id !='=>$id));
-    if ($query->num_rows() > 0) return "El codigo de banco ingresado esta siendo utilizado";
+    if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
 
     return "OK";
 

@@ -3,15 +3,39 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
     <title></title>
+    <style type="text/css">
+
+        .enjoy-css {
+            /*display: inline-block;*/
+            /*-webkit-box-sizing: content-box;*/
+            /*-moz-box-sizing: content-box;*/
+            /*box-sizing: content-box;*/
+            margin: 6px;
+            padding: 5px;
+            border: none;
+            font: normal 40px/1 "Times New Roman", Times, serif;
+            color: rgba(244,242,242,1);
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            background: #0faddb;
+            align:center;
+            text-align: center;
+        }
+
+
+
+    </style>
 </head>
+
 <body>
 <div width='100%' style='background-color: #eee; padding: 30px 0px; padding-bottom: 0;'>
 
     <table border='0' cellspacing='0' cellpadding='0' width='700' align='center' style='color: #CCCCCC;'>
         <tr style='height: 70px; background-color:  #0faddb'>
             <td>
-                <img style='display: block; margin: auto; width: 100%' src='http://www.circulomedicodezarate.org/img-web/img-top-logo.jpg' alt="cmz_logo"/>
+<!--                <img style='display: block; margin: auto; width: 100%' src='http://www.circulomedicodezarate.org/img-web/img-top-logo.jpg' alt="cmz_logo"/>-->
 <!--                <img style='display: block; margin: auto;' src='http://www.centromedicorondilla.com/images/logo.png' alt="cmz_logo"/>-->
+                <div class="enjoy-css">Centro Medico Zarate</div>
             </td>
         </tr>
     </table>
@@ -37,7 +61,9 @@
             <td width='50px'></td>
             <td width='600px' style='background-color:  #0faddb; text-align:center;'>
                 <p style='color: white; font-size: 16px; margin-left: 20px; margin-top: 20px;'>Su usuario es:  <strong><?php echo $document_number; ?></strong></p>
-                <p style='color: white; font-size: 16px; margin-left: 20px;'>Su Contraseña es:  <strong><?php echo $password; ?></strong></p>
+                <p style='color: white; font-size: 16px; margin-left: 20px;'>Contraseña:  <strong><?php echo $password; ?></strong></p>
+                <p style='color: white; font-size: 16px; margin-left: 20px;'><a href="http://208.68.39.205/staging-front/" style='color: white; text-decoration: none;'> www.circulomedicodezarate.org</a><strong></strong></p>
+
             </td>
             <td width='50px'></td>
         </tr>

@@ -80,10 +80,66 @@ $route['banks/remove/(:num)']         = 'BankController/removeBank/id/$1';
 $route['banks/(:num)']                = 'BankController/getBank/id/$1';
 
 ////////////////////////Speciality routes////////////////////////
-$route['specialitys']                 = 'SpecialityController/specialitys';  //Get -> show specialitys  & post -> create speciality
-$route['specialitys/update/(:num)']   = 'SpecialityController/updateSpeciality/id/$1';
-$route['specialitys/remove/(:num)']   = 'SpecialityController/removeSpeciality/id/$1';
-$route['specialitys/(:num)']          = 'SpecialityController/getSpeciality/id/$1';
+$route['specialities']                = 'SpecialityController/specialities';  //Get -> show specialities  & post -> create speciality
+$route['specialities/update/(:num)']  = 'SpecialityController/updateSpeciality/id/$1';
+$route['specialities/remove/(:num)']  = 'SpecialityController/removeSpeciality/id/$1';
+$route['specialities/(:num)']         = 'SpecialityController/getSpeciality/id/$1';
+
+
+////////////////////////Medical Insurances routes////////////////////////
+$route['insurances']                  = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
+$route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsurance/id/$1';
+$route['insurances/remove/(:num)']    = 'MedicalInsuranceController/removeInsurance/id/$1';
+$route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance/id/$1';
+
+////////////////////////Plans routes////////////////////////
+$route['plans']                       = 'PlanController/plans';  //post -> create plan
+$route['plansByInsurance/(:num)']     = 'PlanController/plansByInsurance/id/$1';  //get -> get plans by insurance
+$route['plans/update/(:num)']         = 'PlanController/updatePlan/id/$1';
+$route['plans/remove/(:num)']         = 'PlanController/removePlan/id/$1';
+$route['plans/(:num)']                = 'PlanController/getPlan/id/$1';
+
+////////////////////////Contact routes////////////////////////
+$route['contacts']                    = 'ContactController/contacts';  //Get -> show contacts  & post -> create contact
+$route['contacts/update/(:num)']      = 'ContactController/updateContact/id/$1';
+$route['contacts/remove/(:num)']      = 'ContactController/removeContact/id/$1';
+$route['contacts/(:num)']             = 'ContactController/getContact/id/$1';
+
+////////////////////////Nomenclator routes////////////////////////
+$route['nomenclators']                = 'NomenclatorController/nomenclators';  //Get -> show contacts  & post -> create contact
+$route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator/id/$1';
+$route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
+$route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
+
+////////////////////////IVA routes////////////////////////
+$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+
+////////////////////////Scope routes////////////////////////
+$route['scopes']                      = 'ScopeController/scopes';  //Get -> show scopes
 
 ////////////////////////Login routes////////////////////////
-$route['login']["post"]         = 'LoginController/login';
+$route['login']["post"]               = 'LoginController/login';
+
+////////////////////////IVA routes////////////////////////
+$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+
+////////////////////////Femeba routes////////////////////////
+$route['categoryfemeba']              = 'CategoryFemebaController/femeba';
+
+////////////////////////Category Circle routes////////////////////////
+$route['medicalcareer']               = 'MedicalCareerController/medical_career';
+
+////////////////////////Payment Types routes////////////////////////
+$route['paymenttypes']                = 'PaymentTypesController/payment_types';
+
+////////////////////////Professionals routes////////////////////////
+$route['professionals']                = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
+$route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
+$route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
+$route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';
+
+////////////////////////Coverage routes////////////////////////
+$route['coverages']                     = 'CoverageController/coverages';
+$route['coverages/(:num)']              = 'CoverageController/getCoverage/id/$1';
+$route['coverages/update/(:num)']       = 'CoverageController/updateCoverage/id/$1';
+$route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';

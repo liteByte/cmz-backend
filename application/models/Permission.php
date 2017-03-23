@@ -37,7 +37,7 @@ class Permission extends CI_Model{
 
     //Name validation
     $query = $this->db->get_where('permissions', array('name' => $name));
-    if ($query->num_rows() > 0) return "Permission already exists";
+    if ($query->num_rows() > 0) return "El permiso ingresado ya ha sido creado";
 
     return "OK";
 

@@ -11,7 +11,7 @@ class SendMail{
         $data['password']= $newPassword;
         $data['name']= $info['data']->name;
 
-        $CI ->email->from('pruebalitebyte@gmail.com', 'CMZ');
+        $CI ->email->from('info@4isolutions.com.ar', 'CMZ');
         $CI ->email->to($info['data']->email);
         $CI->email->subject('Recuperacion de contraseña');
         $CI->email->message($CI->load->view('email/recover_password', $data, true) );
@@ -19,7 +19,7 @@ class SendMail{
 
 
         if($CI->email->send()){
-            return $CI->response(array('msg'=>$info['data']->email), RC::HTTP_OK);
+            return $CI->response(array('msg'=>"Email enviado correctamente"), RC::HTTP_OK);
         } else {
             return $CI->response(array('error'=>show_error($CI->email->print_debugger())), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -32,7 +32,7 @@ class SendMail{
         $data['email'] =  $email;
         $data['password'] =  $password;
 
-        $CI ->email->from('pruebalitebyte@gmail.com', 'CMZ');
+        $CI ->email->from('info@4isolutions.com.ar', 'CMZ');
         $CI ->email->to($data['email']);
         $CI->email->subject('Usuario CMZ');
         $CI->email->message($CI->load->view('email/signin', $data, true) );
@@ -40,7 +40,7 @@ class SendMail{
 
 
         if($CI->email->send()){
-            return $CI->response(array('msg'=>'Problemas en el envio de email'), RC::HTTP_OK);
+            return $CI->response(array('msg'=>'Email enviado correctamente'), RC::HTTP_OK);
         } else {
             return $CI->response(array('error'=>show_error($CI->email->print_debugger())), RC::HTTP_INTERNAL_SERVER_ERROR);
         }
