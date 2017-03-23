@@ -42,7 +42,6 @@ class NomenclatorController extends AuthController{
 
       if(empty($type))                                                 return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($code))                                                 return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($class))                                                return $this->response(['error'=>'No se ha ingresado clase'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($description))                                          return $this->response(['error'=>'No se ha ingresado descripción'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($unity))                                                return $this->response(['error'=>'No se ha ingresado unidad'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($speciality_unity)   && strlen($speciality_unity) ==0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);

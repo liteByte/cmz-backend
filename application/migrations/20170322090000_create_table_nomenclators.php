@@ -26,7 +26,7 @@ class Migration_Create_table_nomenclators extends CI_Migration{
                 'class' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  1,
-                    'null'          =>  FALSE
+                    'null'          =>  TRUE
                 ),
                 'description' => array(
                     'type'          =>  'VARCHAR',
