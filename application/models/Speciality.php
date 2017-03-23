@@ -72,7 +72,7 @@ class Speciality extends CI_Model {
     //TODO:Validar que la Especialidad Médica al ser eliminada no tenga prestaciones valoradas actual e histórica con esta especialidad.
     public function delete($specialityID) {
 
-        $query = $this->db->get_where('specialitys', array("speciality_id" => $specialityID));
+        $query = $this->db->get_where('specialities', array("speciality_id" => $specialityID));
 
 
         if($query->num_rows()){
