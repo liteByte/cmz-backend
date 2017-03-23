@@ -40,18 +40,18 @@ class NomenclatorController extends AuthController{
       $anesthetist_unity  = $post->anesthetist_unity   ?? 0;
       $spending_unity     = $post->spending_unity      ?? 0;
 
-      if(empty($type))                                                 return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($code))                                                 return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($description))                                          return $this->response(['error'=>'No se ha ingresado descripción'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($unity))                                                return $this->response(['error'=>'No se ha ingresado unidad'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($speciality_unity)   && strlen($speciality_unity) ==0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($help_unity)         && strlen($help_unity) ==0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($anesthetist_unity)  && strlen($anesthetist_unity) ==0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($spending_unity)     && strlen($spending_unity) ==0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($code))                                                  return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($description))                                           return $this->response(['error'=>'No se ha ingresado descripción'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($unity))                                                 return $this->response(['error'=>'No se ha ingresado unidad'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($speciality_unity)   && strlen($speciality_unity) == 0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Validations
       $unities = ['P','Q','R','G','B','V','A','E'];
-      if (!in_array($unity, $unities))      return $this->response(['error'=>'La unidad indicada no es valida'], REST_Controller::HTTP_BAD_REQUEST);
+      if (!in_array($unity, $unities))      return $this->response(['error'=>'La unidad indicada no es válida'], REST_Controller::HTTP_BAD_REQUEST);
       if($speciality_unity < 0 )            return $this->response(['error'=>'La unidad de especialidad no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
       if($help_unity < 0 )                  return $this->response(['error'=>'La unidad de ayuda no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
       if($anesthetist_unity < 0 )           return $this->response(['error'=>'La unidad de anestesista no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
@@ -110,17 +110,17 @@ class NomenclatorController extends AuthController{
       $spending_unity     = $post->spending_unity      ?? 0;
       $id                 = (int) $this->get('id');
 
-      if(empty($type))                                                 return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($description))                                          return $this->response(['error'=>'No se ha ingresado descripción'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($unity))                                                return $this->response(['error'=>'No se ha ingresado unidad'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($speciality_unity)   && strlen($speciality_unity) ==0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($help_unity)         && strlen($help_unity) ==0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($anesthetist_unity)  && strlen($anesthetist_unity) ==0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($spending_unity)     && strlen($spending_unity) ==0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($description))                                           return $this->response(['error'=>'No se ha ingresado descripción'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($unity))                                                 return $this->response(['error'=>'No se ha ingresado unidad'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($speciality_unity)   && strlen($speciality_unity) == 0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Validations
       $unities = ['P','Q','R','G','B','V','A','E'];
-      if (!in_array($unity, $unities))      return $this->response(['error'=>'La unidad indicada no es valida'], REST_Controller::HTTP_BAD_REQUEST);
+      if (!in_array($unity, $unities))      return $this->response(['error'=>'La unidad indicada no es válida'], REST_Controller::HTTP_BAD_REQUEST);
       if($speciality_unity < 0 )            return $this->response(['error'=>'La unidad de especialidad no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
       if($help_unity < 0 )                  return $this->response(['error'=>'La unidad de ayuda no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
       if($anesthetist_unity < 0 )           return $this->response(['error'=>'La unidad de anestesista no puede ser menor a 0'], REST_Controller::HTTP_BAD_REQUEST);
@@ -155,7 +155,7 @@ class NomenclatorController extends AuthController{
       $nomenclator = $this->Nomenclator->getNomenclatorById($id);
 
       if(empty($nomenclator)){
-        return $this->response(['error'=>'No se encontro el ID del nomenclador'], REST_Controller::HTTP_BAD_REQUEST);
+        return $this->response(['error'=>'No se encontró el ID del nomenclador'], REST_Controller::HTTP_BAD_REQUEST);
       } else {
         return $this->response($nomenclator, REST_Controller::HTTP_OK);
       }

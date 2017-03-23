@@ -114,7 +114,7 @@ class Nomenclator extends CI_Model{
 
     //Code+class validation
     $query = $this->db->get_where('nomenclators', array('code' => $code,'class' => $class));
-    if ($query->num_rows() > 0) return "La combinacion de codigo y clase ingresada ya ha sido utilizada";
+    if ($query->num_rows() > 0) return "La combinación de codigo y clase ingresada ya ha sido utilizada";
 
     return "OK";
 
