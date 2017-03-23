@@ -9,17 +9,17 @@ class Plan extends CI_Model{
   private $medical_insurance_id;
 
   public function __construct(){
-      parent::__construct();
+    parent::__construct();
   }
 
   //Creates the plan in 'plans'
   public function save($description,$medical_insurance_denom,$medical_insurance_id){
 
     $data = array(
-                  'description'                 => $description,
-                  'medical_insurance_id'        => $medical_insurance_id,
-                  'medical_insurance_denom'     => $medical_insurance_denom,
-                  'active'                      => 'active'
+        'description'                 => $description,
+        'medical_insurance_id'        => $medical_insurance_id,
+        'medical_insurance_denom'     => $medical_insurance_denom,
+        'active'                      => 'active'
     );
 
     $this->db->insert('plans', $data);
@@ -31,16 +31,16 @@ class Plan extends CI_Model{
   //Updates the plan in 'plans'
   public function update($description,$medical_insurance_denom,$medical_insurance_id,$id,$userID){
 
-      $now = date('Y-m-d H:i:s');
+    $now = date('Y-m-d H:i:s');
 
-      $data = array(
-                    'description'                 => $description,
-                    'medical_insurance_id'        => $medical_insurance_id,
-                    'medical_insurance_denom'     => $medical_insurance_denom,
-                    'active'                      => 'active',
-                    'update_date'                 => $now,
-                    'modify_user_id'              => $userID
-      );
+    $data = array(
+        'description'                 => $description,
+        'medical_insurance_id'        => $medical_insurance_id,
+        'medical_insurance_denom'     => $medical_insurance_denom,
+        'active'                      => 'active',
+        'update_date'                 => $now,
+        'modify_user_id'              => $userID
+    );
 
     $this->db->where('plan_id', $id);
     $this->db->update('plans', $data);
@@ -60,7 +60,7 @@ class Plan extends CI_Model{
     $query = $this->db->get('plans');
 
     foreach ($query->result_array('Plan') as $row){
-       array_push($result,$row);
+      array_push($result,$row);
     }
 
     return $result;
@@ -82,13 +82,20 @@ class Plan extends CI_Model{
   public function delete($planID,$userID){
 
     $now = date('Y-m-d H:i:s');
+    $query = $this->db->get_where('plans', ["plan_id" => $planID]);
 
-    //Delete insurance
-    $this->db->where('plan_id', $planID);
-    $this->db->update('plans', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
+    if($query->num_rows()){
+      //Delete insurance
+      $this->db->where('plan_id', $planID);
+      $result = $this->db->delete('plans');
+      $errors = $this->db->error();
+      if($errors['code'] == '1451') return "No se puede eliminar el Plam, ya que posee información relacionada";
+      if(!$result) return "Error al intentar Usuario";
 
+    }else{
+      return "El Id del plan no existe en la base de datos";
+    }
     return true;
-
   }
 
   public function validateData($description,$medical_insurance_id){

@@ -16,10 +16,10 @@ class User extends CI_Model{
   private $date_updated;
   private $date_created;
 
-    public function __construct(){
-      parent::__construct();
-      $this->load->library('hash');
-    }
+  public function __construct(){
+    parent::__construct();
+    $this->load->library('hash');
+  }
 
   //Get user information to sign in
   public function getUser($dni){
@@ -36,14 +36,14 @@ class User extends CI_Model{
     $now = date('Y-m-d H:i:s');
 
     $data = array(
-                  'name'            => $name,
-                  'last_name'       => $last_name,
-                  'document_type'   => $document_type,
-                  'document_number' => $document_number,
-                  'password'        => $this->hash->encrypt($password),
-                  'email'           => $email,
-                  'active'          => 'active',
-                  'date_created'    => $now
+        'name'            => $name,
+        'last_name'       => $last_name,
+        'document_type'   => $document_type,
+        'document_number' => $document_number,
+        'password'        => $this->hash->encrypt($password),
+        'email'           => $email,
+        'active'          => 'active',
+        'date_created'    => $now
     );
 
     $this->db->insert('users', $data);
@@ -61,12 +61,12 @@ class User extends CI_Model{
     $now = date('Y-m-d H:i:s');
 
     $data = array(
-                  'name'            => $name,
-                  'last_name'       => $last_name,
-                  'document_type'   => $document_type,
-                  'document_number' => $document_number,
-                  'email'           => $email,
-                  'date_update'     => $now
+        'name'            => $name,
+        'last_name'       => $last_name,
+        'document_type'   => $document_type,
+        'document_number' => $document_number,
+        'email'           => $email,
+        'date_update'     => $now
     );
 
     $this->db->where('user_id', $id);
@@ -78,14 +78,15 @@ class User extends CI_Model{
 
   //Delete user and role information in 'user_role'
   //TODO: verificar que el usuario no tenga auditorias antes de borrarlo
-  public function delete($userID){
-
-    $query = $this->db->get_where('users', array("user_id" => $userID));
+  //TODO: Definir el tipo de Baja.
+  public function delete($userID, $DownUserID){
+    $now = date('Y-m-d H:i:s');
+    $query = $this->db->get_where('users', ["user_id" => $userID]);
 
     if($query->num_rows()){
       //Delete user
       $this->db->where('user_id', $userID);
-      $result = $this->db->delete('users');
+      $result = $this->db->update('users', ['active' => 'inactive', 'modify_user_id' => $DownUserID,'update_date' =>$now]);
       $errors = $this->db->error();
       if($errors['code'] == '1451') return "No se puede eliminar el Usuario, ya que posee información relacionada";
       if(!$result) return "Error al intentar Usuario";
@@ -113,7 +114,7 @@ class User extends CI_Model{
 
     foreach ($query->result_array() as $row)
     {
-       array_push($result->roles,$row);
+      array_push($result->roles,$row);
     }
 
     return $result;
@@ -126,8 +127,8 @@ class User extends CI_Model{
 
     if ($query->num_rows() > 0)
     {
-       $row = $query->row();
-       return array('status'=>'ok','data'=>$row);
+      $row = $query->row();
+      return array('status'=>'ok','data'=>$row);
 
     } else {
 
@@ -146,7 +147,7 @@ class User extends CI_Model{
 
     foreach ($query->result_array('User') as $row)
     {
-       array_push($result,$row);
+      array_push($result,$row);
     }
 
     return $result;
@@ -167,7 +168,7 @@ class User extends CI_Model{
 
     foreach ($query->result_array() as $row)
     {
-       array_push($roles,$row['role_id']);
+      array_push($roles,$row['role_id']);
     }
 
     //If user has no roles, return empty
@@ -185,7 +186,7 @@ class User extends CI_Model{
 
     foreach ($query->result_array() as $row)
     {
-       array_push($result,$row['name']);
+      array_push($result,$row['name']);
     }
 
     //If user has no permissions, return empty
