@@ -5,4 +5,4 @@ pipelines:
     staging:
       - step:
           script:
-            - curl $ADDRESS/push.php
+            - curl $ADDRESS/staging/push.php
