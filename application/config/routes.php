@@ -105,6 +105,12 @@ $route['contacts/update/(:num)']      = 'ContactController/updateContact/id/$1';
 $route['contacts/remove/(:num)']      = 'ContactController/removeContact/id/$1';
 $route['contacts/(:num)']             = 'ContactController/getContact/id/$1';
 
+////////////////////////Nomenclator routes////////////////////////
+$route['nomenclators']                = 'NomenclatorController/nomenclators';  //Get -> show contacts  & post -> create contact
+$route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator/id/$1';
+$route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
+$route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
