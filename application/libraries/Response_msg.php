@@ -1,12 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Created by PhpStorm.
- * User: Edgar
- * Date: 24/02/2017
- * Time: 13:30
- */
 class Response_msg{
 
 

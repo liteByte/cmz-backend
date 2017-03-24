@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Edgar
- * Date: 21/02/2017
- * Time: 13:20
- */
 defined("BASEPATH") or exit("No direct script access allowed");
 
 class Migrate extends CI_Controller {
