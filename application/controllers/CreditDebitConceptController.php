@@ -56,7 +56,7 @@ class CreditDebitConceptController extends AuthController{
 
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
-        //If everything is valid, save the plan
+        //If everything is valid, save the concept
         if($this->CreditDebitConcept->save($code, $concept_description, $concept_group_id,$concept_type_id,$concept_movement_id,$value,$applies_liquidation,$receipt_legend)){
             return $this->response(['msg'=>'Concepto creado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
@@ -140,7 +140,7 @@ class CreditDebitConceptController extends AuthController{
 
         $concept = $this->CreditDebitConcept->getConceptById($id);
 
-        if(empty($plan)){
+        if(empty($concept)){
             return $this->response(['error'=>'No se encontro el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
         } else {
             return $this->response($concept, REST_Controller::HTTP_OK);
