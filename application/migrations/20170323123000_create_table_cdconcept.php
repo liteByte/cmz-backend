@@ -19,7 +19,7 @@ class Migration_Create_table_cdconcept extends CI_Migration{
                     'unsigned'      =>  TRUE,
                     'unique'        =>  TRUE,
                     'null'          =>  FALSE
-                )
+                ),
                 'concept_description' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  70,
