@@ -56,7 +56,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 ////////////////////////Role routes////////////////////////
 $route['roles']                       = 'RoleController/roles';  //Get -> show roles  & post -> create role
-$route['roles/(:num)']                = 'RoleController/getRole/id/$1';
 $route['roles/update/(:num)']         = 'RoleController/updateRole/id/$1';
 
 ////////////////////////Permission routes////////////////////////
@@ -118,7 +117,7 @@ $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 $route['scopes']                      = 'ScopeController/scopes';  //Get -> show scopes
 
 ////////////////////////Login routes////////////////////////
-$route['login']["post"]               = 'LoginController/login';
+$route['login']['post']               = 'LoginController/login';
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
