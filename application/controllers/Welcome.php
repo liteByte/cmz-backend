@@ -29,7 +29,7 @@ class Welcome extends CI_Controller {
 	{
 
 
-		$_SESSION['usuario'] = 'Edgar';
+		$_SESSION['usuario'] = 'CMZ';
 
 		//$key = 'usuario';
 		 //echo $this->session->userdata($key);

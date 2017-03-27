@@ -56,7 +56,6 @@ $route['translate_uri_dashes'] = FALSE;
 
 ////////////////////////Role routes////////////////////////
 $route['roles']                       = 'RoleController/roles';  //Get -> show roles  & post -> create role
-$route['roles/(:num)']                = 'RoleController/getRole/id/$1';
 $route['roles/update/(:num)']         = 'RoleController/updateRole/id/$1';
 
 ////////////////////////Permission routes////////////////////////
@@ -105,6 +104,12 @@ $route['contacts/update/(:num)']      = 'ContactController/updateContact/id/$1';
 $route['contacts/remove/(:num)']      = 'ContactController/removeContact/id/$1';
 $route['contacts/(:num)']             = 'ContactController/getContact/id/$1';
 
+////////////////////////Nomenclator routes////////////////////////
+$route['nomenclators']                = 'NomenclatorController/nomenclators';  //Get -> show contacts  & post -> create contact
+$route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator/id/$1';
+$route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
+$route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
@@ -112,7 +117,7 @@ $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 $route['scopes']                      = 'ScopeController/scopes';  //Get -> show scopes
 
 ////////////////////////Login routes////////////////////////
-$route['login']["post"]               = 'LoginController/login';
+$route['login']['post']               = 'LoginController/login';
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva

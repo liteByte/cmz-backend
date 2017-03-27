@@ -9,16 +9,19 @@ require APPPATH . '/libraries/REST_Controller.php';
 use Restserver\Libraries\REST_Controller;
 
 
-class AuthController extends REST_Controller{
+class AuthController extends REST_Controller {
 
-    function __construct(){
+    function __construct() {
         parent::__construct();
     }
 
-    public function validateToken($headers){
+    public function validateToken($headers) {
+
+        $headers = array_change_key_case($headers, CASE_LOWER);
 
         $token = $headers["authorization"];
-        if(!empty($token)){
+
+        if (!empty($token)) {
 
             try {
                 $user = JWT::decode($token);
@@ -29,10 +32,10 @@ class AuthController extends REST_Controller{
                 return $token_valid;
             }
 
-                $user->status = "ok";
-                return $user;
+            $user->status = "ok";
+            return $user;
 
-        }else{
+        } else {
 
             $token_valid = new stdClass();
             $token_valid->status = "error";
