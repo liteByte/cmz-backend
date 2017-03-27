@@ -45,7 +45,7 @@ class CoverageController extends AuthController{
         foreach ($data as $units){
             $type_units = $units->type_units;
             if($type_units == "Ambulatorio"){ $unit_ambulatorio[] =  $units->units;}
-            if($type_units == "Internacion"){ $unit_internacion[] =  $units->units;}
+            if($type_units == "Internación"){ $unit_internacion[] =  $units->units;}
         }
 
         $units_default_ambulatorio = array_values(array_diff($unit_default, $unit_ambulatorio));
