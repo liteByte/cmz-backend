@@ -68,12 +68,19 @@ class CreditDebitConcept extends CI_Model{
 
     $result = array();
 
-    $this->db->where(['active' => "active"]);
+    $this->db->select('credit_debit_concepts.* , concept_group.group_description, concept_type.type_description , concept_movement.movement_description');
+    $this->db->from ('credit_debit_concepts');
+    $this->db->join('concept_group',      'concept_group.concept_group_id = credit_debit_concepts.concept_group_id');
+    $this->db->join('concept_type',       'concept_type.concept_type_id = credit_debit_concepts.concept_type_id');
+    $this->db->join('concept_movement',   'concept_movement.concept_movement_id = credit_debit_concepts.concept_movement_id');
     $this->db->order_by("concept_description", "asc");
-    $query = $this->db->get('credit_debit_concepts');
+    $this->db->where('credit_debit_concepts.active',"active");
+    $query =  $this->db->get();
 
-    foreach ($query->result_array('CreditDebitConcept') as $row){
-      array_push($result,$row);
+    if(!$query->row()){ return $result;}
+
+    foreach ($query->result_array('Professionals') as $row){
+        array_push($result,$row);
     }
 
     return $result;
