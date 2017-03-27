@@ -22,22 +22,22 @@ class Migration_Create_table_concept_group extends CI_Migration{
 
         $data = array(
             array(
-                'description' => "Deducciones Legales"
+                'group_description' => "Deducciones Legales"
             ),
             array(
-                'description' => "Deducciones Obligatorias"
+                'group_description' => "Deducciones Obligatorias"
             ),
             array(
-                'description' => "Deducciones Estatutarias"
+                'group_description' => "Deducciones Estatutarias"
             ),
             array(
-                'description' => "Deducciones Voluntarias"
+                'group_description' => "Deducciones Voluntarias"
             ),
             array(
-                'description' => "Deducciones Judiciales"
+                'group_description' => "Deducciones Judiciales"
             ),
             array(
-                'description' => "Otros Créditos"
+                'group_description' => "Otros Créditos"
             )
         );
 
