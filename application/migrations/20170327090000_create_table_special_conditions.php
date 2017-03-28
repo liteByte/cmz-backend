@@ -36,8 +36,9 @@ class Migration_Create_table_special_conditions extends CI_Migration{
                 'null'          =>  FALSE
             ],
             'type' => [
-                'type'          =>  'VARCHAR',
-                'constraint'    =>  50,
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ],
             'period_of_validity'=> [
@@ -59,8 +60,9 @@ class Migration_Create_table_special_conditions extends CI_Migration{
         ]);
 
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                       REFERENCES plans(plan_id)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)          REFERENCES medical_insurance(medical_insurance_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                 REFERENCES plans(plan_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)    REFERENCES medical_insurance(medical_insurance_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (type)                    REFERENCES special_conditions_type(id_special_conditions_type)');
         $this->dbforge->add_field('UNIQUE KEY coverage_key (medical_insurance_id, plan_id,nomenclator_type, provision )');
         $this->dbforge->add_key('id_special_conditions', TRUE);
         $this->dbforge->create_table('special_conditions');
@@ -72,7 +74,7 @@ class Migration_Create_table_special_conditions extends CI_Migration{
                 'plan_id'                       => 1,
                 'nomenclator_type'              => 'NN',
                 'provision'                     => '12345678',
-                'type'                          => 'Completo',
+                'type'                          => 1,
                 'period_of_validity'            => '2017/12',
                 'type_of_values'                => TRUE,
                 'group_of_values'               => TRUE,
@@ -82,7 +84,7 @@ class Migration_Create_table_special_conditions extends CI_Migration{
                 'plan_id'                       => 3,
                 'nomenclator_type'              => 'NN',
                 'provision'                     => '12345678',
-                'type'                          => 'Completo',
+                'type'                          => 2,
                 'period_of_validity'            => '2017/12',
                 'type_of_values'                => FALSE,
                 'group_of_values'               => FALSe,
