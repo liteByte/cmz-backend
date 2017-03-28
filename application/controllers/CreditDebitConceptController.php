@@ -75,12 +75,29 @@ class CreditDebitConceptController extends AuthController{
         if(!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
             return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
-        $concepts = $this->CreditDebitConcept->getConcepts();
-        return $this->response($concepts, REST_Controller::HTTP_OK);
+        $id = $this->get('id');
+
+        if(!isset($id)){
+
+            $concepts = $this->CreditDebitConcept->getConcepts();
+            return $this->response($concepts, REST_Controller::HTTP_OK);
+
+        }else{
+
+            $concept = $this->CreditDebitConcept->getConceptById($id);
+
+            if(empty($concept)){
+                return $this->response(['error'=>'No se encontro el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
+            } else {
+                return $this->response($concept, REST_Controller::HTTP_OK);
+            }
+
+        }
+
     }
 
     //Update concept information
-    public function updateConcept_put(){
+    public function concepts_put(){
 
         //Validates if the user is logged and the token sent is valid.
         if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
@@ -125,7 +142,7 @@ class CreditDebitConceptController extends AuthController{
     }
 
     //Show specific concept
-    public function getConcept_get(){
+    /*public function concepts_get(){
 
         //Validates if the user is logged and the token sent is valid.
         if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
@@ -145,10 +162,10 @@ class CreditDebitConceptController extends AuthController{
         } else {
             return $this->response($concept, REST_Controller::HTTP_OK);
         }
-    }
+    }*/
 
     //Delete concept
-    public function removeConcept_delete(){
+    public function concepts_delete(){
 
         //Validates if the user is logged and the token sent is valid.
         if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
