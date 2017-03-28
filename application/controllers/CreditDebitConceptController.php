@@ -141,29 +141,6 @@ class CreditDebitConceptController extends AuthController{
 
     }
 
-    //Show specific concept
-    /*public function concepts_get(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMconceptosdebitocredito", $this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
-        $id = $this->get('id');
-
-        if(empty($id)) return $this->response(['error'=>'Falta el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
-
-        $concept = $this->CreditDebitConcept->getConceptById($id);
-
-        if(empty($concept)){
-            return $this->response(['error'=>'No se encontro el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
-        } else {
-            return $this->response($concept, REST_Controller::HTTP_OK);
-        }
-    }*/
-
     //Delete concept
     public function concepts_delete(){
 

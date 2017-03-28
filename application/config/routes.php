@@ -111,7 +111,7 @@ $route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id
 
 ////////////////////////Credit-debit-concepts routes////////////////////////
 $route['cdconcepts']                  = 'CreditDebitConceptController/concepts'; //Get -> show concepts  & post -> create concept
-$route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/id/$1';
+$route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/id/$1'; //Get -> show specific concept, Put -> update concept , Delete -> delete concept
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
