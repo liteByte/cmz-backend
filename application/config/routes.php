@@ -84,7 +84,6 @@ $route['specialities/update/(:num)']  = 'SpecialityController/updateSpeciality/i
 $route['specialities/remove/(:num)']  = 'SpecialityController/removeSpeciality/id/$1';
 $route['specialities/(:num)']         = 'SpecialityController/getSpeciality/id/$1';
 
-
 ////////////////////////Medical Insurances routes////////////////////////
 $route['insurances']                  = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
 $route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsurance/id/$1';
@@ -110,6 +109,10 @@ $route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator
 $route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
 $route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
 
+////////////////////////Credit-debit-concepts routes////////////////////////
+$route['cdconcepts']                  = 'CreditDebitConceptController/concepts'; //Get -> show concepts  & post -> create concept
+$route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/id/$1'; //Get -> show specific concept, Put -> update concept , Delete -> delete concept
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
@@ -127,6 +130,9 @@ $route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 
 ////////////////////////Category Circle routes////////////////////////
 $route['medicalcareer']               = 'MedicalCareerController/medical_career';
+
+////////////////////////Concept Group routes////////////////////////
+$route['conceptgroup']                = 'ConceptGroupController/conceptGroups';
 
 ////////////////////////Payment Types routes////////////////////////
 $route['paymenttypes']                = 'PaymentTypesController/payment_types';
