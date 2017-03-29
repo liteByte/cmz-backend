@@ -110,6 +110,10 @@ $route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator
 $route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
 $route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
 
+////////////////////////Fee routes////////////////////////
+$route['fees']                        = 'FeeController/fees';  //Get -> show fees  & post -> create fee
+$route['fees/(:num)']                 = 'FeeController/fees/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
