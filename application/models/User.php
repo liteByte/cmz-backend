@@ -23,7 +23,7 @@ class User extends CI_Model{
 
   //Get user information to sign in
   public function getUser($dni){
-    $this->db->select('*');
+    $this->db->select('user_id,document_type,document_number,name,email,last_name,active');
     $this->db->where('document_number', $dni);
     $this->db->where('active', 'active');
     $query = $this->db->get('users');
@@ -100,6 +100,7 @@ class User extends CI_Model{
   public function getUserById($userID){
 
     //Get user data
+    $this->db->select('user_id,document_type,document_number,name,email,last_name,active');
     $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
     $result = $query->row();
