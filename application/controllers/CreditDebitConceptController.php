@@ -22,10 +22,10 @@ class CreditDebitConceptController extends AuthController{
     public function concepts_post(){
 
         //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
+        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
         //Validates if the user has permissions to do this action
-        if(!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
+        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
             return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $post = json_decode(file_get_contents('php://input'));
@@ -39,25 +39,25 @@ class CreditDebitConceptController extends AuthController{
         $applies_liquidation    = $post->applies_liquidation  ?? "";
         $receipt_legend         = $post->receipt_legend       ?? "";
 
-        if(empty($code))                          return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_description))           return $this->response(['error'=>'No se ha ingresado descripción del concepto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
-        if(strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($code))                          return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_description))           return $this->response(['error'=>'No se ha ingresado descripción del concepto'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
+        if (strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if($code == 0)      return $this->response(['error'=>'El código de concepto no puede ser 0'], REST_Controller::HTTP_BAD_REQUEST);
-        if($value < 0)      return $this->response(['error'=>'El valor ingresado no puede ser negativo'], REST_Controller::HTTP_BAD_REQUEST);
+        if ($code == 0)      return $this->response(['error'=>'El código de concepto no puede ser 0'], REST_Controller::HTTP_BAD_REQUEST);
+        if ($value < 0)      return $this->response(['error'=>'El valor ingresado no puede ser negativo'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validate ids and repeated code
         $error = $this->CreditDebitConcept->validateData($code, $concept_group_id,$concept_type_id,$concept_movement_id);
 
-        if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
+        if (strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, save the concept
-        if($this->CreditDebitConcept->save($code, $concept_description, $concept_group_id,$concept_type_id,$concept_movement_id,$value,$applies_liquidation,$receipt_legend)){
+        if ($this->CreditDebitConcept->save($code, $concept_description, $concept_group_id,$concept_type_id,$concept_movement_id,$value,$applies_liquidation,$receipt_legend)){
             return $this->response(['msg'=>'Concepto creado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -69,24 +69,24 @@ class CreditDebitConceptController extends AuthController{
     public function concepts_get(){
 
         //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
+        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
         //Validates if the user has permissions to do this action
-        if(!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
+        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
             return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $id = $this->get('id');
 
-        if(!isset($id)){
+        if (!isset($id)){
 
             $concepts = $this->CreditDebitConcept->getConcepts();
             return $this->response($concepts, REST_Controller::HTTP_OK);
 
-        }else{
+        } else {
 
             $concept = $this->CreditDebitConcept->getConceptById($id);
 
-            if(empty($concept)){
+            if (empty($concept)){
                 return $this->response(['error'=>'No se encontro el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
             } else {
                 return $this->response($concept, REST_Controller::HTTP_OK);
@@ -100,10 +100,10 @@ class CreditDebitConceptController extends AuthController{
     public function concepts_put(){
 
         //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
+        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
         //Validates if the user has permissions to do this action
-        if(!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
+        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
             return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $post = json_decode(file_get_contents('php://input'));
@@ -117,23 +117,23 @@ class CreditDebitConceptController extends AuthController{
         $receipt_legend         = $post->receipt_legend       ?? "";
         $id                     = (int) $this->get('id');
 
-        if(empty($concept_description))           return $this->response(['error'=>'No se ha ingresado descripción del concepto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
-        if(strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_description))           return $this->response(['error'=>'No se ha ingresado descripción del concepto'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
+        if (strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if($value < 0)      return $this->response(['error'=>'El valor ingresado no puede ser negativo'], REST_Controller::HTTP_BAD_REQUEST);
+        if ($value < 0)      return $this->response(['error'=>'El valor ingresado no puede ser negativo'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Valid ids
         $error = $this->CreditDebitConcept->validateIDs($concept_group_id,$concept_type_id,$concept_movement_id);
 
-        if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
+        if (strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, update the concept
-        if($this->CreditDebitConcept->update($concept_description, $concept_group_id, $concept_type_id, $concept_movement_id, $value, $applies_liquidation, $receipt_legend, $id, $this->token_valid->user_id)){
+        if ($this->CreditDebitConcept->update($concept_description, $concept_group_id, $concept_type_id, $concept_movement_id, $value, $applies_liquidation, $receipt_legend, $id, $this->token_valid->user_id)){
             return $this->response(['msg'=>'Concepto modificado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -145,16 +145,16 @@ class CreditDebitConceptController extends AuthController{
     public function concepts_delete(){
 
         //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
+        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
 
         //Validates if the user has permissions to do this action
-        if(!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
+        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
             return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $id = (int) $this->get('id');
 
         $result = $this->CreditDebitConcept->delete($id, $this->token_valid->user_id);
-        if(strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
+        if (strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(['msg'=>'Concepto eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
 
     }

@@ -19,7 +19,7 @@ class ConceptGroup extends CI_Model{
     $query = $this->db->get('concept_group');
 
     foreach ($query->result_array('ConceptGroup') as $row){
-      array_push($result,$row);
+      $result[] = $row;
     }
 
     return $result;

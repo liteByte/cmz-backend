@@ -68,19 +68,19 @@ class CreditDebitConcept extends CI_Model{
 
     $result = array();
 
-    $this->db->select('credit_debit_concepts.* , concept_group.group_description, concept_type.type_description , concept_movement.movement_description');
-    $this->db->from ('credit_debit_concepts');
-    $this->db->join('concept_group',      'concept_group.concept_group_id = credit_debit_concepts.concept_group_id');
-    $this->db->join('concept_type',       'concept_type.concept_type_id = credit_debit_concepts.concept_type_id');
-    $this->db->join('concept_movement',   'concept_movement.concept_movement_id = credit_debit_concepts.concept_movement_id');
-    $this->db->order_by("concept_description", "asc");
-    $this->db->where('credit_debit_concepts.active',"active");
+    $this->db->select('CDC.* , CG.group_description, CT.type_description , CM.movement_description');
+    $this->db->from ('credit_debit_concepts CDC');
+    $this->db->join('concept_group CG',      'CG.concept_group_id = CDC.concept_group_id');
+    $this->db->join('concept_type CT',       'CT.concept_type_id = CDC.concept_type_id');
+    $this->db->join('concept_movement CM',   'CM.concept_movement_id = CDC.concept_movement_id');
+    $this->db->order_by("CDC.concept_description", "asc");
+    $this->db->where('CDC.active',"active");
     $query =  $this->db->get();
 
     if(!$query->row()){ return $result;}
 
     foreach ($query->result_array('Professionals') as $row){
-        array_push($result,$row);
+      $result[] = $row;
     }
 
     return $result;
