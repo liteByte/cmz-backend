@@ -36,10 +36,10 @@ class Migration_Create_table_fees extends CI_Migration{
                     'type'          => 'DATE',
                     'null'          => FALSE,
                 ),
-                'unity' => array(
-                    'type'          => 'VARCHAR',
-                    'constraint'    => 1,
-                    'null'          => FALSE
+                'unity_id' => array(
+                    'type'          =>  'INT',
+                    'constraint'    =>  5,
+                    'unsigned'      =>  TRUE
                 ),
                 'active' => array(
                     'type'          =>  'VARCHAR',
@@ -60,7 +60,8 @@ class Migration_Create_table_fees extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)    REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                 REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_type_id)             REFERENCES fee_types(fee_type_id)');
-        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period,unity)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (unity_id)                REFERENCES unities(unity_id)');
+        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period,unity_id)');
         $this->dbforge->add_key('fee_id', TRUE);
         $this->dbforge->create_table('fees');
 
@@ -73,7 +74,16 @@ class Migration_Create_table_fees extends CI_Migration{
                 'fee_type_id'           => "1",
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
-                'unity'                 => "A",
+                'unity_id'              => "1",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "2",
                 'active'                => "active"
             ),
             array(
@@ -82,7 +92,16 @@ class Migration_Create_table_fees extends CI_Migration{
                 'fee_type_id'           => "2",
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
-                'unity'                 => "A",
+                'unity_id'              => "3",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "2",
+                'plan_id'               => "3",
+                'fee_type_id'           => "2",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "4",
                 'active'                => "active"
             )
         );

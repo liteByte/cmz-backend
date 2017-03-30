@@ -73,17 +73,17 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'unity_id'              => "2",
                 'movement'              => "F",
                 'value'                 => "23",
-                'item_name'             => "A-Básica",
-                'id_medical_career'     => null,
-                'id_category_femeba'    => "1"
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
             ),
             array(
                 'unity_id'              => "3",
                 'movement'              => "U",
                 'value'                 => "34",
-                'item_name'             => "4-Especialista",
-                'id_medical_career'     => "2",
-                'id_category_femeba'    => null
+                'item_name'             => "B1-Básica 1",
+                'id_medical_career'     => null,
+                'id_category_femeba'    => "2"
             ),
             array(
                 'unity_id'              => "4",

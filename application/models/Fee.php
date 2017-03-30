@@ -97,10 +97,11 @@ class Fee extends CI_Model{
       $this->db->join('medical_insurance MI',       'MI.medical_insurance_id = F.medical_insurance_id');
       $this->db->join('plans P',                    'P.plan_id = F.plan_id');
       $this->db->join('fee_types FT',               'FT.fee_type_id = F.fee_type_id');
+      $this->db->join('unities U',                  'U.unity_id = F.unity_id');
       $this->db->order_by("MI.denomination", "asc");
       $this->db->order_by("P.description", "asc");
       $this->db->order_by("F.period", "desc");
-      $this->db->order_by("F.unity", "asc");
+      $this->db->order_by("U.unity", "asc");
       $this->db->where('F.active',"active");
       $query = $this->db->get();
 
@@ -139,7 +140,7 @@ class Fee extends CI_Model{
       $this->db->select('U.*');
       $this->db->from ('unities U');
       $this->db->order_by("U.unity", "asc");
-      $this->db->where('U.fee_id',$fee['fee_id']);
+      $this->db->where('U.unity_id',$fee['unity_id']);
       $unityQuery = $this->db->get();
 
       $unities = $unityQuery->result_array();
