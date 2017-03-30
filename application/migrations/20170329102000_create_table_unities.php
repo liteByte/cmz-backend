@@ -21,7 +21,7 @@ class Migration_Create_table_unities extends CI_Migration{
                 'unity' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  1,
-                    'null'          => FALSE
+                    'null'          =>  FALSE
                 ),
                 'movement' => array(
                     'type'          =>  'VARCHAR',
@@ -34,7 +34,7 @@ class Migration_Create_table_unities extends CI_Migration{
                     'null'          =>  FALSE
                 )
         ));
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_id)    REFERENCES FEES(fee_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_id)    REFERENCES fees(fee_id)');
         $this->dbforge->add_key('unity_id', TRUE);
         $this->dbforge->create_table('unities');
 
@@ -43,25 +43,25 @@ class Migration_Create_table_unities extends CI_Migration{
                 'fee_id'    => "1",
                 'unity'     => "A",
                 'movement'  => "F",
-                'value'     => "50"
+                'expenses'  => "50"
             ),
             array(
                 'fee_id'    => "1",
                 'unity'     => "B",
                 'movement'  => "U",
-                'value'     => "20"
+                'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "2",
                 'unity'     => "P",
                 'movement'  => "F",
-                'value'     => "80"
+                'expenses'  => "80"
             ),
             array(
                 'fee_id'    => "2",
                 'unity'     => "Q",
                 'movement'  => "U",
-                'value'     => "90"
+                'expenses'  => "90"
             )
         );
 

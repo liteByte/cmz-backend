@@ -34,7 +34,12 @@ class Validator{
 
     public function validateCuit($cuit){
         return (strlen($cuit)==11 && $cuit != 00000000000);
+    }
+
+    public function validateDate($date){
+        return true;
 
     }
+
 
 }

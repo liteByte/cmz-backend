@@ -14,7 +14,7 @@ class Migration_Create_table_medical_career extends CI_Migration{
             'description_medical_career'   => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  50,
-                'null'          => FALSE
+                'null'          =>  FALSE
             )
         ));
         $this->dbforge->add_key('id_medical_career', TRUE);
