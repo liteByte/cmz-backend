@@ -144,5 +144,9 @@ $route['coverages/update/(:num)']       = 'CoverageController/updateCoverage/id/
 $route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';
 
 ////////////////////////Special Conditions routes////////////////////////
-$route['specialconditionstypes']['get'] =  'SpecialConditionsTypesController/types';
-$route['specialconditions']['post']     = 'SpecialConditionsController/specialconditions';
+$route['specialconditionstypes']['get']     =  'SpecialConditionsTypesController/types';
+$route['specialconditions']['post']         = 'SpecialConditionsController/specialconditions';
+$route['specialconditions']['get']          = 'SpecialConditionsController/specialconditions';
+$route['specialconditions/(:num)']['delete']= 'SpecialConditionsController/specialconditions/id/$1';
+$route['specialconditions/(:num)']['put']   = 'SpecialConditionsController/specialconditions/id/$1';
+$route['specialconditions/(:num)']['get']   = 'SpecialConditionsController/specialconditions_by_id/id/$1';
