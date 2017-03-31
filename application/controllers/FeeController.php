@@ -35,7 +35,6 @@ class FeeController extends AuthController{
       $fee_type_id              = $post->fee_type_id            ?? "";
       $upload_date              = $post->upload_date            ?? "";
       $period                   = $post->period                 ?? "";
-      $unity                    = $post->unity                  ?? "";
 
       //Fee's unities
       $unities                  = $post->unities                ?? "";
@@ -46,11 +45,10 @@ class FeeController extends AuthController{
       if(empty($fee_type_id))                             return $this->response(['error'=>'No se ha ingresado tipo de arancel'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($upload_date))                             return $this->response(['error'=>'No se ha ingresado fecha de alta'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($period))                                  return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($unity))                                   return $this->response(['error'=>'No se ha ingresado unidad del arancel'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($unities))                                 return $this->response(['error'=>'No se ha ingresado datos de unidades'], REST_Controller::HTTP_BAD_REQUEST);
 
       foreach ($unities as $unity) {
-          if(empty($unity->unity))                                  return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
+          if(empty($unity->unity) || strlen($unity->unity) <> 1)    return $this->response(['error'=>'No se ha ingresado alguna unidad o se ha ingresado un valor incorrecto para la misma'], REST_Controller::HTTP_BAD_REQUEST);
           if(empty($unity->movement))                               return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
           if(empty($unity->expenses) || $unity->expenses < 0)       return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
           if(empty($unity->honoraries))                             return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
@@ -67,12 +65,12 @@ class FeeController extends AuthController{
       if(!$this->validator->validateDate($upload_date))     return $this->response(array('error'=>'Fecha de carga invalida'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Validate fields and unique key
-      $error = $this->fee->validateData($medical_insurance_id, $plan_id, $fee_type_id, $period, $unity);
+      $error = $this->fee->validateData($medical_insurance_id, $plan_id, $fee_type_id, $period, $unities);
 
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, save the fee
-      if($this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unity, $unities)){
+      if($this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unities)){
         return $this->response(['msg'=>'Arancel creado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

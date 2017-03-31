@@ -41,6 +41,11 @@ class Migration_Create_table_fees extends CI_Migration{
                     'constraint'    =>  5,
                     'unsigned'      =>  TRUE
                 ),
+                'unity' => array(
+                    'type'          =>  'VARCHAR',
+                    'constraint'    =>  1,
+                    'null'          =>  FALSE
+                ),
                 'active' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  30,
@@ -61,7 +66,7 @@ class Migration_Create_table_fees extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                 REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_type_id)             REFERENCES fee_types(fee_type_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (unity_id)                REFERENCES unities(unity_id)');
-        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period,unity_id)');
+        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period,unity)');
         $this->dbforge->add_key('fee_id', TRUE);
         $this->dbforge->create_table('fees');
 
@@ -75,6 +80,7 @@ class Migration_Create_table_fees extends CI_Migration{
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
                 'unity_id'              => "1",
+                'unity'                 => "A",
                 'active'                => "active"
             ),
             array(
@@ -84,6 +90,7 @@ class Migration_Create_table_fees extends CI_Migration{
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
                 'unity_id'              => "2",
+                'unity'                 => "B",
                 'active'                => "active"
             ),
             array(
@@ -93,6 +100,7 @@ class Migration_Create_table_fees extends CI_Migration{
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
                 'unity_id'              => "3",
+                'unity'                 => "P",
                 'active'                => "active"
             ),
             array(
@@ -102,6 +110,7 @@ class Migration_Create_table_fees extends CI_Migration{
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
                 'unity_id'              => "4",
+                'unity'                 => "Q",
                 'active'                => "active"
             )
         );

@@ -9,58 +9,72 @@ class Fee extends CI_Model{
   }
 
   //Creates the fee in 'fees'
-  public function save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unity, $unities){
+  public function save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unities){
 
-      $data = array(
+      //Make the fee structure
+      $feeData = array(
                     'medical_insurance_id'  => $medical_insurance_id,
                     'plan_id'               => $plan_id,
                     'fee_type_id'           => $fee_type_id,
                     'upload_date'           => $upload_date,
                     'period'                => $period,
-                    'unity'                 => $unity,
+                    'unity_id'              => "",
+                    "unity"                 => "",
                     'active'                => "active"
       );
 
-      $this->db->insert('fees', $data);
+      //For every unit the fee has, insert the unity (and its honoraries) and then insert the fee
+      foreach ($unities as $unity){
 
-      //Obtain last inserted fee id
-      $feeID = $this->db->insert_id();
+          //Insert the unity and get it's ID
+          $unityID = $this->createUnity($unity);
+          if ($unityID == false) return false;
 
-      return $this->updateUnities($unities,$feeID);
+          //Complete fee data with it's unity information
+          $feeData['unity_id'] = $unityID;
+          $feeData['unity']    = strtoupper ($unity->unity);
+
+          //Insert the fee
+          $this->db->insert('fees', $feeData);
+      }
+
+      return true;
 
   }
 
-  //Update a fee's unities
-  public function updateUnities($unities,$feeID){
+  //Create an unity with it's honoraries
+  public function createUnity($unityData){
 
-    //Delete old unities from the fee
-    $this->db->delete('unities', ['fee_id' => $feeID]);
+      $this->db->insert('unities', ['unity' =>strtoupper($unityData->unity), 'movement' => $unityData->movement, 'expenses' => $unityData->expenses]);
+      if ($this->db->affected_rows() == 0) return false;
 
-    //Add new unities to the fee
-    foreach ($unities as $unity) {
-
-      $this->db->insert('unities', ['fee_id' => $feeID,'unity' => $unity->unity, 'movement' => $unity->movement, 'expenses' => $unity->expenses]);
-
-      //Obtain last inserted fee id
+      //Obtain last inserted unity id
       $unityID = $this->db->insert_id();
 
       //Add honoraries to the unity
-      if (!($this->updateHonoraries($unity->honoraries, $unityID))) return false;
-    }
+      if (!($this->createHonoraries($unityData->honoraries, $unityID))) return false;
 
-    return true;
+      return $unityID;
 
   }
 
-  //Update a unity's honoraries
-  public function updateHonoraries($honoraries,$unityID){
-
-    //Delete old honoraries from the unity
-    $this->db->delete('honoraries', ['unity_id' => $unityID]);
+  //Create an unity's honoraries
+  public function createHonoraries($honoraries,$unityID){
 
     //Add new honoraries to the unity
     foreach ($honoraries as $honorary) {
-      $this->db->insert('honoraries', ['unity_id' => $unityID,'movement' => $honorary->movement, 'value' => $honorary->value, 'id_medical_career' => $honorary->id_medical_career, 'id_category_femeba' => $honorary->id_category_femeba]);
+
+      $honorariesData = [
+            'unity_id'            => $unityID,
+            'movement'            => $honorary->movement,
+            'value'               => $honorary->value,
+            'id_medical_career'   => (empty($honorary->id_medical_career) ? null : $honorary->id_medical_career),
+            'id_category_femeba'  => (empty($honorary->id_category_femeba) ? null : $honorary->id_category_femeba),
+            'item_name'           => $honorary->item_name
+      ];
+
+      $this->db->insert('honoraries', $honorariesData);
+      if ($this->db->affected_rows() == 0) return false;
     }
 
     return true;
@@ -177,11 +191,17 @@ class Fee extends CI_Model{
 
   }
 
-  public function validateData($medical_insurance_id, $plan_id, $fee_type_id, $period, $unity){
+  public function validateData($medical_insurance_id, $plan_id, $fee_type_id, $period, $unities){
 
-     //Repeated key validation
-     $query = $this->db->get_where('fees', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'fee_type_id' => $fee_type_id, 'period' => $period, 'unity' => $unity]);
-     if ($query->num_rows() > 0) return "Ya existe un arancel con la misma combinación de Obra Social + Plan + Tipo Arancel + Período + Unidad";
+      //Validate repetead key for each unity
+     foreach($unities as $unity){
+         $this->db->select('F.*');
+         $this->db->from ('fees F');
+         $this->db->where(['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'fee_type_id' => $fee_type_id, 'period' => $period, 'unity' => $unity->unity]);
+         $this->db->limit(1);
+         $query = $this->db->get();
+         if ($query->num_rows() > 0) return ("Ya existe un arancel con la misma combinación de Obra Social + Plan + Tipo Arancel + Período para la unidad ".$unity->unity);
+     }
 
      return $this->validateIDs($medical_insurance_id,$plan_id,$fee_type_id);
 
