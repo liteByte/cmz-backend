@@ -146,12 +146,12 @@ class CoverageController extends AuthController{
 
         $plan_id                    = $post->plan_id;
         $medical_insurance_id       = $post->medical_insurance_id;
-        $id_units_coverage          = $post->id_units_coverage;
+        //$id_units_coverage          = $post->id_units_coverage;
         $data                       = $post->data;
 
         if(empty($plan_id))                     return $this->response(array('error'=>'No se ha ingresado el id del Plan'), RC::HTTP_BAD_REQUEST);
         if(empty($medical_insurance_id))        return $this->response(array('error'=>'No se ha ingresado el id de la Obra Social'), RC::HTTP_BAD_REQUEST);
-        if(empty($id_units_coverage))           return $this->response(array('error'=>'Error en la data enviada'), RC::HTTP_BAD_REQUEST);
+        //if(empty($id_units_coverage))           return $this->response(array('error'=>'Error en la data enviada'), RC::HTTP_BAD_REQUEST);
 
         // Range can be 0-100, 2 decimal
         foreach ($data as $h_g){
@@ -164,9 +164,10 @@ class CoverageController extends AuthController{
 
         //Validate if exist all units
         foreach ($data as $units){
-            $type_units = $units->type_units;
-            if($type_units == "Ambulatorio"){ $unit_ambulatorio[] =  $units->units;}
-            if($type_units == "Internacion"){ $unit_internacion[] =  $units->units;}
+
+            $type_units = $units->type_unit;
+            if($type_units == "Ambulatorio"){ $unit_ambulatorio[] =  $units->unit;}
+            if($type_units == "Internación"){ $unit_internacion[] =  $units->unit;}
         }
 
         $units_default_ambulatorio = array_values(array_diff($unit_default, $unit_ambulatorio));
@@ -192,7 +193,7 @@ class CoverageController extends AuthController{
         }
 
         //Update data
-        $result = $this->Coverages->update($id, $plan_id,  $medical_insurance_id, $id_units_coverage, $data);
+        $result = $this->Coverages->update($id, $plan_id,  $medical_insurance_id, $data);
         if($result != 1 ){
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
         }

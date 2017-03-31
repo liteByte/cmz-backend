@@ -213,14 +213,21 @@ class SpecialConditions extends CI_Model{
                 foreach ($query_specials->result_array() as $qs) {
                     $row['especiales'] = $query_specials->result_array();
                 }
+                $row['unit']    =   '';
+                $row['quantity_units'] = '';
             } else {
                 $this->db->select('special_conditions_details.unit, special_conditions_details.quantity_units');
                 $this->db->from('special_conditions_details');
                 $this->db->where('id_special_conditions', $id);
                 $query_unit = $this->db->get();
+                $empty_array [] = [
+                    ["type_unit" => "Ambulatorio", "honorary"  => 0, "expenses"  => 0],
+                    ["type_unit" => "Internación", "honorary"  => 0, "expenses"  => 0],
+                ];
 
                 foreach ($query_unit->result_array('special_conditions') as $qs) {
                     $row = array_merge($row, $qs);
+                    $row['especiales'] = $empty_array;
                 }
             }
             array_push($result,$row);

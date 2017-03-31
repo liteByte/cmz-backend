@@ -101,7 +101,7 @@ class Coverages extends CI_Model{
                     $temp1['unit'] = $row['unit'];
                     $temp1['type_unit'] = $row['type_unit'];
                     $temp1['honorary'] = $row['honorary'];
-                    $temp1['expenses'] = $row['expenses'];
+                    $temp1['expense'] = $row['expenses'];
                     array_push($data_internacion, $temp1);
                 }
 
@@ -110,7 +110,7 @@ class Coverages extends CI_Model{
                     $temp1['unit'] = $row['unit'];
                     $temp1['type_unit'] = $row['type_unit'];
                     $temp1['honorary'] = $row['honorary'];
-                    $temp1['expenses'] = $row['expenses'];
+                    $temp1['expense'] = $row['expenses'];
                 }
                 array_push($data_ambulatorio, $temp1);
             }
@@ -139,7 +139,7 @@ class Coverages extends CI_Model{
         return true;
     }
 
-    public function update($id, $plan_id,  $medical_insurance_id, $id_units_coverage, $data ){
+    public function update($id, $plan_id,  $medical_insurance_id, $data ){
 
         $update_coverage = [
             "plan_id"               =>$plan_id,
@@ -154,20 +154,22 @@ class Coverages extends CI_Model{
         //Update table "units_coverage"
         foreach ($data as $update_units_coverage){
             $update_row = [
-                "unit"                  => $update_units_coverage->units,
-                "type_unit"             => $update_units_coverage->type_units,
+                "unit"                  => $update_units_coverage->unit,
+                "type_unit"             => $update_units_coverage->type_unit,
                 "honorary"              => $update_units_coverage->honorary,
                 "expenses"              => $update_units_coverage->expense
             ];
-            $this->db->where('id_units_coverage', $id_units_coverage);
+
+            $this->db->where('id_coverage', $id);
+            $this->db->where('unit', $update_units_coverage->unit);
+            $this->db->where('type_unit', $update_units_coverage->type_unit);
             $this->db->update('units_coverage', $update_row);
+            $errors = $this->db->error();
+
+            if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+            if(!$result)                return "Error al intentar crear nueva Cobertura";
         }
 
-        $afftectedRows = $this->db->affected_rows();
-
-        if(!$afftectedRows){
-            return  "No se actualizaron registros";;
-        }
         return true;
     }
 }
