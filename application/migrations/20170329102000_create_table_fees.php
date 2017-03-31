@@ -94,23 +94,63 @@ class Migration_Create_table_fees extends CI_Migration{
                 'active'                => "active"
             ),
             array(
-                'medical_insurance_id'  => "2",
-                'plan_id'               => "3",
-                'fee_type_id'           => "2",
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
                 'unity_id'              => "3",
+                'unity'                 => "E",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "4",
+                'unity'                 => "G",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "5",
                 'unity'                 => "P",
                 'active'                => "active"
             ),
             array(
-                'medical_insurance_id'  => "2",
-                'plan_id'               => "3",
-                'fee_type_id'           => "2",
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",
-                'unity_id'              => "4",
+                'unity_id'              => "6",
                 'unity'                 => "Q",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "7",
+                'unity'                 => "R",
+                'active'                => "active"
+            ),
+            array(
+                'medical_insurance_id'  => "1",
+                'plan_id'               => "1",
+                'fee_type_id'           => "1",
+                'upload_date'           => $now,
+                'period'                => "2017-10-10",
+                'unity_id'              => "8",
+                'unity'                 => "V",
                 'active'                => "active"
             )
         );

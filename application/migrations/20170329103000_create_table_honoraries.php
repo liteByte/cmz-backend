@@ -81,17 +81,49 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'unity_id'              => "3",
                 'movement'              => "U",
                 'value'                 => "34",
-                'item_name'             => "B1-Básica 1",
-                'id_medical_career'     => null,
-                'id_category_femeba'    => "2"
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
             ),
             array(
                 'unity_id'              => "4",
                 'movement'              => "U",
                 'value'                 => "45",
-                'item_name'             => "B1-Básica 1",
-                'id_medical_career'     => null,
-                'id_category_femeba'    => "2"
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unity_id'              => "5",
+                'movement'              => "U",
+                'value'                 => "45",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unity_id'              => "6",
+                'movement'              => "U",
+                'value'                 => "45",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unity_id'              => "7",
+                'movement'              => "U",
+                'value'                 => "45",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unity_id'              => "8",
+                'movement'              => "U",
+                'value'                 => "45",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
             )
         );
 

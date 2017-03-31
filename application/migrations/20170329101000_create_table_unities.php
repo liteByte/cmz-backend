@@ -44,12 +44,32 @@ class Migration_Create_table_unities extends CI_Migration{
                 'expenses'  => "20"
             ),
             array(
+                'unity'     => "E",
+                'movement'  => "U",
+                'expenses'  => "20"
+            ),
+            array(
+                'unity'     => "G",
+                'movement'  => "U",
+                'expenses'  => "20"
+            ),
+            array(
                 'unity'     => "P",
                 'movement'  => "F",
                 'expenses'  => "80"
             ),
             array(
                 'unity'     => "Q",
+                'movement'  => "U",
+                'expenses'  => "90"
+            ),
+            array(
+                'unity'     => "R",
+                'movement'  => "U",
+                'expenses'  => "90"
+            ),
+            array(
+                'unity'     => "V",
                 'movement'  => "U",
                 'expenses'  => "90"
             )

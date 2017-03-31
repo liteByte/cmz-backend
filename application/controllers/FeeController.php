@@ -130,11 +130,13 @@ class FeeController extends AuthController{
 
         foreach ($unities as $unity) {
             if(empty($unity->unity) || strlen($unity->unity) <> 1)  return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unity->unity_id))                             return $this->response(['error'=>'No se ha ingresado el ID de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->movement))                             return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->expenses) || $unity->expenses < 0)     return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->honoraries))                           return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
 
             foreach ($unity->honoraries as $honorary) {
+                if(empty($honorary->honorary_id))                                                        return $this->response(['error'=>'No se ha ingresado el ID de algun honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->movement))                                                           return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->value) || $honorary->value < 0)                                      return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))          return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
