@@ -151,7 +151,7 @@ class SpecialConditions extends CI_Model{
 
         $this->db->select('special_conditions.*');
         $this->db->select('medical_insurance.denomination');
-        $this->db->select('plans.description');
+        $this->db->select('plans.description as description_plan');
         $this->db->select('nomenclators.code, nomenclators.class, nomenclators.description');
         $this->db->from('special_conditions');
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = special_conditions.medical_insurance_id');

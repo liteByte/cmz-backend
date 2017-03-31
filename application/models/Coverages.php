@@ -87,6 +87,8 @@ class Coverages extends CI_Model{
             $data_ambulatorio = [];
 
             foreach ($query->result_array() as $row){
+
+
                 if($i == 0){
                     $result['id_coverage'] = $row['id_coverage'];
                     $result['medical_insurance_id'] = $row['medical_insurance_id'];
@@ -94,6 +96,14 @@ class Coverages extends CI_Model{
                     $result['plan_id'] = $row['plan_id'];
                     $result['description'] = $row['description'];
                     $i++;
+                }
+                if($row['type_unit'] === "Ambulatorio"){
+                    $temp2['id_units_coverage'] = $row['id_units_coverage'];
+                    $temp2['unit'] = $row['unit'];
+                    $temp2['type_unit'] = $row['type_unit'];
+                    $temp2['honorary'] = $row['honorary'];
+                    $temp2['expense'] = $row['expenses'];
+                    array_push($data_ambulatorio, $temp2);
                 }
 
                 if($row['type_unit'] == "Internación"){
@@ -104,20 +114,13 @@ class Coverages extends CI_Model{
                     $temp1['expense'] = $row['expenses'];
                     array_push($data_internacion, $temp1);
                 }
-
-                if($row['type_unit'] === "Ambulatorio"){
-                    $temp1['id_units_coverage'] = $row['id_units_coverage'];
-                    $temp1['unit'] = $row['unit'];
-                    $temp1['type_unit'] = $row['type_unit'];
-                    $temp1['honorary'] = $row['honorary'];
-                    $temp1['expense'] = $row['expenses'];
-                }
-                array_push($data_ambulatorio, $temp1);
             }
 
-            $temp1 = array_merge($data_ambulatorio,  $data_internacion);
 
-            $result['data'] = $temp1;
+
+            $temp = array_merge($data_internacion, $data_ambulatorio  );
+
+            $result['data'] = $temp;
         }else{
             return false;
         }
