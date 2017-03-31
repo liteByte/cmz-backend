@@ -118,7 +118,7 @@ class Coverages extends CI_Model{
 
 
 
-            $temp = array_merge($data_internacion, $data_ambulatorio  );
+            $temp = array_merge($data_ambulatorio ,$data_internacion  );
 
             $result['data'] = $temp;
         }else{
