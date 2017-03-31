@@ -45,7 +45,7 @@ class FeeController extends AuthController{
       if(empty($fee_type_id))                             return $this->response(['error'=>'No se ha ingresado tipo de arancel'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($upload_date))                             return $this->response(['error'=>'No se ha ingresado fecha de alta'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($period))                                  return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($unities))                                 return $this->response(['error'=>'No se ha ingresado datos de unidades'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($unities) || count($unities) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
 
       foreach ($unities as $unity) {
           if(empty($unity->unity) || strlen($unity->unity) <> 1)    return $this->response(['error'=>'No se ha ingresado alguna unidad o se ha ingresado un valor incorrecto para la misma'], REST_Controller::HTTP_BAD_REQUEST);
@@ -120,20 +120,16 @@ class FeeController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
-        $upload_date = $post->upload_date            ?? "";
-        $unity       = $post->unity                  ?? "";
         $id          = (int) $this->get('id');
 
         //Fee's unities
         $unities     = $post->unities                ?? "";
 
         //Validate if any obligatory field is missing
-        if(empty($upload_date)) return $this->response(['error'=>'No se ha ingresado fecha de alta'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($unity))       return $this->response(['error'=>'No se ha ingresado unidad del arancel'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($unities))     return $this->response(['error'=>'No se ha ingresado datos de unidades'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($unities) || count($unities) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
 
         foreach ($unities as $unity) {
-            if(empty($unity->unity))                                return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unity->unity) || strlen($unity->unity) <> 1)  return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->movement))                             return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->expenses) || $unity->expenses < 0)     return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($unity->honoraries))                           return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
@@ -145,16 +141,8 @@ class FeeController extends AuthController{
             }
         }
 
-        //Validations
-        if(!$this->validator->validateDate($upload_date)) return $this->response(array('error'=>'Fecha de carga invalida'), REST_Controller::HTTP_BAD_REQUEST);
-
-        //Validate fields and unique key
-        $error = $this->fee->validateData($unity);
-
-        if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
-
         //If everything is valid, update the fee
-        if($this->fee->update($upload_date, $unity, $unities, $id, $this->token_valid->user_id)){
+        if($this->fee->update($unities, $id, $this->token_valid->user_id)){
           return $this->response(['msg'=>'Arancel modificado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
           return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

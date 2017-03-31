@@ -43,7 +43,7 @@ class Fee extends CI_Model{
   }
 
   //Create an unity with it's honoraries
-  public function createUnity($unityData){
+  function createUnity($unityData){
 
       $this->db->insert('unities', ['unity' =>strtoupper($unityData->unity), 'movement' => $unityData->movement, 'expenses' => $unityData->expenses]);
       if ($this->db->affected_rows() == 0) return false;
@@ -59,7 +59,7 @@ class Fee extends CI_Model{
   }
 
   //Create an unity's honoraries
-  public function createHonoraries($honoraries,$unityID){
+  function createHonoraries($honoraries,$unityID){
 
     //Add new honoraries to the unity
     foreach ($honoraries as $honorary) {
@@ -82,22 +82,64 @@ class Fee extends CI_Model{
   }
 
   //Updates the fee in 'fees' and its unities
-  public function update($upload_date, $unity, $unities, $id, $userID){
+  public function update($unities, $id, $userID){
 
       $now = date('Y-m-d H:i:s');
 
       $data = array(
-                    'upload_date'        => $upload_date,
-                    'unity'              => $unity,
-                    'active'             => 'active',
                     'update_date'        => $now,
                     'modify_user_id'     => $userID
       );
 
-      $this->db->where('fee_id', $id);
-      $this->db->update('fees', $data);
+      foreach ($unities as $unity){
 
-      return $this->updateUnities($unities,$id);
+          //Update each unity
+          if(!$this->updateUnity($unity)) return false;
+
+          //Update fee
+          $this->db->where('fee_id', $id);
+          $this->db->update('fees', $data);
+      }
+
+      return true;
+
+  }
+
+  //Create an unity with it's honoraries
+  function updateUnity($unityData){
+
+      $this->db->where('unity_id', $unityData->unity_id);
+      $this->db->update('unities', ['unity' =>strtoupper($unityData->unity), 'movement' => $unityData->movement, 'expenses' => $unityData->expenses]);
+      if ($this->db->affected_rows() == 0) return false;
+
+      //Update unity's honoraries
+      if (!($this->updateHonoraries($unityData->honoraries, $unityData->unity_id))) return false;
+
+      return $unityID;
+
+  }
+
+  //Update an unity's honoraries
+  function updateHonoraries($honoraries,$unityID){
+
+    //Add new honoraries to the unity
+    foreach ($honoraries as $honorary) {
+
+      $honorariesData = [
+            'unity_id'            => $unityID,
+            'movement'            => $honorary->movement,
+            'value'               => $honorary->value,
+            'id_medical_career'   => (empty($honorary->id_medical_career) ? null : $honorary->id_medical_career),
+            'id_category_femeba'  => (empty($honorary->id_category_femeba) ? null : $honorary->id_category_femeba),
+            'item_name'           => $honorary->item_name
+      ];
+
+      $this->db->where('honorary_id', $honorary->honorary_id);
+      $this->db->update('honoraries', $honorariesData);
+      if ($this->db->affected_rows() == 0) return false;
+    }
+
+    return true;
 
   }
 
