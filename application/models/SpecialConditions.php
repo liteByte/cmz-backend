@@ -220,7 +220,7 @@ class SpecialConditions extends CI_Model{
                 $this->db->from('special_conditions_details');
                 $this->db->where('id_special_conditions', $id);
                 $query_unit = $this->db->get();
-                $empty_array [] = [
+                $empty_array  = [
                     ["type_unit" => "Ambulatorio", "honorary"  => 0, "expenses"  => 0],
                     ["type_unit" => "Internación", "honorary"  => 0, "expenses"  => 0],
                 ];
@@ -230,7 +230,8 @@ class SpecialConditions extends CI_Model{
                     $row['especiales'] = $empty_array;
                 }
             }
-            array_push($result,$row);
+//            array_push($result,$row);
+            $result = $row;
         }
         return $result;
     }
