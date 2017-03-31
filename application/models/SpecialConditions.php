@@ -241,6 +241,11 @@ class SpecialConditions extends CI_Model{
         $query = $this->db->get_where('special_conditions', ["id_special_conditions" => $id]);
 
         if ($query->num_rows()) {
+
+            $this->db->where('id_special_conditions', $id);
+            $result = $this->db->delete('special_conditions_details');
+            if (!$result) return "Error al intentar eliminar condicion";
+
             $this->db->where('id_special_conditions', $id);
             $result = $this->db->delete('special_conditions');
             $errors = $this->db->error();
