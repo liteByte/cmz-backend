@@ -9,13 +9,11 @@ class Migration_Create_table_honoraries extends CI_Migration{
         $this->dbforge->add_field(array(
                 'honorary_id' => array(
                     'type'          =>  'INT',
-                    'constraint'    =>  5,
                     'unsigned'      =>  TRUE,
                     'auto_increment'=>  TRUE
                 ),
                 'unity_id' => array(
                     'type'          =>  'INT',
-                    'constraint'    =>  5,
                     'unsigned'      =>  TRUE
                 ),
                 'movement' => array(

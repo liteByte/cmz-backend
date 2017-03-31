@@ -65,7 +65,7 @@ class FeeController extends AuthController{
       if(!$this->validator->validateDate($upload_date))     return $this->response(array('error'=>'Fecha de carga invalida'), REST_Controller::HTTP_BAD_REQUEST);
 
       //Validate fields and unique key
-      $error = $this->fee->validateData($medical_insurance_id, $plan_id, $fee_type_id, $period, $unities);
+      $error = $this->fee->validateData($medical_insurance_id, $plan_id, $fee_type_id, $period);
 
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
@@ -120,10 +120,10 @@ class FeeController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
-        $id          = (int) $this->get('id');
+        $id = (int) $this->get('id');
 
         //Fee's unities
-        $unities     = $post->unities                ?? "";
+        $unities = $post->unities ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($unities) || count($unities) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
@@ -136,7 +136,6 @@ class FeeController extends AuthController{
             if(empty($unity->honoraries))                           return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
 
             foreach ($unity->honoraries as $honorary) {
-                if(empty($honorary->honorary_id))                                                        return $this->response(['error'=>'No se ha ingresado el ID de algun honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->movement))                                                           return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->value) || $honorary->value < 0)                                      return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
                 if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))          return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
@@ -163,6 +162,8 @@ class FeeController extends AuthController{
          return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $id = (int) $this->get('id');
+
+      if (empty($id)) return $this->response(['error'=>'No se ha informado el ID del arancel a eliminar'], REST_Controller::HTTP_BAD_REQUEST);
 
       if($this->fee->delete($id, $this->token_valid->user_id)){
         return $this->response(['msg'=>'Arancel eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
