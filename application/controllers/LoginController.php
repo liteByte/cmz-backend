@@ -33,7 +33,8 @@ class LoginController extends CI_Controller {
             if (!password_verify($this->clave, $user_data->password)) {
                 $this->response_msg->setResponse(['error' => 'Clave incorrecta'], 400);
             }
-
+            //Delete password of User data
+            unset($user_data->password);
             $permissions = $this->user->getPermissions($user_data->document_number);
 
             unset($user_data->password);

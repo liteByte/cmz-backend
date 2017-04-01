@@ -23,7 +23,7 @@ class User extends CI_Model{
 
   //Get user information to sign in
   public function getUser($dni){
-    $this->db->select('user_id,document_type,document_number,name,email,last_name,active');
+    $this->db->select('user_id, password, document_type,document_number,name,email,last_name,active');
     $this->db->where('document_number', $dni);
     $this->db->where('active', 'active');
     $query = $this->db->get('users');
