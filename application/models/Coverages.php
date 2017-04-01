@@ -7,7 +7,6 @@ class Coverages extends CI_Model{
     public function __construct(){
         parent::__construct();
     }
-    
 
     public function save($plan_id, $medical_insurance_id,$data ){
 
@@ -18,8 +17,10 @@ class Coverages extends CI_Model{
         ];
 
         $result = $this->db->insert('coverages', $new_coverage);
+        $errors = $this->db->error();
 
-        if(!$result){ $result = "Error al intentar crear nueva Cobertura"; return $result; }
+        if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+        if(!$result)                return "Error al intentar crear nueva Cobertura";
 
         //Obtain last inserted user id
         $id_coverage = $this->db->insert_id();
@@ -34,8 +35,9 @@ class Coverages extends CI_Model{
             ];
             $result = $this->db->insert('units_coverage', $new_row);
         }
-
-        if(!$result){ $result = "Error al intentar crear nueva Cobertura"; return $result; }
+        $errors = $this->db->error();
+        if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+        if(!$result)                return "Error al intentar crear nueva Cobertura";
         return "OK";
     }
 
@@ -53,9 +55,9 @@ class Coverages extends CI_Model{
         $this->db->order_by("units_coverage.unit", "asc");
         $this->db->where('coverages.status', 1);
         $query =  $this->db->get();
-        
-        if(!$query) return false;  
-        
+
+        if(!$query) return false;
+
         foreach ($query->result_array('Coverages') as $row){
             array_push($result,$row);
         }
@@ -80,13 +82,48 @@ class Coverages extends CI_Model{
         $query = $this->db->get();
 
         if($query !== FALSE && $query->num_rows() > 0){
-            foreach ($query->result_array() as $row) {
-                $result[] = $row;
+            $i = 0;
+            $data_internacion = [];
+            $data_ambulatorio = [];
+
+            foreach ($query->result_array() as $row){
+
+
+                if($i == 0){
+                    $result['id_coverage'] = $row['id_coverage'];
+                    $result['medical_insurance_id'] = $row['medical_insurance_id'];
+                    $result['denomination'] = $row['denomination'];
+                    $result['plan_id'] = $row['plan_id'];
+                    $result['description'] = $row['description'];
+                    $i++;
+                }
+                if($row['type_unit'] === "Ambulatorio"){
+                    $temp2['id_units_coverage'] = $row['id_units_coverage'];
+                    $temp2['unit'] = $row['unit'];
+                    $temp2['type_unit'] = $row['type_unit'];
+                    $temp2['honorary'] = $row['honorary'];
+                    $temp2['expense'] = $row['expenses'];
+                    array_push($data_ambulatorio, $temp2);
+                }
+
+                if($row['type_unit'] == "Internación"){
+                    $temp1['id_units_coverage'] = $row['id_units_coverage'];
+                    $temp1['unit'] = $row['unit'];
+                    $temp1['type_unit'] = $row['type_unit'];
+                    $temp1['honorary'] = $row['honorary'];
+                    $temp1['expense'] = $row['expenses'];
+                    array_push($data_internacion, $temp1);
+                }
             }
+
+
+
+            $temp = array_merge($data_ambulatorio ,$data_internacion  );
+
+            $result['data'] = $temp;
         }else{
             return false;
         }
-
         return $result;
     }
 
@@ -105,7 +142,7 @@ class Coverages extends CI_Model{
         return true;
     }
 
-    public function update($id, $plan_id,  $medical_insurance_id, $id_units_coverage, $data ){
+    public function update($id, $plan_id,  $medical_insurance_id, $data ){
 
         $update_coverage = [
             "plan_id"               =>$plan_id,
@@ -120,20 +157,22 @@ class Coverages extends CI_Model{
         //Update table "units_coverage"
         foreach ($data as $update_units_coverage){
             $update_row = [
-                "unit"                  => $update_units_coverage->units,
-                "type_unit"             => $update_units_coverage->type_units,
+                "unit"                  => $update_units_coverage->unit,
+                "type_unit"             => $update_units_coverage->type_unit,
                 "honorary"              => $update_units_coverage->honorary,
                 "expenses"              => $update_units_coverage->expense
             ];
-            $this->db->where('id_units_coverage', $id_units_coverage);
+
+            $this->db->where('id_coverage', $id);
+            $this->db->where('unit', $update_units_coverage->unit);
+            $this->db->where('type_unit', $update_units_coverage->type_unit);
             $this->db->update('units_coverage', $update_row);
+            $errors = $this->db->error();
+
+            if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+            if(!$result)                return "Error al intentar crear nueva Cobertura";
         }
 
-        $afftectedRows = $this->db->affected_rows();
-
-        if(!$afftectedRows){
-            return  "No se actualizaron registros";;
-        }
         return true;
     }
 }

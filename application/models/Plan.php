@@ -89,9 +89,8 @@ class Plan extends CI_Model{
       $this->db->where('plan_id', $planID);
       $result = $this->db->delete('plans');
       $errors = $this->db->error();
-      if($errors['code'] == '1451') return "No se puede eliminar el Plam, ya que posee información relacionada";
-      if(!$result) return "Error al intentar Usuario";
-
+      if($errors['code'] == '1451') return "No se puede eliminar el Plan, ya que posee información relacionada";
+      if(!$result) return "Error al intentar eliminar plan";
     }else{
       return "El Id del plan no existe en la base de datos";
     }
