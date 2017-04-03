@@ -122,6 +122,8 @@ class FeeController extends AuthController{
 
         $id = (int) $this->get('id');
 
+        if (empty($id)) return $this->response(['error'=>'No se ha informado el ID del arancel a modificar'], REST_Controller::HTTP_BAD_REQUEST);
+
         //Fee's units
         $units = $post->units ?? "";
 
