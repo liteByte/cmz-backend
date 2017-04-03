@@ -2,12 +2,12 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_unities extends CI_Migration{
+class Migration_Create_table_units extends CI_Migration{
 
     public function up(){
 
         $this->dbforge->add_field(array(
-                'unity_id' => array(
+                'unit_id' => array(
                     'type'          =>  'INT',
                     'unsigned'      =>  TRUE,
                     'auto_increment'=>  TRUE
@@ -16,7 +16,7 @@ class Migration_Create_table_unities extends CI_Migration{
                     'type'          =>  'INT',
                     'unsigned'      =>  TRUE
                 ),
-                'unity' => array(
+                'unit' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  1,
                     'null'          =>  FALSE
@@ -32,68 +32,68 @@ class Migration_Create_table_unities extends CI_Migration{
                     'null'          =>  FALSE
                 )
         ));
-        $this->dbforge->add_key('unity_id', TRUE);
+        $this->dbforge->add_key('unit_id', TRUE);
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_id) REFERENCES fees(fee_id)');
-        $this->dbforge->create_table('unities');
+        $this->dbforge->create_table('units');
 
         $data = array(
             array(
                 'fee_id'    => "1",
-                'unity'     => "A",
+                'unit'     => "A",
                 'movement'  => "F",
                 'expenses'  => "50"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "B",
+                'unit'     => "B",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "E",
+                'unit'     => "E",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "G",
+                'unit'     => "G",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "P",
+                'unit'     => "P",
                 'movement'  => "F",
                 'expenses'  => "80"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "Q",
+                'unit'     => "Q",
                 'movement'  => "U",
                 'expenses'  => "90"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "R",
+                'unit'     => "R",
                 'movement'  => "U",
                 'expenses'  => "90"
             ),
             array(
                 'fee_id'    => "1",
-                'unity'     => "V",
+                'unit'     => "V",
                 'movement'  => "U",
                 'expenses'  => "90"
             )
         );
 
-        $this->db->insert_batch('unities', $data);
+        $this->db->insert_batch('units', $data);
     }
 
 
     public function down(){
 
-        $this->dbforge->drop_table('unities');
+        $this->dbforge->drop_table('units');
 
     }
 

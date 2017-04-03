@@ -9,7 +9,7 @@ class Fee extends CI_Model{
   }
 
   //Creates the fee in 'fees'
-  public function save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unities){
+  public function save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $units){
 
       //Make the fee structure
       $feeData = array(
@@ -26,24 +26,24 @@ class Fee extends CI_Model{
       //Obtain last inserted fee id
       $feeID = $this->db->insert_id();
 
-      return $this->createUnities($unities,$feeID);
+      return $this->createUnits($units,$feeID);
 
   }
 
-  //Create a fee's unities
- public function createUnities($unities,$feeID){
+  //Create a fee's units
+ public function createUnits($units,$feeID){
 
-    //Add new unities to the fee
-    foreach ($unities as $unity) {
+    //Add new units to the fee
+    foreach ($units as $unit) {
 
-      $this->db->insert('unities', ['fee_id' => $feeID,'unity' => $unity->unity, 'movement' => $unity->movement, 'expenses' => $unity->expenses]);
+      $this->db->insert('units', ['fee_id' => $feeID,'unit' => $unit->unit, 'movement' => $unit->movement, 'expenses' => $unit->expenses]);
       if ($this->db->affected_rows() == 0) return false;
 
       //Obtain last inserted fee id
-      $unityID = $this->db->insert_id();
+      $unitID = $this->db->insert_id();
 
-      //Add honoraries to the unity
-      if (!($this->createHonoraries($unity->honoraries, $unityID))) return false;
+      //Add honoraries to the unit
+      if (!($this->createHonoraries($unit->honoraries, $unitID))) return false;
 
     }
 
@@ -51,17 +51,17 @@ class Fee extends CI_Model{
 
 }
 
- //Create a unity's honoraries
- public function createHonoraries($honoraries,$unityID){
+ //Create a unit's honoraries
+ public function createHonoraries($honoraries,$unitID){
 
-    //Delete old honoraries from the unity
-    $this->db->delete('honoraries', ['unity_id' => $unityID]);
+    //Delete old honoraries from the unit
+    $this->db->delete('honoraries', ['unit_id' => $unitID]);
 
-    //Add new honoraries to the unity
+    //Add new honoraries to the unit
     foreach ($honoraries as $honorary) {
 
       $honorariesData = [
-          'unity_id'            => $unityID,
+          'unit_id'            => $unitID,
           'movement'            => $honorary->movement,
           'value'               => $honorary->value,
           'id_medical_career'   => (empty($honorary->id_medical_career) ? null : $honorary->id_medical_career),
@@ -76,8 +76,8 @@ class Fee extends CI_Model{
     return true;
 }
 
-  //Updates the fee in 'fees' and its unities
-  public function update($unities, $id, $userID){
+  //Updates the fee in 'fees' and its units
+  public function update($units, $id, $userID){
 
       $now = date('Y-m-d H:i:s');
 
@@ -90,20 +90,20 @@ class Fee extends CI_Model{
       $this->db->where('fee_id', $id);
       $this->db->update('fees', $data);
 
-      //For each unity, update it's values and add/delete honoraries
-      foreach ($unities as $unity){
+      //For each unit, update it's values and add/delete honoraries
+      foreach ($units as $unit){
 
-          //Update unity
-          $this->db->where('unity_id', $unity->unity_id);
-          $this->db->update('unities', ['unity' =>strtoupper($unity->unity), 'movement' => $unity->movement, 'expenses' => $unity->expenses]);
+          //Update unit
+          $this->db->where('unit_id', $unit->unit_id);
+          $this->db->update('units', ['unit' =>strtoupper($unit->unit), 'movement' => $unit->movement, 'expenses' => $unit->expenses]);
 
           //Delete all old honoraries
-          $this->db->delete('honoraries', ['unity_id' => $unity->unity_id]);
+          $this->db->delete('honoraries', ['unit_id' => $unit->unit_id]);
 
-          foreach ($unity->honoraries as $honorary){
+          foreach ($unit->honoraries as $honorary){
 
               $honorariesData = [
-                    'unity_id'            => $unity->unity_id,
+                    'unit_id'            => $unit->unit_id,
                     'movement'            => $honorary->movement,
                     'value'               => $honorary->value,
                     'id_medical_career'   => (empty($honorary->id_medical_career)  ? null : $honorary->id_medical_career),
@@ -139,9 +139,9 @@ class Fee extends CI_Model{
       if (!$query)                 return [];
       if ($query->num_rows() == 0) return [];
 
-      //Assign each fee it's unities
+      //Assign each fee it's units
       foreach ($query->result_array() as $fee) {
-          $fee['unities'] = $this->getFeeUnities($fee);
+          $fee['units'] = $this->getFeeunits($fee);
           $result[] = $fee;
       }
 
@@ -162,38 +162,38 @@ class Fee extends CI_Model{
 
       //Get the first fee of the associative result_array (there should be only one anyways)
       $fee = reset($query->result_array());
-      $fee['unities'] = $this->getFeeUnities($fee);
+      $fee['units'] = $this->getFeeunits($fee);
 
       return $fee;
 
   }
 
- public function getFeeUnities($fee){
+ public function getFeeunits($fee){
 
-      //Get all fee's unities
+      //Get all fee's units
       $this->db->select('U.*');
-      $this->db->from ('unities U');
-      $this->db->order_by("U.unity", "asc");
+      $this->db->from ('units U');
+      $this->db->order_by("U.unit", "asc");
       $this->db->where('U.fee_id',$fee['fee_id']);
-      $unityQuery = $this->db->get();
+      $unitQuery = $this->db->get();
 
-      $unities = $unityQuery->result_array();
+      $units = $unitQuery->result_array();
 
-      //Assign each unity it's honoraries
-      foreach ($unities as &$unity){
+      //Assign each unit it's honoraries
+      foreach ($units as &$unit){
 
           $this->db->select('H.*');
           $this->db->from ('honoraries H');
           $this->db->order_by("H.item_name", "asc");
-          $this->db->where('H.unity_id',$unity['unity_id']);
+          $this->db->where('H.unit_id',$unit['unit_id']);
           $honorariesQuery = $this->db->get();
 
           $honoraries = $honorariesQuery->result_array();
-          $unity['honoraries'] = $honoraries;
+          $unit['honoraries'] = $honoraries;
 
       }
 
-      return $unities;
+      return $units;
 
  }
 

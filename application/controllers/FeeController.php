@@ -36,8 +36,8 @@ class FeeController extends AuthController{
       $upload_date              = $post->upload_date            ?? "";
       $period                   = $post->period                 ?? "";
 
-      //Fee's unities
-      $unities                  = $post->unities                ?? "";
+      //Fee's units
+      $units                  = $post->units                ?? "";
 
       //Validate if any obligatory field is missing
       if(empty($medical_insurance_id))                    return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
@@ -45,18 +45,18 @@ class FeeController extends AuthController{
       if(empty($fee_type_id))                             return $this->response(['error'=>'No se ha ingresado tipo de arancel'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($upload_date))                             return $this->response(['error'=>'No se ha ingresado fecha de alta'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($period))                                  return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($unities) || count($unities) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($units) || count($units) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
 
-      foreach ($unities as $unity) {
-          if(empty($unity->unity) || strlen($unity->unity) <> 1)    return $this->response(['error'=>'No se ha ingresado alguna unidad o se ha ingresado un valor incorrecto para la misma'], REST_Controller::HTTP_BAD_REQUEST);
-          if(empty($unity->movement))                               return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-          if(empty($unity->expenses) || $unity->expenses < 0)       return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-          if(empty($unity->honoraries))                             return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
+      foreach ($units as $unit) {
+          if(empty($unit->unit) || strlen($unit->unit) <> 1)    return $this->response(['error'=>'No se ha ingresado alguna unidad o se ha ingresado un valor incorrecto para la misma'], REST_Controller::HTTP_BAD_REQUEST);
+          if(empty($unit->movement))                            return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+          if(empty($unit->expenses) || $unit->expenses < 0)     return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+          if(empty($unit->honoraries))                          return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
 
-          foreach ($unity->honoraries as $honorary) {
-              if(empty($honorary->movement))                                                               return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-              if(empty($honorary->value) || $honorary->value < 0)                                          return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-              if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))              return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
+          foreach ($unit->honoraries as $honorary) {
+              if(empty($honorary->movement))                                                               return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+              if(empty($honorary->value) || $honorary->value < 0)                                          return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+              if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))              return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
           }
       }
 
@@ -70,7 +70,7 @@ class FeeController extends AuthController{
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, save the fee
-      if($this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $unities)){
+      if($this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $units)){
         return $this->response(['msg'=>'Arancel creado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -122,28 +122,28 @@ class FeeController extends AuthController{
 
         $id = (int) $this->get('id');
 
-        //Fee's unities
-        $unities = $post->unities ?? "";
+        //Fee's units
+        $units = $post->units ?? "";
 
         //Validate if any obligatory field is missing
-        if(empty($unities) || count($unities) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($units) || count($units) <> 8)         return $this->response(['error'=>'No se han ingresado datos para todas las unidades'], REST_Controller::HTTP_BAD_REQUEST);
 
-        foreach ($unities as $unity) {
-            if(empty($unity->unity) || strlen($unity->unity) <> 1)  return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
-            if(empty($unity->unity_id))                             return $this->response(['error'=>'No se ha ingresado el ID de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-            if(empty($unity->movement))                             return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-            if(empty($unity->expenses) || $unity->expenses < 0)     return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-            if(empty($unity->honoraries))                           return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
+        foreach ($units as $unit) {
+            if(empty($unit->unit) || strlen($unit->unit) <> 1)    return $this->response(['error'=>'No se ha ingresado alguna unidad'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unit->unit_id))                             return $this->response(['error'=>'No se ha ingresado el ID de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unit->movement))                            return $this->response(['error'=>'No se ha ingresado movimiento para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unit->expenses) || $unit->expenses < 0)     return $this->response(['error'=>'No se ha ingresado un valor valido para gastos para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($unit->honoraries))                          return $this->response(['error'=>'No se han ingresado honorarios para la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
 
-            foreach ($unity->honoraries as $honorary) {
-                if(empty($honorary->movement))                                                           return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-                if(empty($honorary->value) || $honorary->value < 0)                                      return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
-                if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))          return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unity->unity], REST_Controller::HTTP_BAD_REQUEST);
+            foreach ($unit->honoraries as $honorary) {
+                if(empty($honorary->movement))                                                           return $this->response(['error'=>'No se ha ingresado movimiento para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+                if(empty($honorary->value) || $honorary->value < 0)                                      return $this->response(['error'=>'No se ha ingresado un valor valido para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
+                if(empty($honorary->id_medical_career) && empty($honorary->id_category_femeba))          return $this->response(['error'=>'No se ha ingresado item para un honorario de la unidad '.$unit->unit], REST_Controller::HTTP_BAD_REQUEST);
             }
         }
 
         //If everything is valid, update the fee
-        if($this->fee->update($unities, $id, $this->token_valid->user_id)){
+        if($this->fee->update($units, $id, $this->token_valid->user_id)){
           return $this->response(['msg'=>'Arancel modificado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
           return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
