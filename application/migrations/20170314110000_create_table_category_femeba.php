@@ -22,16 +22,16 @@ class Migration_Create_table_category_femeba extends CI_Migration{
 
         $data = array(
             array(
-                'description_femeba' => "básica"
+                'description_femeba' => "A-Básica"
             ),
             array(
-                'description_femeba' => "básica 1"
+                'description_femeba' => "B1-Básica 1"
             ),
             array(
-                'description_femeba' => "especialista"
+                'description_femeba' => "B2-Especialista"
             ),
             array(
-                'description_femeba' => "jerarquizado"
+                'description_femeba' => "D-Jerarquizado"
             )
         );
 

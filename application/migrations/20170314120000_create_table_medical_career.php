@@ -14,7 +14,7 @@ class Migration_Create_table_medical_career extends CI_Migration{
             'description_medical_career'   => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  50,
-                'null'          => FALSE
+                'null'          =>  FALSE
             )
         ));
         $this->dbforge->add_key('id_medical_career', TRUE);
@@ -22,13 +22,13 @@ class Migration_Create_table_medical_career extends CI_Migration{
 
         $data = array(
             array(
-                'description_medical_career' => "básica"
+                'description_medical_career' => "1-Básica"
             ),
             array(
-                'description_medical_career' => "especialista"
+                'description_medical_career' => "4-Especialista"
             ),
             array(
-                'description_medical_career' => "Jerarquizado"
+                'description_medical_career' => "8-Jerarquizado"
             )
         );
 

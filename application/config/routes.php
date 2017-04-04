@@ -84,6 +84,7 @@ $route['specialities/update/(:num)']  = 'SpecialityController/updateSpeciality/i
 $route['specialities/remove/(:num)']  = 'SpecialityController/removeSpeciality/id/$1';
 $route['specialities/(:num)']         = 'SpecialityController/getSpeciality/id/$1';
 
+
 ////////////////////////Medical Insurances routes////////////////////////
 $route['insurances']                  = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
 $route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsurance/id/$1';
@@ -112,6 +113,10 @@ $route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id
 ////////////////////////Credit-debit-concepts routes////////////////////////
 $route['cdconcepts']                  = 'CreditDebitConceptController/concepts'; //Get -> show concepts  & post -> create concept
 $route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/id/$1'; //Get -> show specific concept, Put -> update concept , Delete -> delete concept
+
+////////////////////////Fee routes////////////////////////
+$route['fees']                        = 'FeeController/fees';  //Get -> show fees  & post -> create fee & put -> update fees
+$route['fees/(:num)']                 = 'FeeController/fees/id/$1';
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
