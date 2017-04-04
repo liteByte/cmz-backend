@@ -52,7 +52,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
 
         $data = array(
             array(
-                'unit_id'              => "1",
+                'unit_id'               => "1",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -60,7 +60,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "1",
+                'unit_id'               => "1",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -68,7 +68,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "1",
+                'unit_id'               => "1",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -76,7 +76,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "2",
+                'unit_id'               => "2",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -84,7 +84,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "2",
+                'unit_id'               => "2",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -92,7 +92,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "2",
+                'unit_id'               => "2",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -100,7 +100,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "3",
+                'unit_id'               => "3",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -108,7 +108,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "3",
+                'unit_id'               => "3",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -116,7 +116,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "3",
+                'unit_id'               => "3",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -124,7 +124,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "4",
+                'unit_id'               => "4",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -132,7 +132,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "4",
+                'unit_id'               => "4",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -140,7 +140,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "4",
+                'unit_id'               => "4",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -148,7 +148,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "5",
+                'unit_id'               => "5",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -156,7 +156,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "5",
+                'unit_id'               => "5",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -164,7 +164,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "5",
+                'unit_id'               => "5",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -172,7 +172,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "6",
+                'unit_id'               => "6",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -180,7 +180,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "6",
+                'unit_id'               => "6",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -188,7 +188,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "6",
+                'unit_id'               => "6",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -196,7 +196,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "7",
+                'unit_id'               => "7",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -204,7 +204,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "7",
+                'unit_id'               => "7",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -212,7 +212,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "7",
+                'unit_id'               => "7",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
@@ -220,7 +220,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "8",
+                'unit_id'               => "8",
                 'movement'              => "F",
                 'value'                 => "12",
                 'item_name'             => "1-Básica",
@@ -228,7 +228,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "8",
+                'unit_id'               => "8",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "4-Especialista",
@@ -236,7 +236,7 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'id_category_femeba'    => null
             ),
             array(
-                'unit_id'              => "8",
+                'unit_id'               => "8",
                 'movement'              => "F",
                 'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
