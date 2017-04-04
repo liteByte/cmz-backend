@@ -63,7 +63,7 @@ class Migration_Create_table_fees extends CI_Migration{
         $data = array(
             array(
                 'medical_insurance_id'  => "1",
-                'plan_id'               => "1",
+                'plan_id'               => "2",
                 'fee_type_id'           => "1",
                 'upload_date'           => $now,
                 'period'                => "2017-10-10",

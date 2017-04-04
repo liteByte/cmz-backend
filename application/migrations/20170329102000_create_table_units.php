@@ -39,49 +39,49 @@ class Migration_Create_table_units extends CI_Migration{
         $data = array(
             array(
                 'fee_id'    => "1",
-                'unit'     => "A",
-                'movement'  => "F",
+                'unit'      => "A",
+                'movement'  => "U",
                 'expenses'  => "50"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "B",
+                'unit'      => "B",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "E",
+                'unit'      => "E",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "G",
+                'unit'      => "G",
                 'movement'  => "U",
                 'expenses'  => "20"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "P",
+                'unit'      => "P",
                 'movement'  => "F",
                 'expenses'  => "80"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "Q",
+                'unit'      => "Q",
                 'movement'  => "U",
                 'expenses'  => "90"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "R",
+                'unit'      => "R",
                 'movement'  => "U",
                 'expenses'  => "90"
             ),
             array(
                 'fee_id'    => "1",
-                'unit'     => "V",
+                'unit'      => "V",
                 'movement'  => "U",
                 'expenses'  => "90"
             )

@@ -217,7 +217,11 @@ class Fee extends CI_Model{
       $query = $this->db->get_where('fees', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'fee_type_id' => $fee_type_id, 'period' => $period]);
       if ($query->num_rows() > 0) return "Ya existe un arancel con la misma combinación de Obra Social + Plan + Tipo Arancel + Período";
 
-     return $this->validateIDs($medical_insurance_id,$plan_id,$fee_type_id);
+      //Validate if the insurance and plan are OK
+      $query = $this->db->get_where('plans', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id]);
+      if ($query->num_rows() <> 1) return "El plan seleccionado no pertenece a la obra social seleccionada o viceversa";
+
+      return $this->validateIDs($medical_insurance_id,$plan_id,$fee_type_id);
 
    }
 
