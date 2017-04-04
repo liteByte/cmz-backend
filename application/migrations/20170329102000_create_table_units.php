@@ -40,7 +40,7 @@ class Migration_Create_table_units extends CI_Migration{
             array(
                 'fee_id'    => "1",
                 'unit'     => "A",
-                'movement'  => "F",
+                'movement'  => "U",
                 'expenses'  => "50"
             ),
             array(

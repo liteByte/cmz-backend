@@ -63,6 +63,14 @@ class Migration_Create_table_honoraries extends CI_Migration{
                 'unit_id'              => "1",
                 'movement'              => "F",
                 'value'                 => "60",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "1",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
                 'id_medical_career'     => "3",
                 'id_category_femeba'    => null
@@ -70,59 +78,172 @@ class Migration_Create_table_honoraries extends CI_Migration{
             array(
                 'unit_id'              => "2",
                 'movement'              => "F",
-                'value'                 => "23",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "2",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "2",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "8-Jerarquizado",
                 'id_medical_career'     => "3",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "3",
-                'movement'              => "U",
-                'value'                 => "34",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "3",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "4-Especialista",
+                'id_medical_career'     => "2",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "3",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "4",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "4",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "4-Especialista",
                 'id_medical_career'     => "2",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "4",
-                'movement'              => "U",
-                'value'                 => "45",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "5",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "5",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "4-Especialista",
                 'id_medical_career'     => "2",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "5",
-                'movement'              => "U",
-                'value'                 => "45",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "6",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "6",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "4-Especialista",
                 'id_medical_career'     => "2",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "6",
-                'movement'              => "U",
-                'value'                 => "45",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "7",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "7",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "4-Especialista",
                 'id_medical_career'     => "2",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "7",
-                'movement'              => "U",
-                'value'                 => "45",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "8",
+                'movement'              => "F",
+                'value'                 => "12",
+                'item_name'             => "1-Básica",
+                'id_medical_career'     => "1",
+                'id_category_femeba'    => null
+            ),
+            array(
+                'unit_id'              => "8",
+                'movement'              => "F",
+                'value'                 => "60",
                 'item_name'             => "4-Especialista",
                 'id_medical_career'     => "2",
                 'id_category_femeba'    => null
             ),
             array(
                 'unit_id'              => "8",
-                'movement'              => "U",
-                'value'                 => "45",
-                'item_name'             => "4-Especialista",
-                'id_medical_career'     => "2",
+                'movement'              => "F",
+                'value'                 => "60",
+                'item_name'             => "8-Jerarquizado",
+                'id_medical_career'     => "3",
                 'id_category_femeba'    => null
             )
+
         );
 
         $this->db->insert_batch('honoraries', $data);
