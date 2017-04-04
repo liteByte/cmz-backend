@@ -239,4 +239,33 @@ class Fee extends CI_Model{
 
  }
 
+  public function validateHonoraryQuantity($fee_type_id,$honoraryQuantity){
+
+      //1-Arancel CMZ y 2-Arancel Femeba
+      if ($fee_type_id == 1){
+
+          $this->db->select('MC.*');
+          $this->db->from ('medical_career MC');
+          $query = $this->db->get();
+
+          $medical_career_quantity = $query->num_rows();
+
+          if($honoraryQuantity != $medical_career_quantity*8) return false;
+
+      } else {
+
+          $this->db->select('CF.*');
+          $this->db->from ('category_femeba CF');
+          $query = $this->db->get();
+
+          $femeba_category_quantity = $query->num_rows();
+
+          if($honoraryQuantity != $femeba_category_quantity*8) return false;
+
+      }
+
+      return true;
+
+  }
+
 }
