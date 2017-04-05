@@ -9,7 +9,9 @@ class Professionals extends CI_Model{
 
     public function validateData($document_number, $speciality_id, $id_category_femeba, $id_medical_career, $id_payment_type, $bank_id){
         $query = $this->db->get_where('professionals', array('document_number' => $document_number));
-        if ($query->num_rows() > 0) return "El numero de documento ya esta registrado";
+        if($query){
+            if ($query->num_rows() > 0) return "El numero de documento ya esta registrado";
+        }
 
         $query = $this->db->get_where('specialities', array('speciality_id' => $speciality_id));
         if ($query->num_rows() == 0) return "La especilidad no registrada";
@@ -101,7 +103,7 @@ class Professionals extends CI_Model{
         $this->db->where('professionals.active',"active");
         $query =  $this->db->get();
 
-        if(!$query->row()){ return false;  }
+        if(!$query){ return false;  }
 
         foreach ($query->result_array('Professionals') as $row){
             array_push($result,$row);
