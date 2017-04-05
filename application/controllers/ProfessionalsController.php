@@ -130,7 +130,11 @@ class ProfessionalsController extends AuthController{
             return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
 
         $profesionals_result = $this->Professionals->getProfessionals();
-        return $this->response($profesionals_result, RC::HTTP_OK);
+        if(empty($profesionals_result)){
+            return $this->response(array('error'=>'No hay información'), RC::HTTP_BAD_REQUEST);
+        } else {
+            return $this->response($profesionals_result, RC::HTTP_OK);
+        }
     }
 
     public function getProfessionals_get(){
