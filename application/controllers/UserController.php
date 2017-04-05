@@ -10,27 +10,18 @@ use Restserver\Libraries\REST_Controller;
 class UserController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMusuarios";
     function __construct(){
         parent::__construct();
         $this->load->model('User');
         $this->load->model('Role');
         $this->load->library('validator');
-        $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
     //Create user
     public function users_post(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
-
         $name             = $post->name             ?? "";
         $last_name        = $post->last_name        ?? "";
         $email            = $post->email            ?? "";
@@ -69,15 +60,7 @@ class UserController extends AuthController{
     //Update user information
     public function updateUser_put(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
-
         $name             = $post->name              ?? "";
         $last_name        = $post->last_name         ?? "";
         $email            = $post->email             ?? "";
@@ -113,13 +96,6 @@ class UserController extends AuthController{
     //Delete user
     public function removeUser_delete(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $id = (int) $this->get('id');
         $result = $this->User->delete($id,$this->token_valid->user_id);
 
@@ -130,13 +106,6 @@ class UserController extends AuthController{
     //Show users
     public function users_get(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $users = $this->User->getUsers();
         return $this->response($users, REST_Controller::HTTP_OK);
     }
@@ -144,17 +113,8 @@ class UserController extends AuthController{
     //Show specific users
     public function getUser_get(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $id = $this->get('id');
-
         if(empty($id)) return $this->response(array('error'=>'Falta el ID del usuario'), REST_Controller::HTTP_BAD_REQUEST);
-
         $user = $this->User->getUserById($id);
 
         if(empty($user)){
@@ -194,8 +154,8 @@ class UserController extends AuthController{
     //Change user password
     public function changePassword_post(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
+//        //Validates if the user is logged and the token sent is valid.
+//        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
 
         $post = json_decode(file_get_contents('php://input'));
 
@@ -227,15 +187,7 @@ class UserController extends AuthController{
     //Update a user specific roles
     public function updateRoles_post(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMusuarios",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
-
         $roles = $post->roles ?? array();
         $id    = $this->get('id');
 
@@ -255,8 +207,4 @@ class UserController extends AuthController{
         for($i=0;$i < $longitud;$i++) $password .= $pattern{mt_rand(0,$max)};
         return $password;
     }
-
-    // Send Mail with new Password
-
-
 }
