@@ -16,6 +16,7 @@ class UserController extends AuthController{
         $this->load->model('User');
         $this->load->model('Role');
         $this->load->library('validator');
+        $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
     //Create user

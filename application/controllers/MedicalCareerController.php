@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class MedicalCareerController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "*";
     function __construct(){
         parent::__construct();
         $this->load->model('MedicalCareer');
@@ -18,12 +18,7 @@ class MedicalCareerController extends AuthController{
     }
 
     public function medical_career_get(){
-
-        //Validates Token
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
         $circle = $this->MedicalCareer->getMedicalCareer();
         return $this->response($circle, RC::HTTP_OK);
     }
-
 }

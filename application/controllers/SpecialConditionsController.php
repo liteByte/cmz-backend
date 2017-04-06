@@ -9,6 +9,7 @@ use Restserver\Libraries\REST_Controller as RC;
 
 class SpecialConditionsController extends AuthController{
 
+    protected $access = "ABMcondicionesespeciales";
     function __construct(){
         parent::__construct();
         $this->load->model('SpecialConditions');
@@ -16,14 +17,8 @@ class SpecialConditionsController extends AuthController{
     }
 
     public function specialconditions_post(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), RC::HTTP_BAD_REQUEST);
-
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
 
         $post = json_decode(file_get_contents('php://input'));
-
         $medical_insurance_id   = $post->medical_insurance_id   ?? "";
         $plan_id                = $post->plan_id                ?? "";
         $nomenclator_type       = $post->nomenclator_type       ?? "";
@@ -102,11 +97,6 @@ class SpecialConditionsController extends AuthController{
     }
 
     public function specialconditions_put(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), RC::HTTP_BAD_REQUEST);
-
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
 
         $id = $this->get('id');
         $post = json_decode(file_get_contents('php://input'));
@@ -193,29 +183,16 @@ class SpecialConditionsController extends AuthController{
     }
 
     public function specialconditions_get(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), RC::HTTP_BAD_REQUEST);
-
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
 
         $result = $this->SpecialConditions->get_specialconditions();
-
         if($result){
             return $this->response($result, RC::HTTP_OK);
         }else{
             return $this->response(array('error'=>'No hay Información para mostrar'), RC::HTTP_FORBIDDEN);
         }
-
-
     }
 
     public function specialconditions_by_id_get(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), RC::HTTP_BAD_REQUEST);
-
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
 
         $id = $this->get('id');
         if(empty($id)) return $this->response(array('error'=>'Falta el ID de la condición especial'), RC::HTTP_BAD_REQUEST);
@@ -226,17 +203,11 @@ class SpecialConditionsController extends AuthController{
         }else{
             return $this->response(array('error'=>'No hay Información para mostrar'), RC::HTTP_FORBIDDEN);
         }
-
     }
 
     public function specialconditions_delete(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), RC::HTTP_BAD_REQUEST);
-
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
+        
         $id = $this->get('id');
-
         $result = $this->SpecialConditions->delete_specialconditions($id);
 
         if(strcmp($result, true ) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);

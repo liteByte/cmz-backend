@@ -21,6 +21,7 @@ class AuthController extends REST_Controller {
         $headers = array_change_key_case($headers, CASE_LOWER);
         $token = $headers["authorization"];
 
+
         if (!empty($token)) {
             try {
                 $user = JWT::decode($token);
@@ -30,14 +31,14 @@ class AuthController extends REST_Controller {
                 $token_valid->message = "Token de autenticación no válido";
                 return $token_valid;
             }
-            $result = in_array($this->access, $user->permissions);
-//            print_r($user->permissions);
-//            die();
-            if(!$result){
-                return $this->response(array('error'=>'No tienes los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-            } else{
-                return true;
+//            print_r($this->access);
+//            die("end");
+            if($this->access != "*"){
+                $result = in_array($this->access, $user->permissions);
+                if(!$result)   return false;
             }
+
+            return $user;
         }else {
             $token_valid = new stdClass();
             $token_valid->status = "error";
