@@ -161,7 +161,7 @@ class Fee extends CI_Model{
       if ($query->num_rows() == 0) return [];
 
       //Get the first fee of the associative result_array (there should be only one anyways)
-      $fee = reset($query->result_array());
+      $fee = $query->first_row('array');
       $fee['units'] = $this->getFeeunits($fee);
 
       return $fee;
