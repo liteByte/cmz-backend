@@ -59,7 +59,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
         $data = array(
             array(
                 'cuit'  => '85745212458965',
-                'date_start_activity' => '01/01/2017',
+                'date_start_activity' => '2017-01-01',
                 'iibb' => '100000',
                 'iibb_percentage' => '10',
                 'gain' => TRUE,
@@ -69,7 +69,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             ),
             array(
                 'cuit'  => '85745212458900',
-                'date_start_activity' => '02/01/2017',
+                'date_start_activity' => '2017-01-02',
                 'iibb' => '100000',
                 'iibb_percentage' => '10',
                 'gain' => FALSE,
