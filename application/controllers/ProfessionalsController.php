@@ -24,7 +24,6 @@ class ProfessionalsController extends AuthController{
 
         $registration_number        = $post->registration_number        ?? "";
         $name                       = $post->name                       ?? "";
-        $last_name                  = $post->last_name                  ?? "";
         $document_type              = $post->document_type              ?? "";
         $document_number            = $post->document_number            ?? "";
         $date_birth                 = $post->date_birth                 ?? "";
@@ -55,7 +54,6 @@ class ProfessionalsController extends AuthController{
         $gain                       = $post->gain                       ?? "";
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
-        if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
@@ -108,7 +106,7 @@ class ProfessionalsController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
         //save the Professionals
-        $result = $this->Professionals->save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number);
+        $result = $this->Professionals->save($registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number);
         if($result != 1 )
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>'Profesional creado satisfactoriamente'), RC::HTTP_OK);
@@ -145,7 +143,6 @@ class ProfessionalsController extends AuthController{
 
         $registration_number        = $post->registration_number        ?? "";
         $name                       = $post->name                       ?? "";
-        $last_name                  = $post->last_name                  ?? "";
         $document_type              = $post->document_type              ?? "";
         $document_number            = $post->document_number            ?? "";
         $date_birth                 = $post->date_birth                 ?? "";
@@ -178,7 +175,6 @@ class ProfessionalsController extends AuthController{
 
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
-        if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
@@ -234,7 +230,7 @@ class ProfessionalsController extends AuthController{
         $error = $this->Professionals->validateDataUpdate($id, $document_number);
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
-        if(!$this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number)){
+        if(!$this->Professionals->update($id, $registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number)){
             return $this->response(array('msg'=>'Profesional actualizado de forma correcta'), RC::HTTP_OK);
         }else{
             return $this->response(array('error'=>'Error de base de datos'), RC::HTTP_INTERNAL_SERVER_ERROR);

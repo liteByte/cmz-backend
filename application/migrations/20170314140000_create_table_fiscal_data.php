@@ -13,23 +13,22 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             ),
             'cuit' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 13,
                 'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_start_activity' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'type'          => 'DATE',
                 'null'          => FALSE
             ),
             'iibb' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 15,
                 'null'          => FALSE
             ),
             'iibb_percentage' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'type'          => 'DECIMAL',
+                'constraint'    => '10,2',
                 'null'          => FALSE
             ),
             'gain' => array(
@@ -38,7 +37,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             ),
             'iva_id' => array(
                 'type'          =>  'INT',
-                'constraint'    =>  5,
+                'constraint'    =>  2,
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),

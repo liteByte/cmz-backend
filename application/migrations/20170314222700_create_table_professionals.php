@@ -21,28 +21,22 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'name' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 100,
-                'null'          => FALSE
-            ),
-            'last_name' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 100,
+                'constraint'    => 50,
                 'null'          => FALSE
             ),
             'document_type' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    =>  20,
+                'constraint'    =>  10,
                 'null'          => FALSE
             ),
             'document_number' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 50,
+                'constraint'    => 9,
                 'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_birth' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 50,
+                'type'          => 'DATE',
                 'unique'        => FALSE,
                 'null'          => FALSE
             ),
@@ -57,7 +51,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'zip_code' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 10
+                'constraint'    => 15
             ),
             'phone_number' => array(
                 'type'          => 'VARCHAR',
@@ -65,7 +59,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'email' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 100,
+                'constraint'    => 35,
                 'null'          => FALSE
             ),
             'office_address' => array(
@@ -91,7 +85,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'type_partner' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 10,
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
@@ -165,8 +159,7 @@ class Migration_Create_table_professionals extends CI_Migration{
         $data = array(
             array(
                 'registration_number'  => '87451285',
-                'name' => 'Jose',
-                'last_name' => 'Ramirez',
+                'name' => 'Jose Ramirez',
                 'document_type' => 'DNI',
                 'document_number' => '61189982',
                 'date_birth' => '20/02/1975',
@@ -188,8 +181,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             array(
                 'registration_number'  => '96857412',
-                'name' => 'Antonio',
-                'last_name' => 'Ramirez',
+                'name' => 'Antonio Ramirez',
                 'document_type' => 'DNI',
                 'document_number' => '6118998',
                 'date_birth' => '20/02/1975',
