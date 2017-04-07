@@ -239,7 +239,6 @@ class ProfessionalsController extends AuthController{
 
     public function removeProfessional_delete(){
 
-       return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
         $id = (int) $this->get('id');
 
         if($this->Professionals->delete($id, $this->token_valid->user_id )){

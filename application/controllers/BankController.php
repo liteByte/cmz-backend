@@ -20,13 +20,6 @@ class BankController extends AuthController{
     //Create bank
     public function banks_post(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMbancos",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
 
         $bank_code        = $post->bank_code        ?? "";

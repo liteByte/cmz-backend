@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class RoleController extends AuthController {
 
     private $token_valid;
-    protected $access = "ABMroles";
+    protected $access = "*";
     function __construct() {
         parent::__construct();
         $this->load->model('Role');
