@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class MedicalInsuranceController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMobrassociales";
     function __construct(){
         parent::__construct();
         $this->load->model('MedicalInsurance');
@@ -20,13 +20,6 @@ class MedicalInsuranceController extends AuthController{
 
     //Create medical insurance
     public function medicalInsurance_post(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMobrassociales",$this->token_valid->permissions))
-        return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -113,13 +106,6 @@ class MedicalInsuranceController extends AuthController{
     //Show medical insurances
     public function medicalInsurance_get(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMobrassociales",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $medicalInsurances = $this->MedicalInsurance->getMedicalInsurances();
       return $this->response($medicalInsurances, REST_Controller::HTTP_OK);
     }
@@ -127,15 +113,7 @@ class MedicalInsuranceController extends AuthController{
     //Update medical insurance information
     public function updateInsurance_put(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMobrassociales",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $post = json_decode(file_get_contents('php://input'));
-
       $denomination             = $post->denomination               ?? "";
       $settlement_name          = $post->settlement_name            ?? "";
       $address                  = $post->address                    ?? "";
@@ -220,15 +198,7 @@ class MedicalInsuranceController extends AuthController{
     //Show specific medical insurance
     public function getInsurance_get(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMobrassociales",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = $this->get('id');
-
       if(empty($id)) return $this->response(['error'=>'Falta el ID de la obra social'], REST_Controller::HTTP_BAD_REQUEST);
 
       $medicalInsurance = $this->MedicalInsurance->getInsuranceById($id);
@@ -243,13 +213,6 @@ class MedicalInsuranceController extends AuthController{
     //Delete medical insurance
     public function removeInsurance_delete(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMobrassociales",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = (int) $this->get('id');
 
       if($this->MedicalInsurance->delete($id,$this->token_valid->user_id)){
@@ -259,5 +222,4 @@ class MedicalInsuranceController extends AuthController{
       }
 
     }
-
 }

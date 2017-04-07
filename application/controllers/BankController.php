@@ -10,12 +10,11 @@ use Restserver\Libraries\REST_Controller;
 class BankController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMbancos";
     function __construct(){
         parent::__construct();
         $this->load->model('Bank');
         $this->load->library('validator');
-        $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
     //Create bank
@@ -59,27 +58,12 @@ class BankController extends AuthController{
 
     //Show banks
     public function banks_get(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMbancos",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $banks = $this->Bank->getBanks();
         return $this->response($banks, REST_Controller::HTTP_OK);
     }
 
     //Update bank information
     public function updateBank_put(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMbancos",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
 
         $post = json_decode(file_get_contents('php://input'));
 
@@ -118,15 +102,7 @@ class BankController extends AuthController{
     //Show specific bank
     public function getBank_get(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMbancos",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
-
         $id = $this->get('id');
-
         if(empty($id)) return $this->response(array('error'=>'Falta el ID del banco'), REST_Controller::HTTP_BAD_REQUEST);
 
         $bank = $this->Bank->getBankById($id);
@@ -141,15 +117,7 @@ class BankController extends AuthController{
     //Delete bank
     public function removeBank_delete(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMbancos",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta acción'), REST_Controller::HTTP_FORBIDDEN);
         $id = (int) $this->get('id');
-
-
         $result = $this->Bank->delete($id);
         if(strcmp($result, 1) != 0) return $this->response(array('error'=>$result), REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>'Banco eliminado satisfactoriamente'), REST_Controller::HTTP_OK);

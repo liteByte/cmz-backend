@@ -9,7 +9,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class ProfessionalsController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMprofesionales";
     function __construct(){
         parent::__construct();
         $this->load->model('Professionals');
@@ -20,18 +20,10 @@ class ProfessionalsController extends AuthController{
     //Create Professionals
     public function professionals_post(){
 
-        //Validate Token.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
-        //Validates permissions
-        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
 
         $registration_number        = $post->registration_number        ?? "";
         $name                       = $post->name                       ?? "";
-        $last_name                  = $post->last_name                  ?? "";
         $document_type              = $post->document_type              ?? "";
         $document_number            = $post->document_number            ?? "";
         $date_birth                 = $post->date_birth                 ?? "";
@@ -62,7 +54,6 @@ class ProfessionalsController extends AuthController{
         $gain                       = $post->gain                       ?? "";
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
-        if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
@@ -115,19 +106,13 @@ class ProfessionalsController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
         //save the Professionals
-        $result = $this->Professionals->save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number);
+        $result = $this->Professionals->save($registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number);
         if($result != 1 )
             if(strcmp($result,"OK") != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>'Profesional creado satisfactoriamente'), RC::HTTP_OK);
     }
 
     public function professionals_get(){
-        //Validate Token.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
-        //Validates permissions
-        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
 
         $profesionals_result = $this->Professionals->getProfessionals();
         if(empty($profesionals_result)){
@@ -138,12 +123,6 @@ class ProfessionalsController extends AuthController{
     }
 
     public function getProfessionals_get(){
-        //Validate Token.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
-        //Validates permissions
-        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
 
         $id = $this->get('id');
         if(empty($id)) return $this->response(array('error'=>'Falta el ID del profesional'), RC::HTTP_BAD_REQUEST);
@@ -158,18 +137,12 @@ class ProfessionalsController extends AuthController{
     }
 
     public function updateProfessionals_put(){
-        //Validate Token.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
 
-        //Validates permissions
-        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
         $post = json_decode(file_get_contents('php://input'));
         $id               = (int) $this->get('id');
 
         $registration_number        = $post->registration_number        ?? "";
         $name                       = $post->name                       ?? "";
-        $last_name                  = $post->last_name                  ?? "";
         $document_type              = $post->document_type              ?? "";
         $document_number            = $post->document_number            ?? "";
         $date_birth                 = $post->date_birth                 ?? "";
@@ -202,7 +175,6 @@ class ProfessionalsController extends AuthController{
 
         if(empty($registration_number))            return $this->response(array('error'=>'No se ha ingresado número de matrícula'), RC::HTTP_BAD_REQUEST);
         if(empty($name))                           return $this->response(array('error'=>'No se ha ingresado el nombre'), RC::HTTP_BAD_REQUEST);
-        if(empty($last_name))                      return $this->response(array('error'=>'No se ha ingresado el apellido'), RC::HTTP_BAD_REQUEST);
         if(empty($document_type))                  return $this->response(array('error'=>'No se ha ingresado el tipo de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($document_number))                return $this->response(array('error'=>'No se ha ingresado el número de documento'), RC::HTTP_BAD_REQUEST);
         if(empty($date_birth))                     return $this->response(array('error'=>'No se ha ingresado la fecha de nacimiento'), RC::HTTP_BAD_REQUEST);
@@ -217,7 +189,7 @@ class ProfessionalsController extends AuthController{
         if(empty($type_partner))                   return $this->response(array('error'=>'No se ha ingresado el tipo de socio'), RC::HTTP_BAD_REQUEST);
         if(empty($id_medical_career))              return $this->response(array('error'=>'No se ha ingresado la categoría del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($id_payment_type))                return $this->response(array('error'=>'No se ha ingresado la forma de pago'), RC::HTTP_BAD_REQUEST);
-       // if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
+        // if(empty($bank_id))                        return $this->response(array('error'=>'No se ha ingresado el banco elegido por el profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($date_start_activity))            return $this->response(array('error'=>'No se ha ingresado la fecha de inicio de actividad del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb))                           return $this->response(array('error'=>'No se ha ingresado el número de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
         if(empty($iibb_percentage))                return $this->response(array('error'=>'No se ha ingresado el porcentaje de ingresos brutos del Profesional'), RC::HTTP_BAD_REQUEST);
@@ -258,7 +230,7 @@ class ProfessionalsController extends AuthController{
         $error = $this->Professionals->validateDataUpdate($id, $document_number);
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), RC::HTTP_BAD_REQUEST);
 
-        if(!$this->Professionals->update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number)){
+        if(!$this->Professionals->update($id, $registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number)){
             return $this->response(array('msg'=>'Profesional actualizado de forma correcta'), RC::HTTP_OK);
         }else{
             return $this->response(array('error'=>'Error de base de datos'), RC::HTTP_INTERNAL_SERVER_ERROR);
@@ -267,12 +239,7 @@ class ProfessionalsController extends AuthController{
 
     public function removeProfessional_delete(){
 
-        //Validate Token.
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
-        //Validates permissions
-        if(!in_array("ABMprofesionales",$this->token_valid->permissions))
-            return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
+       return $this->response(array('error'=>'No tiene los permisos para realizar esta accion'), RC::HTTP_FORBIDDEN);
         $id = (int) $this->get('id');
 
         if($this->Professionals->delete($id, $this->token_valid->user_id )){

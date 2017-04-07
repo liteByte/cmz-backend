@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class CategoryFemebaController extends AuthController{
     
     private $token_valid;
-    
+    protected $access = "*";
     function __construct(){
         parent::__construct();
         $this->load->model('Femeba');
@@ -18,12 +18,7 @@ class CategoryFemebaController extends AuthController{
     }
     
     public function femeba_get(){
-
-        //Validates Token
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
         $femeba = $this->Femeba->getFemeba();
         return $this->response($femeba, RC::HTTP_OK);
     }
-
 }

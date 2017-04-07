@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class NomenclatorController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMnomenclador";
     function __construct(){
         parent::__construct();
         $this->load->model('Nomenclator');
@@ -19,13 +19,6 @@ class NomenclatorController extends AuthController{
 
     //Create nomenclator
     public function nomenclators_post(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMnomenclador",$this->token_valid->permissions))
-        return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -76,27 +69,12 @@ class NomenclatorController extends AuthController{
 
     //Show nomenclators
     public function nomenclators_get(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMnomenclador",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $nomenclators = $this->Nomenclator->getNomenclators();
       return $this->response($nomenclators, REST_Controller::HTTP_OK);
     }
 
     //Update nomenclator information
     public function updateNomenclator_put(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMnomenclador",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -141,15 +119,7 @@ class NomenclatorController extends AuthController{
     //Show specific nomenclator
     public function getNomenclator_get(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMnomenclador", $this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = $this->get('id');
-
       if(empty($id)) return $this->response(['error'=>'Falta el ID del nomenclador'], REST_Controller::HTTP_BAD_REQUEST);
 
       $nomenclator = $this->Nomenclator->getNomenclatorById($id);
@@ -164,13 +134,6 @@ class NomenclatorController extends AuthController{
     //Delete nomenclator
     public function removeNomenclator_delete(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMnomenclador",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = (int) $this->get('id');
 
       if($this->Nomenclator->delete($id, $this->token_valid->user_id)){
@@ -180,5 +143,4 @@ class NomenclatorController extends AuthController{
       }
 
     }
-
 }

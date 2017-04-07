@@ -34,7 +34,7 @@ class Professionals extends CI_Model{
         return "OK";
     }
 
-    public function save($registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number ){
+    public function save($registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $cuit, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $account_number, $cbu_number ){
 
         $fiscal_data = array(
             "cuit"=>$cuit,
@@ -58,7 +58,6 @@ class Professionals extends CI_Model{
             $professional_data = array(
                 "registration_number"   =>$registration_number,
                 "name"                  =>$name,
-                "last_name"             =>$last_name,
                 "document_type"         =>$document_type,
                 "document_number"       =>$document_number,
                 "date_birth"            =>$date_birth,
@@ -139,12 +138,11 @@ class Professionals extends CI_Model{
         return $result;
     }
 
-    public function update($id, $registration_number, $name, $last_name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number){
+    public function update($id, $registration_number, $name, $document_type, $document_number, $date_birth, $legal_address, $legal_locality, $zip_code, $phone_number, $email, $office_address, $office_locality, $id_fiscal_data, $speciality_id, $type_partner, $id_category_femeba, $id_medical_career,  $id_payment_type, $bank_id, $date_start_activity, $iibb, $iibb_percentage, $gain, $iva_id, $retention_vat, $retention_gain, $cuit, $account_number, $cbu_number){
 
         $data = array(
             "registration_number"   =>$registration_number,
             "name"                  =>$name,
-            "last_name"             =>$last_name,
             "document_type"         =>$document_type,
             "document_number"       =>$document_number,
             "date_birth"            =>$date_birth,
