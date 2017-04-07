@@ -31,8 +31,6 @@ class AuthController extends REST_Controller {
                 $token_valid->message = "Token de autenticación no válido";
                 return $token_valid;
             }
-//            print_r($this->access);
-//            die("end");
             if($this->access != "*"){
                 $result = in_array($this->access, $user->permissions);
                 if(!$result)   return false;

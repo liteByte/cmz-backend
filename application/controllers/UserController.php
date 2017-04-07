@@ -155,9 +155,6 @@ class UserController extends AuthController{
     //Change user password
     public function changePassword_post(){
 
-//        //Validates if the user is logged and the token sent is valid.
-//        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
         $post = json_decode(file_get_contents('php://input'));
 
         $oldPassword = $post->oldPassword ?? "";
