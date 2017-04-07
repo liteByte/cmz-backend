@@ -54,31 +54,31 @@ class MedicalInsuranceController extends AuthController{
       $ret_adherente_gastos     = $post->ret_adherente_gastos       ?? "";
       $cobertura_fer_noct       = $post->cobertura_fer_noct         ?? "";
 
-      if(empty($denomination))              return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($settlement_name))           return $this->response(['error'=>'No se ha ingresado nombre de liquidación'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($address))                   return $this->response(['error'=>'No se ha ingresado dirección'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($location))                  return $this->response(['error'=>'No se ha ingresado localidad'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($postal_code))               return $this->response(['error'=>'No se ha ingresado código postal'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($cuit))                      return $this->response(['error'=>'No se ha ingresado CUIT'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($iva_id))                    return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($gross_income))              return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($payment_deadline))          return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
-      if(strlen($scope_id) <> 1)            return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if(strlen($maternal_plan) <> 1)       return $this->response(['error'=>'No se ha ingresado plan maternal'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($admin_rights))              return $this->response(['error'=>'No se han ingresado derechos de admin'], REST_Controller::HTTP_BAD_REQUEST);
-      if(strlen($femeba) <> 1)              return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_socios_honorarios))     return $this->response(['error'=>'No se ha ingresado retención de honorarios de socios'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_socios_gastos))         return $this->response(['error'=>'No se ha ingresado retención de gastos de socios'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_nosocios_honorarios))   return $this->response(['error'=>'No se ha ingresado retención de honorarios de no-socios'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_nosocios_gastos))       return $this->response(['error'=>'No se ha ingresado retención de gastos de no-socios'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_adherente_honorarios))  return $this->response(['error'=>'No se ha ingresado retención de honorarios de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($ret_adherente_gastos))      return $this->response(['error'=>'No se ha ingresado retención de gastos de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
-      if(empty($cobertura_fer_noct))        return $this->response(['error'=>'No se ha ingresado cobertura nocturna/feriados'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($denomination))                                                  return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($settlement_name))                                               return $this->response(['error'=>'No se ha ingresado nombre de liquidación'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($address))                                                       return $this->response(['error'=>'No se ha ingresado dirección'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($location))                                                      return $this->response(['error'=>'No se ha ingresado localidad'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($postal_code))                                                   return $this->response(['error'=>'No se ha ingresado código postal'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($cuit))                                                          return $this->response(['error'=>'No se ha ingresado CUIT'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($iva_id))                                                        return $this->response(['error'=>'No se ha ingresado IVA'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($gross_income))                                                  return $this->response(['error'=>'No se ha ingresado ingresos brutos'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($payment_deadline))                                              return $this->response(['error'=>'No se ha ingresado plazo de pago'], REST_Controller::HTTP_BAD_REQUEST);
+      if(strlen($scope_id) <> 1)                                                return $this->response(['error'=>'Se ha ingresado el alcance incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(strlen($maternal_plan) <> 1)                                           return $this->response(['error'=>'No se ha ingresado plan maternal'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($admin_rights)             && $admin_rights !== '0')             return $this->response(['error'=>'No se han ingresado derechos de admin'], REST_Controller::HTTP_BAD_REQUEST);
+      if(strlen($femeba) <> 1)                                                  return $this->response(['error'=>'Se ha informado FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_socios_honorarios)    && $ret_socios_honorarios !== '0')    return $this->response(['error'=>'No se ha ingresado retención de honorarios de socios'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_socios_gastos)        && $ret_socios_gastos !== '0')        return $this->response(['error'=>'No se ha ingresado retención de gastos de socios'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_nosocios_honorarios)  && $ret_nosocios_honorarios !== '0')  return $this->response(['error'=>'No se ha ingresado retención de honorarios de no-socios'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_nosocios_gastos)      && $ret_nosocios_gastos !== '0')      return $this->response(['error'=>'No se ha ingresado retención de gastos de no-socios'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_adherente_honorarios) && $ret_adherente_honorarios !== '0') return $this->response(['error'=>'No se ha ingresado retención de honorarios de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($ret_adherente_gastos)     && $ret_adherente_gastos !== '0')     return $this->response(['error'=>'No se ha ingresado retención de gastos de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($cobertura_fer_noct)       && $cobertura_fer_noct !== '0')       return $this->response(['error'=>'No se ha ingresado cobertura nocturna/feriados'], REST_Controller::HTTP_BAD_REQUEST);
 
       //If femeba is true, check for other necessary parameters
       if($femeba == 1){
-          if(strlen($ret_jub_femeba) <> 1)  return $this->response(['error'=>'Se ha ingresado retención de jubilación de FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-          if(empty($federation_funds))      return $this->response(['error'=>'No se han ingresado fondos de federación'], REST_Controller::HTTP_BAD_REQUEST);
+          if(strlen($ret_jub_femeba) <> 1)                          return $this->response(['error'=>'Se ha ingresado retención de jubilación de FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+          if(empty($federation_funds) && $federation_funds !== '0') return $this->response(['error'=>'No se han ingresado fondos de federación'], REST_Controller::HTTP_BAD_REQUEST);
       }
 
       //Validations
@@ -90,7 +90,7 @@ class MedicalInsuranceController extends AuthController{
       if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de retención de gastos de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de retención de honorarios de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de retención de gastos de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-      if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+      if($cobertura_fer_noct < 0)                                           return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       if($femeba == 1){
           if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federación ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
       }
