@@ -118,6 +118,10 @@ $route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/i
 $route['fees']                        = 'FeeController/fees';  //Get -> show fees  & post -> create fee & put -> update fees
 $route['fees/(:num)']                 = 'FeeController/fees/id/$1';
 
+////////////////////////Benefit routes////////////////////////
+$route['benefits']                    = 'BenefitController/fees';  //Get -> show benefits  & post -> create benefit & put -> update benefit
+$route['benefits/(:num)']             = 'BenefitController/fees/id/$1';
+
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
