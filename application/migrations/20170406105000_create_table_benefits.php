@@ -156,7 +156,7 @@ class Migration_Create_table_fees extends CI_Migration{
         $this->dbforge->add_field('UNIQUE KEY benefit_key (medical_insurance_id,plan_id,registration_number,period,benefit)');
         $this->dbforge->add_key('benefit_id', TRUE);
         $this->dbforge->create_table('benefits');
-        
+
         /*$data = array(
             array(
                 'medical_insurance_id'  => "1",

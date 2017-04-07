@@ -136,6 +136,18 @@ $route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 ////////////////////////Category Circle routes////////////////////////
 $route['medicalcareer']               = 'MedicalCareerController/medical_career';
 
+////////////////////////Billing codes routes////////////////////////
+$route['billingCodes']                = 'BillingCodeController/billing_code';
+
+////////////////////////Holiday options routes////////////////////////
+$route['holidayOptions']              = 'HolidayOptionController/holiday_option';
+
+////////////////////////Maternal plan options routes////////////////////////
+$route['maternalPlanOptions']         = 'MaternalPlanOptionController/maternal_plan_option';
+
+////////////////////////Internment-ambulatory options routes////////////////////////
+$route['internmentAmbulatoryOptions'] = 'InternmentAmbulatoryOptionController/internment_ambulatory_option';
+
 ////////////////////////Concept Group routes////////////////////////
 $route['conceptgroup']                = 'ConceptGroupController/conceptGroups';
 
