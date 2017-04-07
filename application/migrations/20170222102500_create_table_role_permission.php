@@ -87,6 +87,10 @@ class Migration_Create_table_role_permission extends CI_Migration{
             array(
                 'permission_id' => "12",
                 'role_id' => "1"
+            ),
+            array(
+                'permission_id' => "13",
+                'role_id' => "1"
             )
         );
 

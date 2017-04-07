@@ -2,13 +2,14 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_fees extends CI_Migration{
+class Migration_Create_table_benefits extends CI_Migration{
 
     public function up(){
 
         $this->dbforge->add_field(array(
             'benefit_id' => array(
-                'type'          =>  'INT',
+                'type'          =>  'BIGINT',
+                'constraint'    =>  10,
                 'unsigned'      =>  TRUE,
                 'auto_increment'=>  TRUE
             ),
@@ -37,7 +38,7 @@ class Migration_Create_table_fees extends CI_Migration{
             ),
             'period'  => array(
                 'type'          => 'DATE',
-                'null'          => FALSE,
+                'null'          => FALSE
             ),
             'remesa'   => array(
                 'type'          =>  'VARCHAR',
@@ -96,7 +97,7 @@ class Migration_Create_table_fees extends CI_Migration{
             ),
             'benefit_date'  => array(
                 'type'          => 'DATE',
-                'null'          => TRUE,
+                'null'          => TRUE
             ),
             'affiliate_number' => array(
                 'type'          =>  'VARCHAR',
@@ -136,7 +137,7 @@ class Migration_Create_table_fees extends CI_Migration{
             ),
             'update_date'  => array(
                 'type'          =>  'TIMESTAMP',
-                'null'          =>  TRUE,
+                'null'          =>  TRUE
             ),
             'modify_user_id' => array(
                 'type'          =>  'INT',
@@ -151,9 +152,9 @@ class Migration_Create_table_fees extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (internment_ambulatory_option_id)     REFERENCES internment_ambulatory_options(internment_ambulatory_option_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (maternal_plan_option_id)             REFERENCES maternal_plan_options(maternal_plan_option_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (holiday_option_id)                   REFERENCES holiday_options(holiday_option_id)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (billing_code_id)                     REFERENCES billing_code_id(billing_codes)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (nomenclator_id)                      REFERENCES nomenclator_id(nomenclators)');
-        $this->dbforge->add_field('UNIQUE KEY benefit_key (medical_insurance_id,plan_id,registration_number,period,benefit)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (billing_code_id)                     REFERENCES billing_codes(billing_code_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (nomenclator_id)                      REFERENCES nomenclators(nomenclator_id)');
+        $this->dbforge->add_field('UNIQUE KEY benefit_key (medical_insurance_id,plan_id,id_professional_data,period,nomenclator_id)');
         $this->dbforge->add_key('benefit_id', TRUE);
         $this->dbforge->create_table('benefits');
 

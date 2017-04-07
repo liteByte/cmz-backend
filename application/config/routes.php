@@ -119,8 +119,8 @@ $route['fees']                        = 'FeeController/fees';  //Get -> show fee
 $route['fees/(:num)']                 = 'FeeController/fees/id/$1';
 
 ////////////////////////Benefit routes////////////////////////
-$route['benefits']                    = 'BenefitController/fees';  //Get -> show benefits  & post -> create benefit & put -> update benefit
-$route['benefits/(:num)']             = 'BenefitController/fees/id/$1';
+$route['benefits']                    = 'BenefitController/benefits';  //Get -> show benefits  & post -> create benefit & put -> update benefit
+$route['benefits/(:num)']             = 'BenefitController/benefits/id/$1';
 
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva

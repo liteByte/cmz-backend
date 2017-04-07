@@ -13,32 +13,35 @@ class Benefit extends CI_Model{
     public function save($medical_insurance_id, $plan_id, $id_professional_data, $registration_number, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_number, $affiliate_name, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
 
         $data = array(
-            '$medical_insurance_id'             => $medical_insurance_id,
-            '$plan_id'                          => $plan_id,
-            '$id_professional_data'             => $id_professional_data,
-            '$registration_number'              => $registration_number,
-            '$period'                           => $period,
-            '$remesa'                           => $remesa,
-            '$nomenclator_id'                   => $nomenclator_id,
-            '$benefit'                          => $benefit,
-            '$quantity'                         => $quantity,
-            '$billing_code_id'                  => $billing_code_id,
-            '$multiple_operation_value'         => $multiple_operation_value,
-            '$holiday_option_id'                => $holiday_option_id,
-            '$maternal_plan_option_id'          => $maternal_plan_option_id,
-            '$internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
-            '$unit_price'                       => $unit_price,
-            '$benefit_date'                     => $benefit_date,
-            '$affiliate_number'                 => $affiliate_number,
-            '$affiliate_name'                   => $affiliate_name,
-            '$bill_number'                      => $bill_number,
-            '$modify_coverage'                  => $modify_coverage,
-            '$new_honorary'                     => $new_honorary,
-            '$new_expenses'                     => $new_expenses,
+            'medical_insurance_id'             => $medical_insurance_id,
+            'plan_id'                          => $plan_id,
+            'id_professional_data'             => $id_professional_data,
+            'registration_number'              => $registration_number,
+            'period'                           => $period,
+            'remesa'                           => (empty($remesa)                   ? null : $remesa),
+            'nomenclator_id'                   => $nomenclator_id,
+            'benefit'                          => $benefit,
+            'quantity'                         => $quantity,
+            'billing_code_id'                  => $billing_code_id,
+            'multiple_operation_value'         => $multiple_operation_value,
+            'holiday_option_id'                => (empty($holiday_option_id)        ? null : $holiday_option_id),
+            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)  ? null : $maternal_plan_option_id),
+            'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
+            'unit_price'                       => (empty($unit_price)               ? null : $unit_price),
+            'benefit_date'                     => (empty($benefit_date)             ? null : $benefit_date),
+            'affiliate_number'                 => (empty($affiliate_number)         ? null : $affiliate_number),
+            'affiliate_name'                   => (empty($affiliate_name)           ? null : $affiliate_name),
+            'bill_number'                      => (empty($bill_number)              ? null : $bill_number),
+            'modify_coverage'                  => (empty($modify_coverage)          ? null : $modify_coverage),
+            'new_honorary'                     => (empty($new_honorary)             ? null : $new_honorary),
+            'new_expenses'                     => (empty($new_expenses)             ? null : $new_expenses),
             'active'                            => 'active'
         );
 
+           // print_r($data);
+           // die();
         $this->db->insert('benefits', $data);
+        if ($this->db->affected_rows() == 0) return false;
 
         return true;
 
@@ -138,7 +141,7 @@ class Benefit extends CI_Model{
             return "El ID de prestación no existe en la base de datos";
 
         }
-        
+
         return true;
     }
 
@@ -148,7 +151,7 @@ class Benefit extends CI_Model{
         $query = $this->db->get_where('benefits', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'id_professional_data' => $id_professional_data, 'period' => $period, 'nomenclator_id' => $nomenclator_id]);
         if ($query->num_rows() > 0) return "Ya existe una prestación con la misma combinación de OS + Plan + Matricula + Prestación + Período";
 
-        return $this->validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id);
+        return $this->validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $nomenclator_id);
 
     }
 
