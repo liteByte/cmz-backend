@@ -14,6 +14,7 @@ class BenefitController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->model('benefit');
+        $this->load->model('affiliate');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
@@ -76,12 +77,26 @@ class BenefitController extends AuthController{
         if(!empty($benefit_date)){
             if(!$this->validator->validateDate($benefit_date))      return $this->response(['error'=>'Fecha de prestación invalida'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if(!empty($affiliate_number)){
+            if(empty($affiliate_name))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        if(!empty($affiliate_name)){
+            if(empty($affiliate_number))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
+        }
 
 
         //Validate fields and unique key
         $error = $this->benefit->validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id);
 
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
+
+
+        //Create the affiliate if informed and if it does not exist
+        if(!$this->affiliate->checkExistence($affiliate_number)) {
+            if (!$this->affiliate->save($medical_insurance_id, $plan_id, $affiliate_number, $affiliate_name)) {
+                return $this->response(['error' => 'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
 
 
         //If everything is valid, save the benefit

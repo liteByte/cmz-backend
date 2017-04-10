@@ -38,8 +38,6 @@ class Benefit extends CI_Model{
             'active'                            => 'active'
         );
 
-           // print_r($data);
-           // die();
         $this->db->insert('benefits', $data);
         if ($this->db->affected_rows() == 0) return false;
 
