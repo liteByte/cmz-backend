@@ -158,18 +158,24 @@ class Migration_Create_table_benefits extends CI_Migration{
         $this->dbforge->add_key('benefit_id', TRUE);
         $this->dbforge->create_table('benefits');
 
-        /*$data = array(
+        $data = array(
             array(
-                'medical_insurance_id'  => "1",
-                'plan_id'               => "2",
-                'fee_type_id'           => "1",
-                'upload_date'           => $now,
-                'period'                => "2017-10-10",
-                'active'                => "active"
+                'medical_insurance_id'              => "1",
+                'plan_id'                           => "2",
+                'id_professional_data'              => "1",
+                'registration_number'               => "87451285",
+                'period'                            => "2017-10-10",
+                'nomenclator_id'                    => 1,
+                'benefit'                           => "12345678-A",
+                'quantity'                          => 1,
+                'billing_code_id'                   => 1,
+                'multiple_operation_value'          => 1,
+                'internment_ambulatory_option_id'   => 1,
+                'active'                            => "active"
             )
         );
 
-        $this->db->insert_batch('benefits', $data);*/
+        $this->db->insert_batch('benefits', $data);
     }
 
 
