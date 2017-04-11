@@ -78,10 +78,10 @@ class BenefitController extends AuthController{
             if(!$this->validator->validateDate($benefit_date))      return $this->response(['error'=>'Fecha de prestación invalida'], REST_Controller::HTTP_BAD_REQUEST);
         }
         if(!empty($affiliate_number)){
-            if(empty($affiliate_name))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($affiliate_name))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su número'], REST_Controller::HTTP_BAD_REQUEST);
         }
         if(!empty($affiliate_name)){
-            if(empty($affiliate_number))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($affiliate_number))    return $this->response(['error'=>'Se debe informar tanto el número del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
         }
 
 
@@ -178,6 +178,12 @@ class BenefitController extends AuthController{
         //Validate optional fields (if sent)
         if(!empty($benefit_date)){
             if(!$this->validator->validateDate($benefit_date))      return $this->response(['error'=>'Fecha de prestación invalida'], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        if(!empty($affiliate_number)){
+            if(empty($affiliate_name))      return $this->response(['error'=>'Se debe informar tanto el nombre del afiliado como su número'], REST_Controller::HTTP_BAD_REQUEST);
+        }
+        if(!empty($affiliate_name)){
+            if(empty($affiliate_number))    return $this->response(['error'=>'Se debe informar tanto el número del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
         }
 
 
