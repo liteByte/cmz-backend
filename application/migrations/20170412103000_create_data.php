@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_fee_types extends CI_Migration{
+class Migration_Create_data extends CI_Migration{
 
     public function up(){
 
@@ -20,6 +20,7 @@ class Migration_Create_table_fee_types extends CI_Migration{
 
     public function down(){
 
+        return true;
 
     }
 
