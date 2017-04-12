@@ -49,20 +49,6 @@ class Migration_Create_table_coverage extends CI_Migration{
         $this->dbforge->add_key('id_coverage', TRUE);
         $this->dbforge->create_table('coverages');
 
-        $data = array(
-            array(
-                'plan_id'               => 1,
-                'medical_insurance_id'  => 1,
-            ),
-            array(
-                'plan_id'               => 2,
-                'medical_insurance_id'  => 1,
-            )
-        );
-
-        $this->db->insert_batch('coverages', $data);
-
-
     }
     public function down(){
         $this->dbforge->drop_table('coverages');

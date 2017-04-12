@@ -47,24 +47,6 @@ class Migration_Create_table_units_coverage extends CI_Migration{
         $this->dbforge->add_field('UNIQUE KEY units_key (id_coverage,unit,type_unit )');
         $this->dbforge->create_table('units_coverage');
 
-        $data = array(
-            array(
-                'id_coverage'       => 1,
-                'unit'              => "A",
-                'type_unit'         => "Internacion",
-                'honorary'          => 5,
-                'expenses'          => 20,
-            ),
-            array(
-                'id_coverage'       => 2,
-                'unit'              => "B",
-                'type_unit'         => "Ambulatorio",
-                'honorary'          => 5,
-                'expenses'          => 20,
-            )
-        );
-
-        $this->db->insert_batch('units_coverage', $data);
     }
     public function down(){
         $this->dbforge->drop_table('units_coverage');

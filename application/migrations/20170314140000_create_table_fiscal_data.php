@@ -56,30 +56,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
         $this->dbforge->add_key('id_fiscal_data', TRUE);
         $this->dbforge->create_table('fiscal_data');
 
-        $data = array(
-            array(
-                'cuit'  => '85745212458965',
-                'date_start_activity' => '2017-01-01',
-                'iibb' => '100000',
-                'iibb_percentage' => '10',
-                'gain' => TRUE,
-                'iva_id' => '1',
-                'retention_vat' => FALSE,
-                'retention_gain' => FALSE,
-            ),
-            array(
-                'cuit'  => '85745212458900',
-                'date_start_activity' => '2017-01-02',
-                'iibb' => '100000',
-                'iibb_percentage' => '10',
-                'gain' => FALSE,
-                'iva_id' => '5',
-                'retention_vat' => FALSE,
-                'retention_gain' => FALSE,
-            ),
-        );
-
-        $this->db->insert_batch('fiscal_data', $data);
     }
 
     public function down(){
