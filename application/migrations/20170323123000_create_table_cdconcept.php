@@ -80,32 +80,6 @@ class Migration_Create_table_cdconcept extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (concept_movement_id)      REFERENCES concept_movement(concept_movement_id)');
         $this->dbforge->create_table('credit_debit_concepts');
 
-        $data = array(
-            array(
-                'code'                  => "1234",
-                'concept_description'   => "Concepto 1",
-                'concept_group_id'      => "1",
-                'concept_type_id'       => "1",
-                'concept_movement_id'   => "1",
-                'value'                 => "5,36",
-                'applies_liquidation'   => 1,
-                'receipt_legend'        => "Una leyenda nueva",
-                'active'                => 'active'
-            ),
-            array(
-                'code'                  => "5678",
-                'concept_description'   => "Concepto 2",
-                'concept_group_id'      => "2",
-                'concept_type_id'       => "2",
-                'concept_movement_id'   => "2",
-                'value'                 => "544,36",
-                'applies_liquidation'   => 0,
-                'receipt_legend'        => "Otra leyenda nueva",
-                'active'                => 'active'
-            ),
-        );
-
-        $this->db->insert_batch('credit_debit_concepts', $data);
     }
 
 

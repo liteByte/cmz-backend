@@ -83,36 +83,6 @@ class Migration_Create_table_nomenclators extends CI_Migration{
         $this->dbforge->add_field('UNIQUE KEY nomenclator_key (code,class)');
         $this->dbforge->create_table('nomenclators');
 
-        $data = array(
-            array(
-                'type'              => "NN",
-                'code'              => "12345678",
-                'class'             => "A",
-                'description'       => "Electrocardiograma",
-                'unity'             => "Q",
-                'speciality_unity'  => "12.69",
-                'helpers'           => 5,
-                'help_unity'        => "12.6",
-                'anesthetist_unity' => "12.6",
-                'spending_unity'    => "12.6",
-                'active'            => 'active'
-            ),
-            array(
-                'type'              => "NS",
-                'code'              => "1234567895",
-                'class'             => "P",
-                'description'       => "Radiografia de torax",
-                'unity'             => "R",
-                'speciality_unity'  => "65.69",
-                'helpers'           => 1,
-                'help_unity'        => "65.6",
-                'anesthetist_unity' => "65.6",
-                'spending_unity'    => "65.6",
-                'active'            => 'active'
-            )
-        );
-
-        $this->db->insert_batch('nomenclators', $data);
     }
 
 
