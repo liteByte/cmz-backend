@@ -62,7 +62,6 @@ class EarningsController extends AuthController{
         $id = $this->get('id');
 
         $result = $this->Earnings->getById($id);
-
         if(!$result){
             return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_NOT_FOUND);
         }else {
@@ -95,7 +94,6 @@ class EarningsController extends AuthController{
             if(strcmp($result,1) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>$this->msgSucces), RC::HTTP_OK);
     }
-
 
     public function earnings_delete(){
         $id = $this->get('id');

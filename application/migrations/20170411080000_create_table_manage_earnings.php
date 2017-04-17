@@ -44,6 +44,7 @@ class Migration_Create_table_manage_earnings extends CI_Migration{
         ));
 
         $this->dbforge->add_key('id_manage_earnings', TRUE);
+        $this->dbforge->add_field('UNIQUE KEY coverage_key (since, until)');
         $this->dbforge->create_table('manage_earnings');
 
         $data = array(

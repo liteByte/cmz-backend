@@ -40,10 +40,7 @@ class Earnings extends CI_Model{
         $query = $this->db->get_where($this->table,["id_manage_earnings" =>  $id]);
 
         if(!$query) return 0;
-        foreach ($query->result_array() as $row){
-            array_push($result,$row);
-        }
-        return $result;
+        return $query->row();
     }
 
     public function update($id, $post){
@@ -66,7 +63,5 @@ class Earnings extends CI_Model{
         if(!$result) return $this->msgRemove;
         
         return 1;
-
-        
     }
 }
