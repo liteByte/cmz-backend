@@ -155,9 +155,17 @@ $route['coverages/update/(:num)']       = 'CoverageController/updateCoverage/id/
 $route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';
 
 ////////////////////////Special Conditions routes////////////////////////
-$route['specialconditionstypes']            =    'SpecialConditionsTypesController/types';
+$route['specialconditionstypes']            = 'SpecialConditionsTypesController/types';
 $route['specialconditions']                 = 'SpecialConditionsController/specialconditions';
 $route['specialconditions']                 = 'SpecialConditionsController/specialconditions';
 $route['specialconditions/update/(:num)']   = 'SpecialConditionsController/specialconditions/id/$1';
 $route['specialconditions/remove/(:num)']   = 'SpecialConditionsController/specialconditions/id/$1';
 $route['specialconditions/(:num)']          = 'SpecialConditionsController/specialconditions_by_id/id/$1';
+
+//////////////////////// Manage Earnings  ////////////////////////
+
+$route['earnings']                  = 'EarningsController/earnings';
+$route['earnings/(:num)']           = 'EarningsController/getEarnings/id/$1';
+$route['earnings/update/(:num)']    = 'EarningsController/earnings/id/$1';
+$route['earnings/remove/(:num)']    = 'EarningsController/earnings/id/$1';
+
