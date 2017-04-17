@@ -35,7 +35,7 @@
             <td>
 <!--                <img style='display: block; margin: auto; width: 100%' src='http://www.circulomedicodezarate.org/img-web/img-top-logo.jpg' alt="cmz_logo"/>-->
 <!--                <img style='display: block; margin: auto;' src='http://www.centromedicorondilla.com/images/logo.png' alt="cmz_logo"/>-->
-                <div class="enjoy-css">Centro Medico Zarate</div>
+                <div class="enjoy-css">Círculo Medico Zarate</div>
             </td>
         </tr>
     </table>
