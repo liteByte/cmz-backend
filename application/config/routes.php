@@ -164,8 +164,5 @@ $route['specialconditions/(:num)']          = 'SpecialConditionsController/speci
 
 //////////////////////// Manage Earnings  ////////////////////////
 
-$route['earnings']                  = 'EarningsController/earnings';
-$route['earnings/(:num)']           = 'EarningsController/getEarnings/id/$1';
-$route['earnings/update/(:num)']    = 'EarningsController/earnings/id/$1';
-$route['earnings/remove/(:num)']    = 'EarningsController/earnings/id/$1';
-
+$route['earnings']                      = 'EarningsController/earnings';
+$route['earnings/(:num)']               = 'EarningsController/earnings/id/$1';

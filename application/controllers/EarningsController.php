@@ -48,27 +48,25 @@ class EarningsController extends AuthController{
 
     public function earnings_get(){
 
-        $result = $this->Earnings->getAll();
-
-        if(empty($result)){
-            return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_FORBIDDEN);
-        }else{
-            return $this->response($result, RC::HTTP_OK);
-        }
-    }
-
-    public function getEarnings_get(){
-
         $id = $this->get('id');
-
-        $result = $this->Earnings->getById($id);
-        if(!$result){
-            return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_NOT_FOUND);
-        }else {
-            return $this->response($result, RC::HTTP_OK);
+        if(!isset($id)){
+            $result = $this->Earnings->getAll();
+            if(empty($result)){
+                return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_FORBIDDEN);
+            }else{
+                return $this->response($result, RC::HTTP_OK);
+            }
+        }else{
+            $result = $this->Earnings->getById($id);
+            if(!$result){
+                return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_NOT_FOUND);
+            }else {
+                return $this->response($result, RC::HTTP_OK);
+            }
         }
-    }
 
+    }
+    
     public function earnings_put(){
         $post = json_decode(file_get_contents('php://input'));
         $id = $this->get('id');
@@ -102,7 +100,7 @@ class EarningsController extends AuthController{
 
         if($result != 1)
             if(strcmp($result,1) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
-        return $this->response(array('msg'=>$this->msgSucces), RC::HTTP_OK);
+        return $this->response(array('msg'=>$this->msgRemove), RC::HTTP_OK);
     }
 }
 
