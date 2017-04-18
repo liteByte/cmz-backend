@@ -26,15 +26,16 @@ class Migration_Create_table_special_conditions extends CI_Migration{
                 'null'          =>  FALSE
             ],
             'nomenclator_type'  => [
-                'type'          =>  'VARCHAR',
-                'constraint'    =>  50,
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ],
-            'provision'         => [
-                'type'          =>  'VARCHAR',
-                'constraint'    =>  50,
-                'null'          =>  FALSE
-            ],
+//            'provision'         => [
+//                'type'          =>  'VARCHAR',
+//                'constraint'    =>  50,
+//                'null'          =>  FALSE
+//            ],
             'type' => [
                 'type'          =>  'INT',
                 'constraint'    =>  5,
