@@ -50,28 +50,7 @@ class Migration_Create_table_plans extends CI_Migration{
         $this->dbforge->add_field('UNIQUE KEY plan_key (medical_insurance_id,description)');
         $this->dbforge->create_table('plans');
 
-        $data = array(
-            array(
-                'description'                   => "210",
-                'medical_insurance_denom'       => "OSDE",
-                'medical_insurance_id'          => "1",
-                'active'                        => 'active'
-            ),
-            array(
-                'description'                   => "310",
-                'medical_insurance_denom'       => "OSDE",
-                'medical_insurance_id'          => "1",
-                'active'                        => 'active'
-            ),
-            array(
-                'description'                   => "Omint Plus",
-                'medical_insurance_denom'       => "Omint",
-                'medical_insurance_id'          => "2",
-                'active'                        => 'active'
-            )
-        );
 
-        $this->db->insert_batch('plans', $data);
     }
 
 

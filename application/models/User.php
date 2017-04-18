@@ -100,7 +100,7 @@ class User extends CI_Model{
   public function getUserById($userID){
 
     //Get user data
-    $this->db->select('user_id,document_type,document_number,name,email,last_name,active');
+    $this->db->select('user_id, password, document_type,document_number,name,email,last_name,active');
     $query = $this->db->get_where('users', array('active' => "active", "user_id" => $userID));
 
     $result = $query->row();

@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class ContactController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMcontactos";
     function __construct(){
         parent::__construct();
         $this->load->model('Contact');
@@ -19,13 +19,6 @@ class ContactController extends AuthController{
 
     //Create contact
     public function contacts_post(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMcontactos",$this->token_valid->permissions))
-        return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -54,26 +47,12 @@ class ContactController extends AuthController{
     //Show contacts
     public function contacts_get(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMcontactos",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $contacts = $this->Contact->getContacts();
       return $this->response($contacts, REST_Controller::HTTP_OK);
     }
 
     //Update contact information
     public function updateContact_put(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMcontactos",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
       $post = json_decode(file_get_contents('php://input'));
 
@@ -103,15 +82,7 @@ class ContactController extends AuthController{
     //Show specific contact
     public function getContact_get(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMcontactos", $this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = $this->get('id');
-
       if(empty($id)) return $this->response(['error'=>'Falta el ID del contacto'], REST_Controller::HTTP_BAD_REQUEST);
 
       $contact = $this->Contact->getContactById($id);
@@ -126,15 +97,7 @@ class ContactController extends AuthController{
     //Delete contact
     public function removeContact_delete(){
 
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-      //Validates if the user has permissions to do this action
-      if(!in_array("ABMcontactos",$this->token_valid->permissions))
-         return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
       $id = (int) $this->get('id');
-
       if($this->Contact->delete($id, $this->token_valid->user_id)){
         return $this->response(['msg'=>'Contacto eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
       } else {
@@ -142,5 +105,4 @@ class ContactController extends AuthController{
       }
 
     }
-
 }

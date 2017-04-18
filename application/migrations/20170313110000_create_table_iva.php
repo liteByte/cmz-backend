@@ -17,40 +17,55 @@ class Migration_Create_table_iva extends CI_Migration{
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  40,
                     'null'          =>  FALSE
-                ),
-                'type' => array(
-                    'type'          =>  'VARCHAR',
-                    'constraint'    =>  2,
-                    'null'          =>  FALSE
                 )
         ));
+
+
         $this->dbforge->add_key('iva_id', TRUE);
         $this->dbforge->create_table('iva');
 
         $data = array(
             array(
-                'description' => "EXENTO",
-                'type'        => "EX"
+                'description' => "IVA Responsable Inscripto",
             ),
             array(
-                'description' => "RESP. INSCRIPTO",
-                'type'        => "RI"
+                'description' => "IVA Responsable no Inscripto",
             ),
             array(
-                'description' => "RESP. NO INSCRIPTO",
-                'type'        => "NI"
+                'description' => "IVA no Responsable",
             ),
             array(
-                'description' => "CONSUMIDOR FINAL",
-                'type'        => "CF"
+                'description' => "IVA Sujeto Exento",
             ),
             array(
-                'description' => "NO ALCANZADO",
-                'type'        => "NA"
+                'description' => "Consumidor Final",
             ),
             array(
-                'description' => "MONOTRIBUTISTA",
-                'type'        => "MT"
+                'description' => "Responsable Monotributo",
+            ),
+            array(
+                'description' => "Sujeto no Categorizado",
+            ),
+            array(
+                'description' => "Proveedor del Exterior",
+            ),
+            array(
+                'description' => "Cliente del Exterior",
+            ),
+            array(
+                'description' => "IVA Liberado – Ley Nº 19.640",
+            ),
+            array(
+                'description' => "IVA Responsable Inscripto – Agente de Percepción",
+            ),
+            array(
+                'description' => "Pequeño Contribuyente Eventual",
+            ),
+            array(
+                'description' => "Monotributista Social",
+            ),
+            array(
+                'description' => "Pequeño Contribuyente Eventual Social",
             )
         );
 
@@ -59,17 +74,6 @@ class Migration_Create_table_iva extends CI_Migration{
 
 
     public function down(){
-
         $this->dbforge->drop_table('iva');
-
     }
-
-
-
-
-
-
-
-
-
 }

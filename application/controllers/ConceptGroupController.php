@@ -11,22 +11,18 @@ class ConceptGroupController extends AuthController{
 
     private $token_valid;
 
+    protected $access = "*";
+
     function __construct(){
         parent::__construct();
         $this->load->model('ConceptGroup');
-        $this->token_valid = $this->validateToken(apache_request_headers());
+        $this->token_valid = $this->validateToken();
     }
 
     //Show concept groups
     public function conceptGroups_get(){
-
-      //Validates if the user is logged and the token sent is valid.
-
-      if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), REST_Controller::HTTP_UNAUTHORIZED);
-
-      $concepts = $this->ConceptGroup->getConcepts();
-
-      return $this->response($concepts, REST_Controller::HTTP_OK);
+        $concepts = $this->ConceptGroup->getConcepts();
+        return $this->response($concepts, REST_Controller::HTTP_OK);
     }
 
 }

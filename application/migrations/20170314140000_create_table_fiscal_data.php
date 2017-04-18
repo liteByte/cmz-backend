@@ -13,23 +13,22 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             ),
             'cuit' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 13,
                 'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_start_activity' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'type'          => 'DATE',
                 'null'          => FALSE
             ),
             'iibb' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 15,
                 'null'          => FALSE
             ),
             'iibb_percentage' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'type'          => 'DECIMAL',
+                'constraint'    => '10,2',
                 'null'          => FALSE
             ),
             'gain' => array(
@@ -38,7 +37,7 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             ),
             'iva_id' => array(
                 'type'          =>  'INT',
-                'constraint'    =>  5,
+                'constraint'    =>  2,
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
@@ -57,30 +56,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
         $this->dbforge->add_key('id_fiscal_data', TRUE);
         $this->dbforge->create_table('fiscal_data');
 
-        $data = array(
-            array(
-                'cuit'  => '85745212458965',
-                'date_start_activity' => '01/01/2017',
-                'iibb' => '100000',
-                'iibb_percentage' => '10',
-                'gain' => TRUE,
-                'iva_id' => '1',
-                'retention_vat' => FALSE,
-                'retention_gain' => FALSE,
-            ),
-            array(
-                'cuit'  => '85745212458900',
-                'date_start_activity' => '02/01/2017',
-                'iibb' => '100000',
-                'iibb_percentage' => '10',
-                'gain' => FALSE,
-                'iva_id' => '5',
-                'retention_vat' => FALSE,
-                'retention_gain' => FALSE,
-            ),
-        );
-
-        $this->db->insert_batch('fiscal_data', $data);
     }
 
     public function down(){

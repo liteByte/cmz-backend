@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class CreditDebitConceptController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "ABMconceptosdebitocredito";
     function __construct(){
         parent::__construct();
         $this->load->model('CreditDebitConcept');
@@ -20,14 +20,6 @@ class CreditDebitConceptController extends AuthController{
 
     //Create concept
     public function concepts_post(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
         $post = json_decode(file_get_contents('php://input'));
 
         $code                   = $post->code                 ?? "";
@@ -68,44 +60,23 @@ class CreditDebitConceptController extends AuthController{
     //Show concepts
     public function concepts_get(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
         $id = $this->get('id');
-
         if (!isset($id)){
-
             $concepts = $this->CreditDebitConcept->getConcepts();
             return $this->response($concepts, REST_Controller::HTTP_OK);
-
         } else {
-
             $concept = $this->CreditDebitConcept->getConceptById($id);
-
             if (empty($concept)){
                 return $this->response(['error'=>'No se encontro el ID del concepto'], REST_Controller::HTTP_BAD_REQUEST);
             } else {
                 return $this->response($concept, REST_Controller::HTTP_OK);
             }
-
         }
-
     }
 
     //Update concept information
     public function concepts_put(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
+        
         $post = json_decode(file_get_contents('php://input'));
 
         $concept_description    = $post->concept_description  ?? "";
@@ -138,25 +109,14 @@ class CreditDebitConceptController extends AuthController{
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     //Delete concept
     public function concepts_delete(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if (!in_array("ABMconceptosdebitocredito",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
+        
         $id = (int) $this->get('id');
-
         $result = $this->CreditDebitConcept->delete($id, $this->token_valid->user_id);
         if (strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(['msg'=>'Concepto eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
-
     }
-
 }

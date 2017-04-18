@@ -10,19 +10,15 @@ use Restserver\Libraries\REST_Controller;
 class ScopeController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "*";
     function __construct(){
         parent::__construct();
         $this->load->model('Scope');
-        $this->token_valid = $this->validateToken(apache_request_headers());
+        $this->token_valid = $this->validateToken();
     }
 
     //Show roles
     public function scopes_get(){
-
-      //Validates if the user is logged and the token sent is valid.
-      if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
       $iva = $this->Scope->getScopes();
       return $this->response($iva, REST_Controller::HTTP_OK);
     }

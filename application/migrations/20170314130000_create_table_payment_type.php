@@ -37,6 +37,9 @@ class Migration_Create_table_payment_type extends CI_Migration{
             array(
                 'description_payment_type' => "Transferencia"
             ),
+            array(
+                'description_payment_type' => "Otros"
+            )
         );
 
         $this->db->insert_batch('payment_type', $data);

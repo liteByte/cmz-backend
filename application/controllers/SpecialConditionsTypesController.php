@@ -9,6 +9,7 @@ use Restserver\Libraries\REST_Controller as RC;
 
 class SpecialConditionsTypesController extends AuthController{
 
+    protected $access = "ABMcondicionesespeciales";
     function __construct(){
         parent::__construct();
         $this->load->model('SpecialConditionsTypes');
@@ -16,13 +17,6 @@ class SpecialConditionsTypesController extends AuthController{
     }
 
     public function types_get(){
-        //Validates if the user is logged and the token sent is valid.
-        if ($this->token_valid->status != "ok") return $this->response(array('error' => $this->token_valid->message), REST_Controller::HTTP_BAD_REQUEST);
-
-        //Validates if the user has permissions to do this action
-        if (!in_array("ABMcondicionesespeciales", $this->token_valid->permissions))
-            return $this->response(array('error' => 'No tiene los permisos para realizar esta acción'), RC::HTTP_UNAUTHORIZED);
-
         $types = $this->SpecialConditionsTypes->gettypes();
         return $this->response($types, RC::HTTP_OK);
     }

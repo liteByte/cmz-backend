@@ -21,28 +21,22 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'name' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 100,
-                'null'          => FALSE
-            ),
-            'last_name' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 100,
+                'constraint'    => 50,
                 'null'          => FALSE
             ),
             'document_type' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    =>  20,
+                'constraint'    =>  10,
                 'null'          => FALSE
             ),
             'document_number' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 50,
+                'constraint'    => 9,
                 'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_birth' => array(
-                'type'          => 'VARCHAR',
-                'constraint'    => 50,
+                'type'          => 'DATE',
                 'unique'        => FALSE,
                 'null'          => FALSE
             ),
@@ -57,7 +51,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'zip_code' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 10
+                'constraint'    => 15
             ),
             'phone_number' => array(
                 'type'          => 'VARCHAR',
@@ -65,7 +59,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'email' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 100,
+                'constraint'    => 35,
                 'null'          => FALSE
             ),
             'office_address' => array(
@@ -91,7 +85,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'type_partner' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 10,
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
@@ -162,56 +156,6 @@ class Migration_Create_table_professionals extends CI_Migration{
         $this->dbforge->add_key('id_professional_data', TRUE);
         $this->dbforge->create_table('professionals');
 
-        $data = array(
-            array(
-                'registration_number'  => '87451285',
-                'name' => 'Jose',
-                'last_name' => 'Ramirez',
-                'document_type' => 'DNI',
-                'document_number' => '61189982',
-                'date_birth' => '20/02/1975',
-                'legal_address' => 'valentin gomez 3355',
-                'legal_locality' => 'ZARATE',
-                'zip_code' => '4545',
-                'phone_number' => '098672797',
-                'email' => 'test@gmail.com',
-                'office_address' => 'ayacucho 935',
-                'office_locality' => 'ZARATE',
-                'id_fiscal_data' => '1',
-                'speciality_id' => '1',
-                'type_partner' => 'SOCIO',
-                'id_category_femeba' => '1',
-                'id_medical_career' => '1',
-                'id_payment_type' => '1',
-                'bank_id' => '1',
-                'active' => 'active'
-            ),
-            array(
-                'registration_number'  => '96857412',
-                'name' => 'Antonio',
-                'last_name' => 'Ramirez',
-                'document_type' => 'DNI',
-                'document_number' => '6118998',
-                'date_birth' => '20/02/1975',
-                'legal_address' => 'valentin gomez 3355',
-                'legal_locality' => 'ZARATE',
-                'zip_code' => '4545',
-                'phone_number' => '098672797',
-                'email' => 'test@gmail.com',
-                'office_address' => 'ayacucho 935',
-                'office_locality' => 'ZARATE',
-                'id_fiscal_data' => '2',
-                'speciality_id' => '2',
-                'type_partner' => 'NO SOCIO',
-                'id_category_femeba' => '2',
-                'id_medical_career' => '2',
-                'id_payment_type' => '2',
-                'bank_id' => '2',
-                'active' => 'active'
-            )
-        );
-
-        $this->db->insert_batch('professionals', $data);
 
     }
 
