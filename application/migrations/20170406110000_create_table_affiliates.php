@@ -8,8 +8,8 @@ class Migration_Create_table_affiliates extends CI_Migration{
 
         $this->dbforge->add_field(array(
             'affiliate_id' => array(
-                'type'          =>  'BIGINT',
-                'constraint'    =>  10,
+                'type'          =>  'INT',
+                'constraint'    =>  5,
                 'unsigned'      =>  TRUE,
                 'auto_increment'=>  TRUE
             ),
@@ -57,23 +57,12 @@ class Migration_Create_table_affiliates extends CI_Migration{
         $this->dbforge->add_key('affiliate_id', TRUE);
         $this->dbforge->create_table('affiliates');
 
-        $data = array(
-            array(
-                'medical_insurance_id'  => "37",
-                'plan_id'               => "2",
-                'affiliate_number'      => "13738",
-                'affiliate_name'        => "ALVAREZ NESTOR ANIBAL",
-                'active'                => "active"
-            )
-        );
-
-        $this->db->insert_batch('affiliates', $data);
     }
 
 
     public function down(){
 
-        $this->dbforge->drop_table('benefits');
+        $this->dbforge->drop_table('affiliates');
 
     }
 

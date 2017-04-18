@@ -10,13 +10,12 @@ class Benefit extends CI_Model{
 
     //Creates the benefit in 'benefits'
     //TODO: crear los datos del paciente en la tabla pacientes?? Falta que lo defina Priscila
-    public function save($medical_insurance_id, $plan_id, $id_professional_data, $registration_number, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_number, $affiliate_name, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
+    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
 
         $data = array(
             'medical_insurance_id'             => $medical_insurance_id,
             'plan_id'                          => $plan_id,
             'id_professional_data'             => $id_professional_data,
-            'registration_number'              => $registration_number,
             'period'                           => $period,
             'remesa'                           => (empty($remesa)                                       ? null : $remesa),
             'nomenclator_id'                   => $nomenclator_id,
@@ -29,8 +28,7 @@ class Benefit extends CI_Model{
             'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
             'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
             'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
-            'affiliate_number'                 => (empty($affiliate_number)                             ? null : $affiliate_number),
-            'affiliate_name'                   => (empty($affiliate_name)                               ? null : $affiliate_name),
+            'affiliate_id'                     => (empty($affiliate_id)                                 ? null : $affiliate_id),
             'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
             'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
@@ -48,7 +46,7 @@ class Benefit extends CI_Model{
     //Updates the benefit in 'benefits'
     //TODO: El sistema valida que la Prestación a ser modificada no haya sido facturada
     //TODO: modificar los datos del paciente?? Falta que lo defina Priscila
-    public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_number, $affiliate_name, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID){
+    public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID){
 
         $now = date('Y-m-d H:i:s');
 
@@ -62,8 +60,7 @@ class Benefit extends CI_Model{
             'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
             'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
             'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
-            'affiliate_number'                 => (empty($affiliate_number)                             ? null : $affiliate_number),
-            'affiliate_name'                   => (empty($affiliate_name)                               ? null : $affiliate_name),
+            'affiliate_id'                     => (empty($affiliate_id)                                 ? null : $affiliate_id),
             'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
             'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
@@ -85,7 +82,7 @@ class Benefit extends CI_Model{
 
         $result = array();
 
-        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, B.registration_number, PF.name, B.benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price');
+        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, PF.registration_number, PF.name, B.benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price');
         $this->db->from('benefits B');
         $this->db->join('medical_insurance MI',         'B.medical_insurance_id = MI.medical_insurance_id');
         $this->db->join('plans PL',                     'B.plan_id = PL.plan_id');
@@ -94,7 +91,7 @@ class Benefit extends CI_Model{
         $this->db->order_by("MI.denomination", "asc");
         $this->db->order_by("PL.description", "asc");
         $this->db->order_by("B.period", "desc");
-        $this->db->order_by("B.registration_number", "asc");
+        $this->db->order_by("PF.registration_number", "asc");
         $this->db->order_by("B.benefit", "asc");
         $this->db->where('B.active',"active");
         $query = $this->db->get();
@@ -113,7 +110,10 @@ class Benefit extends CI_Model{
     //Get a specific benefit information
     public function getBenefitById($benefitID){
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID]);
+        $this->db->select('B.*');
+        $this->db->from('benefits B');
+        $this->db->where('B.benefit_id',$benefitID);
+        $query = $this->db->get();
 
         return $query->row();
 

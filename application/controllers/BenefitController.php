@@ -28,7 +28,6 @@ class BenefitController extends AuthController{
         $medical_insurance_id               = $post->medical_insurance_id               ?? "";
         $plan_id                            = $post->plan_id                            ?? "";
         $id_professional_data               = $post->id_professional_data               ?? "";
-        $registration_number                = $post->registration_number                ?? "";
         $period                             = $post->period                             ?? "";
         $remesa                             = $post->remesa                             ?? "";
         $nomenclator_id                     = $post->nomenclator_id                     ?? "";
@@ -40,6 +39,7 @@ class BenefitController extends AuthController{
         $maternal_plan_option_id            = $post->maternal_plan_option_id            ?? "";
         $internment_ambulatory_option_id    = $post->internment_ambulatory_option_id    ?? "";
         $unit_price                         = $post->unit_price                         ?? "";
+        $affiliate_id                       = $post->affiliate_id                       ?? "";
         $benefit_date                       = $post->benefit_date                       ?? "";
         $affiliate_number                   = $post->affiliate_number                   ?? "";
         $affiliate_name                     = $post->affiliate_name                     ?? "";
@@ -53,7 +53,6 @@ class BenefitController extends AuthController{
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($plan_id))                             return $this->response(['error'=>'No se ha ingresado plan'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($id_professional_data))                return $this->response(['error'=>'No se han ingresado datos del profesional'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($registration_number))                 return $this->response(['error'=>'No se ha ingresado matrícula'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($period))                              return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($nomenclator_id))                      return $this->response(['error'=>'No se han ingresado datos del nomenclador'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($benefit))                             return $this->response(['error'=>'No se ha ingresado prestación'], REST_Controller::HTTP_BAD_REQUEST);
@@ -89,16 +88,32 @@ class BenefitController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
 
-        //Create the affiliate if informed and if it does not exist
-        if(!$this->affiliate->checkExistence($affiliate_number)) {
-            if (!$this->affiliate->save($medical_insurance_id, $plan_id, $affiliate_number, $affiliate_name)) {
-                return $this->response(['error' => 'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        ////Create the affiliate if informed and if it does not exist
+        $affiliateOperation = ["status" => "", "affiliate_id" => $affiliate_id];
+
+        //If an affiliate ID was informed, check if it is valid
+        if(!empty($affiliate_id)){
+            $affiliate_number = "";
+            $affiliate_name   = "";
+            if (!$this->affiliate->validateID($affiliate_id)){
+                return $this->response(['error' => 'El afiliado ingresado no existe en base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        //Check if an affiliate number was informed
+        if (!empty($affiliate_number)) {
+            //If a number was informed, check it's existence.
+            if (!$this->affiliate->checkExistence($affiliate_number)) {
+                $affiliateOperation = $this->affiliate->save($medical_insurance_id, $plan_id, $affiliate_number, $affiliate_name);
+                if (!$affiliateOperation["status"]) {
+                    return $this->response(['error' => 'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                }
             }
         }
 
 
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $registration_number, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_number, $affiliate_name, $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
+        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
             return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -134,6 +149,8 @@ class BenefitController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
+        $medical_insurance_id               = $post->medical_insurance_id               ?? "";
+        $plan_id                            = $post->plan_id                            ?? "";
         $remesa                             = $post->remesa                             ?? "";
         $quantity                           = $post->quantity                           ?? "";
         $billing_code_id                    = $post->billing_code_id                    ?? "";
@@ -142,6 +159,7 @@ class BenefitController extends AuthController{
         $maternal_plan_option_id            = $post->maternal_plan_option_id            ?? "";
         $internment_ambulatory_option_id    = $post->internment_ambulatory_option_id    ?? "";
         $unit_price                         = $post->unit_price                         ?? "";
+        $affiliate_id                       = $post->affiliate_id                       ?? "";
         $benefit_date                       = $post->benefit_date                       ?? "";
         $affiliate_number                   = $post->affiliate_number                   ?? "";
         $affiliate_name                     = $post->affiliate_name                     ?? "";
@@ -151,13 +169,14 @@ class BenefitController extends AuthController{
         $new_expenses                       = $post->new_expenses                       ?? "";
         $id                                 = (int) $this->get('id');
 
-
         //Validate if any obligatory field is missing
+        if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($plan_id))                             return $this->response(['error'=>'No se ha ingresado plan'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($quantity) && $quantity !== '0')       return $this->response(['error'=>'No se ha ingresado cantidad'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($billing_code_id))                     return $this->response(['error'=>'No se ha ingresado código de facturación'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($multiple_operation_value))            return $this->response(['error'=>'No se ha ingresado porcentaje de operación múltiple'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($internment_ambulatory_option_id))     return $this->response(['error'=>'No se han ingresado datos de prestación con respecto a internación o ambulatoria'], REST_Controller::HTTP_BAD_REQUEST);
-
+        if(empty($id))                                  return $this->response(['error'=>'No se ha informado el ID de la prestación a actualizar'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validate optional fields (if sent)
         if(!empty($benefit_date)){
@@ -175,8 +194,32 @@ class BenefitController extends AuthController{
         }
 
 
+        ////Create the affiliate if informed and if it does not exist
+        $affiliateOperation = ["status" => "", "affiliate_id" => $affiliate_id];
+
+        //If an affiliate ID was informed, check if it is valid
+        if(!empty($affiliate_id)){
+            $affiliate_number = "";     //You won't need this if you have an ID
+            $affiliate_name   = "";     //You won't need this if you have an ID
+            if (!$this->affiliate->validateID($affiliate_id)){
+                return $this->response(['error' => 'El afiliado ingresado no existe en base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        //Check if an affiliate number was informed
+        if (!empty($affiliate_number)) {
+            //If a number was informed, check it's existence.
+            if (!$this->affiliate->checkExistence($affiliate_number)) {
+                $affiliateOperation = $this->affiliate->save($medical_insurance_id, $plan_id, $affiliate_number, $affiliate_name);
+                if (!$affiliateOperation["status"]) {
+                    return $this->response(['error' => 'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                }
+            }
+        }
+
+
         //If everything is valid, update the benefit
-        if($this->benefit->update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_number, $affiliate_name, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id)){
+        if($this->benefit->update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id)){
             return $this->response(['msg'=>'Prestación actualizada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

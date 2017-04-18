@@ -20,9 +20,12 @@ class Affiliate extends CI_Model{
         );
 
         $this->db->insert('affiliates', $data);
-        if ($this->db->affected_rows() == 0) return false;
+        if ($this->db->affected_rows() == 0) return ["status" => false];
 
-        return true;
+        //Obtain affiliate id
+        $affiliateID = $this->db->insert_id();
+
+        return ["status" => true, "affiliate_id" => $affiliateID];
 
     }
 
@@ -50,13 +53,13 @@ class Affiliate extends CI_Model{
 
     }
 
-    public function validateData($bank_code){
+    public function validateID($affiliate_id){
 
-        //Bank code validation
-        $query = $this->db->get_where('banks', array('bank_code' => $bank_code));
-        if ($query->num_rows() > 0) return "El código de banco ingresado esta siendo utilizado";
+        //Affiliate id validation
+        $query = $this->db->get_where('affiliates', array('affiliate_id' => $affiliate_id));
+        if ($query->num_rows() <= 0) return false;
 
-        return "OK";
+        return true;
 
     }
 
