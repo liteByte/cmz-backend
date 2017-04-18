@@ -134,6 +134,9 @@ $route['login']['post']               = 'LoginController/login';
 ////////////////////////IVA routes////////////////////////
 $route['iva']                         = 'IvaController/iva';  //Get -> show iva
 
+////////////////////////Patient routes////////////////////////
+$route['affiliates']                  = 'AffiliateController/affiliate';  //Get -> show affiliates
+
 ////////////////////////Femeba routes////////////////////////
 $route['categoryfemeba']              = 'CategoryFemebaController/femeba';
 

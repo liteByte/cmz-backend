@@ -160,10 +160,10 @@ class Migration_Create_table_benefits extends CI_Migration{
 
         $data = array(
             array(
-                'medical_insurance_id'              => "1",
+                'medical_insurance_id'              => "37",
                 'plan_id'                           => "2",
                 'id_professional_data'              => "1",
-                'registration_number'               => "87451285",
+                'registration_number'               => "13738",
                 'period'                            => "2017-10-10",
                 'nomenclator_id'                    => 1,
                 'benefit'                           => "12345678-A",

@@ -18,23 +18,23 @@ class Benefit extends CI_Model{
             'id_professional_data'             => $id_professional_data,
             'registration_number'              => $registration_number,
             'period'                           => $period,
-            'remesa'                           => (empty($remesa)                               ? null : $remesa),
+            'remesa'                           => (empty($remesa)                                       ? null : $remesa),
             'nomenclator_id'                   => $nomenclator_id,
             'benefit'                          => $benefit,
             'quantity'                         => $quantity,
             'billing_code_id'                  => $billing_code_id,
             'multiple_operation_value'         => $multiple_operation_value,
-            'holiday_option_id'                => (empty($holiday_option_id)                    ? null : $holiday_option_id),
-            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)              ? null : $maternal_plan_option_id),
+            'holiday_option_id'                => (empty($holiday_option_id)                            ? null : $holiday_option_id),
+            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)                      ? null : $maternal_plan_option_id),
             'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
-            'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')  ? null : $unit_price),
-            'benefit_date'                     => (empty($benefit_date)                         ? null : $benefit_date),
-            'affiliate_number'                 => (empty($affiliate_number)                     ? null : $affiliate_number),
-            'affiliate_name'                   => (empty($affiliate_name)                       ? null : $affiliate_name),
-            'bill_number'                      => (empty($bill_number)                          ? null : $bill_number),
-            'modify_coverage'                  => (empty($modify_coverage)                      ? null : $modify_coverage),
-            'new_honorary'                     => (empty($new_honorary)                         ? null : $new_honorary),
-            'new_expenses'                     => (empty($new_expenses)                         ? null : $new_expenses),
+            'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
+            'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
+            'affiliate_number'                 => (empty($affiliate_number)                             ? null : $affiliate_number),
+            'affiliate_name'                   => (empty($affiliate_name)                               ? null : $affiliate_name),
+            'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
+            'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
+            'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
+            'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
             'active'                            => 'active'
         );
 
@@ -53,21 +53,21 @@ class Benefit extends CI_Model{
         $now = date('Y-m-d H:i:s');
 
         $data = array(
-            'remesa'                           => (empty($remesa)                               ? null : $remesa),
+            'remesa'                           => (empty($remesa)                                       ? null : $remesa),
             'quantity'                         => $quantity,
             'billing_code_id'                  => $billing_code_id,
             'multiple_operation_value'         => $multiple_operation_value,
-            'holiday_option_id'                => (empty($holiday_option_id)                    ? null : $holiday_option_id),
-            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)              ? null : $maternal_plan_option_id),
+            'holiday_option_id'                => (empty($holiday_option_id)                            ? null : $holiday_option_id),
+            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)                      ? null : $maternal_plan_option_id),
             'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
-            'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')  ? null : $unit_price),
-            'benefit_date'                     => (empty($benefit_date)                         ? null : $benefit_date),
-            'affiliate_number'                 => (empty($affiliate_number)                     ? null : $affiliate_number),
-            'affiliate_name'                   => (empty($affiliate_name)                       ? null : $affiliate_name),
-            'bill_number'                      => (empty($bill_number)                          ? null : $bill_number),
-            'modify_coverage'                  => (empty($modify_coverage)                      ? null : $modify_coverage),
-            'new_honorary'                     => (empty($new_honorary)                         ? null : $new_honorary),
-            'new_expenses'                     => (empty($new_expenses)                         ? null : $new_expenses),
+            'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
+            'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
+            'affiliate_number'                 => (empty($affiliate_number)                             ? null : $affiliate_number),
+            'affiliate_name'                   => (empty($affiliate_name)                               ? null : $affiliate_name),
+            'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
+            'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
+            'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
+            'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
             'active'                           => 'active',
             'update_date'                      => $now,
             'modify_user_id'                   => $userID
@@ -85,7 +85,7 @@ class Benefit extends CI_Model{
 
         $result = array();
 
-        $this->db->select('MI.denomination, PL.description, B.period, B.registration_number, PF.name, PF.last_name, B.benefit, N.description as nomenclator_description, B.quantity, B.unit_price');
+        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, B.registration_number, PF.name, B.benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price');
         $this->db->from('benefits B');
         $this->db->join('medical_insurance MI',         'B.medical_insurance_id = MI.medical_insurance_id');
         $this->db->join('plans PL',                     'B.plan_id = PL.plan_id');

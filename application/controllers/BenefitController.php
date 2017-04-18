@@ -10,6 +10,7 @@ use Restserver\Libraries\REST_Controller;
 class BenefitController extends AuthController{
 
     private $token_valid;
+    protected $access = "ABMprestaciones";
 
     function __construct(){
         parent::__construct();
@@ -21,13 +22,6 @@ class BenefitController extends AuthController{
 
     //Create benefit
     public function benefits_post(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMprestaciones",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $post = json_decode(file_get_contents('php://input'));
 
@@ -83,6 +77,10 @@ class BenefitController extends AuthController{
         if(!empty($affiliate_name)){
             if(empty($affiliate_number))    return $this->response(['error'=>'Se debe informar tanto el número del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if($modify_coverage == 1){
+            if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
+        }
 
 
         //Validate fields and unique key
@@ -111,13 +109,6 @@ class BenefitController extends AuthController{
     //Show benefits
     public function benefits_get(){
 
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMprestaciones",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
-
         $id = $this->get('id');
 
         if (!isset($id)){
@@ -140,13 +131,6 @@ class BenefitController extends AuthController{
 
     //Update benefit information
     public function benefits_put(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMprestaciones",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $post = json_decode(file_get_contents('php://input'));
 
@@ -185,6 +169,10 @@ class BenefitController extends AuthController{
         if(!empty($affiliate_name)){
             if(empty($affiliate_number))    return $this->response(['error'=>'Se debe informar tanto el número del afiliado como su nombre'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if($modify_coverage == 1){
+            if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
+            if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
+        }
 
 
         //If everything is valid, update the benefit
@@ -198,13 +186,6 @@ class BenefitController extends AuthController{
 
     //Delete benefit
     public function benefits_delete(){
-
-        //Validates if the user is logged and the token sent is valid.
-        if($this->token_valid->status != "ok") return $this->response(['error'=>$this->token_valid->message], REST_Controller::HTTP_UNAUTHORIZED);
-
-        //Validates if the user has permissions to do this action
-        if(!in_array("ABMprestaciones",$this->token_valid->permissions))
-            return $this->response(['error'=>'No tiene los permisos para realizar esta acción'], REST_Controller::HTTP_FORBIDDEN);
 
         $id = (int) $this->get('id');
 

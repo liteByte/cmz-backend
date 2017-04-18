@@ -26,6 +26,20 @@ class Affiliate extends CI_Model{
 
     }
 
+    public function getAffiliates(){
+
+        $result = array();
+
+        $query = $this->db->get('affiliates');
+
+        foreach ($query->result_array('Affiliate') as $row){
+            $result[] = $row;
+        }
+
+        return $result;
+
+    }
+
     //Checks if an affiliate with a certain number exists
     public function checkExistence($affiliate_number){
 

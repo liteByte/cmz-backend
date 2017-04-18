@@ -59,10 +59,10 @@ class Migration_Create_table_affiliates extends CI_Migration{
 
         $data = array(
             array(
-                'medical_insurance_id'  => "1",
-                'plan_id'               => "1",
-                'affiliate_number'      => "12345678",
-                'affiliate_name'        => "Roberto Pérez",
+                'medical_insurance_id'  => "37",
+                'plan_id'               => "2",
+                'affiliate_number'      => "13738",
+                'affiliate_name'        => "ALVAREZ NESTOR ANIBAL",
                 'active'                => "active"
             )
         );
