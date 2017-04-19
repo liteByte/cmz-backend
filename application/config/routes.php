@@ -185,3 +185,6 @@ $route['specialconditions/(:num)']          = 'SpecialConditionsController/speci
 
 $route['earnings']                      = 'EarningsController/earnings';
 $route['earnings/(:num)']               = 'EarningsController/earnings/id/$1';
+
+////////////////////////Autocomplete services routes////////////////////////
+$route['insurances/like']      = 'MedicalInsuranceController/insuranceData';
