@@ -18,11 +18,6 @@ class Migration_Create_table_plans extends CI_Migration{
                     'constraint'    =>  50,
                     'null'          =>  FALSE
                 ),
-                'medical_insurance_denom' => array(
-                    'type'          =>  'VARCHAR',
-                    'constraint'    =>  50,
-                    'null'          =>  FALSE
-                ),
                 'medical_insurance_id' => array(
                     'type'          =>  'INT',
                     'constraint'    =>  5,
