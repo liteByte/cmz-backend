@@ -65,6 +65,9 @@ class Migration_Create_table_permissions extends CI_Migration{
             ),
             array(
                 'name' => "ABMprestaciones"
+            ),
+            array(
+                'name' => "ABMganancia"
             )
         );
 
