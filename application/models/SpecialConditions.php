@@ -23,10 +23,6 @@ class SpecialConditions extends CI_Model{
         $result = $this->db->insert('special_conditions', $data);
         $errors = $this->db->error();
 
-        if ($errors != 0 ){
-            print_r($errors);
-        }
-
         if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
 
@@ -44,10 +40,6 @@ class SpecialConditions extends CI_Model{
             $result = $this->db->insert('special_conditions_details', $new_row);
 
             $errors = $this->db->error();
-
-            if ($errors != 0 ){
-                print_r($errors);
-            }
 
             if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
             if(!$result)                return "Error al intentar crear nueva Cobertura";
@@ -69,19 +61,11 @@ class SpecialConditions extends CI_Model{
         $result = $this->db->insert('special_conditions', $data);
         $errors = $this->db->error();
 
-        if ($errors != 0 ){
-            print_r($errors);
-        }
-
         if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
 
         //Obtain last inserted user id
         $id_special_conditions = $this->db->insert_id();
-
-        if ($errors != 0 ){
-            print_r($errors);
-        }
 
         $new_row =[
             "unit"              => $unit,
@@ -90,10 +74,6 @@ class SpecialConditions extends CI_Model{
         ];
         $result = $this->db->insert('special_conditions_details', $new_row);
         $errors = $this->db->error();
-
-        if ($errors != 0 ){
-            print_r($errors);
-        }
 
         if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
