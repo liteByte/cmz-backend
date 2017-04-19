@@ -13,9 +13,10 @@ class Migration_Create_table_contacts extends CI_Migration{
                     'unsigned'      =>  TRUE,
                     'auto_increment'=>  TRUE
                 ),
-                'denomination' => array(
-                    'type'          =>  'VARCHAR',
-                    'constraint'    =>  50,
+                'medical_insurance_id' => array(
+                    'type'          =>  'INT',
+                    'constraint'    =>  5,
+                    'unsigned'      =>  TRUE,
                     'null'          =>  FALSE
                 ),
                 'sector' => array(
@@ -49,22 +50,16 @@ class Migration_Create_table_contacts extends CI_Migration{
                     'null'          =>  TRUE
                 )
         ));
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id) REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_key('contact_id', TRUE);
         $this->dbforge->create_table('contacts');
 
         $data = array(
             array(
-                'denomination'          => "OSDE",
+                'denomination'          => "37",
                 'sector'                => "Gerencia",
                 'phone_number'          => "4444-4444",
                 'email'                 => "gerenciaOsde@osde.com",
-                'active'                => 'active'
-            ),
-            array(
-                'denomination'          => "Omint",
-                'sector'                => "Administracion",
-                'phone_number'          => "5555-5555",
-                'email'                 => "adminOmint@omint.com",
                 'active'                => 'active'
             )
         );

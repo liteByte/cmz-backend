@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Contact extends CI_Model{
 
-  private $denomination;
+  private $medical_insurance_id;
   private $sector;
   private $phone_number;
   private $email;
@@ -14,14 +14,14 @@ class Contact extends CI_Model{
   }
 
   //Creates the contact in 'contacts'
-  public function save($denomination, $sector, $phone_number, $email){
+  public function save($medical_insurance_id, $sector, $phone_number, $email){
 
       $data = array(
-                  'denomination'  => $denomination,
-                  'sector'        => $sector,
-                  'phone_number'  => $phone_number,
-                  'email'         => $email,
-                  'active'        => 'active'
+                  'medical_insurance_id'    => $medical_insurance_id,
+                  'sector'                  => $sector,
+                  'phone_number'            => $phone_number,
+                  'email'                   => $email,
+                  'active'                  => 'active'
       );
 
       $this->db->insert('contacts', $data);
@@ -31,18 +31,18 @@ class Contact extends CI_Model{
   }
 
   //Updates the contact in 'contacts'
-  public function update($denomination, $sector, $phone_number, $email, $id, $userID){
+  public function update($medical_insurance_id, $sector, $phone_number, $email, $id, $userID){
 
       $now = date('Y-m-d H:i:s');
 
       $data = array(
-                    'denomination'    => $denomination,
-                    'sector'          => $sector,
-                    'phone_number'    => $phone_number,
-                    'email'           => $email,
-                    'active'          => 'active',
-                    'update_date'     => $now,
-                    'modify_user_id'  => $userID
+                    'medical_insurance_id'      => $medical_insurance_id,
+                    'sector'                    => $sector,
+                    'phone_number'              => $phone_number,
+                    'email'                     => $email,
+                    'active'                    => 'active',
+                    'update_date'               => $now,
+                    'modify_user_id'            => $userID
       );
 
       $this->db->where('contact_id', $id);
@@ -57,11 +57,14 @@ class Contact extends CI_Model{
 
       $result = array();
 
-      $this->db->where(array('active' => "active"));
-      $this->db->order_by("denomination", "asc");
-      $query = $this->db->get('contacts');
+      $this->db->select('C.*,MI.denomination');
+      $this->db->from('contacts C');
+      $this->db->join('medical_insurance MI', 'C.medical_insurance_id = MI.medical_insurance_id');
+      $this->db->order_by("MI.denomination", "asc");
+      $this->db->where('C.active',"active");
+      $query = $this->db->get();
 
-      foreach ($query->result_array('Contact') as $row) {
+      foreach ($query->result_array() as $row) {
           array_push($result, $row);
       }
 
@@ -72,9 +75,13 @@ class Contact extends CI_Model{
   //Get a specific contact information
   public function getContactById($contactID){
 
-      $result = array();
-
-      $query = $this->db->get_where('contacts', array("contact_id" => $contactID));
+      $this->db->select('C.medical_insurance_id as denomination, C.sector, C.phone_number, C.email, C.contact_id');
+      $this->db->from('contacts C');
+      $this->db->join('medical_insurance MI', 'C.medical_insurance_id = MI.medical_insurance_id');
+      $this->db->order_by("MI.denomination", "asc");
+      $this->db->where('C.active',"active");
+      $this->db->where('C.contact_id',$contactID);
+      $query = $this->db->get();
 
       return $query->row();
   }
