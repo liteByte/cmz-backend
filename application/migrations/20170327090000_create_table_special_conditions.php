@@ -69,7 +69,7 @@ class Migration_Create_table_special_conditions extends CI_Migration{
             [
                 'medical_insurance_id'          => 9,
                 'plan_id'                       => 170,
-                'provision'              => 1,
+                'provision'                     => 1,
                 'type'                          => 1,
                 'period_of_validity'            => '2017/12',
                 'type_of_values'                => TRUE,
@@ -78,7 +78,7 @@ class Migration_Create_table_special_conditions extends CI_Migration{
             [
                 'medical_insurance_id'          => 9,
                 'plan_id'                       => 210,
-                'provision'              => 3,
+                'provision'                     => 3,
                 'type'                          => 2,
                 'period_of_validity'            => '2017/11',
                 'type_of_values'                => FALSE,
