@@ -8,12 +8,11 @@ class SpecialConditions extends CI_Model{
         parent::__construct();
     }
 
-    public function save_special($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,  $especiales){
+    public function save_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,  $especiales){
 
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
-            "nomenclator_type"      => $nomenclator_type,
             "provision"             => $provision,
             "type"                  => $type,
             "period_of_validity"    => $period_of_validity ,
@@ -23,6 +22,11 @@ class SpecialConditions extends CI_Model{
 
         $result = $this->db->insert('special_conditions', $data);
         $errors = $this->db->error();
+
+        if ($errors != 0 ){
+            print_r($errors);
+        }
+
         if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
 
@@ -40,17 +44,21 @@ class SpecialConditions extends CI_Model{
             $result = $this->db->insert('special_conditions_details', $new_row);
 
             $errors = $this->db->error();
+
+            if ($errors != 0 ){
+                print_r($errors);
+            }
+
             if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
             if(!$result)                return "Error al intentar crear nueva Cobertura";
         }
         return  true;
     }
 
-    public function save_unit($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $unit, $quantity_units){
+    public function save_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $unit, $quantity_units){
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
-            "nomenclator_type"      => $nomenclator_type,
             "provision"             => $provision,
             "type"                  => $type,
             "period_of_validity"    => $period_of_validity ,
@@ -60,11 +68,20 @@ class SpecialConditions extends CI_Model{
 
         $result = $this->db->insert('special_conditions', $data);
         $errors = $this->db->error();
-        if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+
+        if ($errors != 0 ){
+            print_r($errors);
+        }
+
+        if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
 
         //Obtain last inserted user id
         $id_special_conditions = $this->db->insert_id();
+
+        if ($errors != 0 ){
+            print_r($errors);
+        }
 
         $new_row =[
             "unit"              => $unit,
@@ -73,16 +90,20 @@ class SpecialConditions extends CI_Model{
         ];
         $result = $this->db->insert('special_conditions_details', $new_row);
         $errors = $this->db->error();
-        if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+
+        if ($errors != 0 ){
+            print_r($errors);
+        }
+
+        if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
         if(!$result)                return "Error al intentar crear nueva Cobertura";
         return  true;
     }
 
-    public function  update_special($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales, $id ){
+    public function  update_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales, $id ){
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
-            "nomenclator_type"      => $nomenclator_type,
             "provision"             => $provision,
             "type"                  => $type,
             "period_of_validity"    => $period_of_validity ,
@@ -114,11 +135,10 @@ class SpecialConditions extends CI_Model{
         return 1;
     }
 
-    public function  update_unit($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units, $id ){
+    public function  update_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units, $id ){
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
-            "nomenclator_type"      => $nomenclator_type,
             "provision"             => $provision,
             "type"                  => $type,
             "period_of_validity"    => $period_of_validity ,
@@ -152,12 +172,14 @@ class SpecialConditions extends CI_Model{
         $this->db->select('special_conditions.*');
         $this->db->select('medical_insurance.denomination');
         $this->db->select('plans.description as description_plan');
-        $this->db->select('nomenclators.code, nomenclators.class, nomenclators.description');
+        $this->db->select('nomenclators.type as nomenclator_type,  nomenclators.code, nomenclators.class, nomenclators.description');
         $this->db->from('special_conditions');
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = special_conditions.medical_insurance_id');
         $this->db->join('plans', 'plans.plan_id = special_conditions.plan_id');
         $this->db->join('nomenclators', 'nomenclators.nomenclator_id = special_conditions.provision');
         $query =  $this->db->get();
+
+
 
         if(!$query) return false;
         foreach ($query->result_array('special_conditions') as $row){
@@ -193,7 +215,7 @@ class SpecialConditions extends CI_Model{
         $this->db->select('special_conditions.*');
         $this->db->select('medical_insurance.denomination');
         $this->db->select('plans.description');
-        $this->db->select('nomenclators.code, nomenclators.class, nomenclators.description');
+        $this->db->select('nomenclators.type as nomenclator_type, nomenclators.code, nomenclators.class, nomenclators.description');
         $this->db->from('special_conditions');
         $this->db->where('id_special_conditions', $id);
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = special_conditions.medical_insurance_id');
