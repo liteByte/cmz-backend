@@ -22,12 +22,12 @@ class ContactController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-      $denomination     = $post->denomination   ?? "";
-      $sector           = $post->sector         ?? "";
-      $phone_number     = $post->phone_number   ?? "";
-      $email            = $post->email          ?? "";
+      $denomination            = $post->denomination   ?? "";
+      $sector                  = $post->sector         ?? "";
+      $phone_number            = $post->phone_number   ?? "";
+      $email                   = $post->email          ?? "";
 
-      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
+      if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($sector))            return $this->response(['error'=>'No se ha ingresado sector/referente'], REST_Controller::HTTP_BAD_REQUEST);
 
       //Email validation
@@ -56,11 +56,11 @@ class ContactController extends AuthController{
 
       $post = json_decode(file_get_contents('php://input'));
 
-      $denomination     = $post->denomination   ?? "";
-      $sector           = $post->sector         ?? "";
-      $phone_number     = $post->phone_number   ?? "";
-      $email            = $post->email          ?? "";
-      $id               = (int) $this->get('id');
+      $denomination             = $post->denomination   ?? "";
+      $sector                   = $post->sector         ?? "";
+      $phone_number             = $post->phone_number   ?? "";
+      $email                    = $post->email          ?? "";
+      $id                       = (int) $this->get('id');
 
       if(empty($denomination))      return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
       if(empty($sector))            return $this->response(['error'=>'No se ha ingresado sector/referente'], REST_Controller::HTTP_BAD_REQUEST);
