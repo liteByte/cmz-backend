@@ -10,6 +10,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class BillingCodeController extends AuthController{
 
     private $token_valid;
+    protected $access = "*";
 
     function __construct(){
         parent::__construct();
@@ -18,10 +19,6 @@ class BillingCodeController extends AuthController{
     }
 
     public function billing_code_get(){
-
-        //Validates Token
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
         $codes = $this->BillingCode->getBillingCodes();
         return $this->response($codes, RC::HTTP_OK);
     }

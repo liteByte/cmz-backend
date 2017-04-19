@@ -10,6 +10,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class MaternalPlanOptionController extends AuthController{
 
     private $token_valid;
+    protected $access = "*";
 
     function __construct(){
         parent::__construct();
@@ -18,10 +19,6 @@ class MaternalPlanOptionController extends AuthController{
     }
 
     public function maternal_plan_option_get(){
-
-        //Validates Token
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
         $options = $this->MaternalPlanOption->getMaternalPlanOptions();
         return $this->response($options, RC::HTTP_OK);
     }

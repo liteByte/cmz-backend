@@ -10,7 +10,7 @@ use Restserver\Libraries\REST_Controller as RC;
 class InternmentAmbulatoryOptionController extends AuthController{
 
     private $token_valid;
-
+    protected $access = "*";
     function __construct(){
         parent::__construct();
         $this->load->model('InternmentAmbulatoryOption');
@@ -18,10 +18,6 @@ class InternmentAmbulatoryOptionController extends AuthController{
     }
 
     public function internment_ambulatory_option_get(){
-
-        //Validates Token
-        if($this->token_valid->status != "ok") return $this->response(array('error'=>$this->token_valid->message), RC::HTTP_UNAUTHORIZED);
-
         $options = $this->InternmentAmbulatoryOption->getInternmentAmbulatoryOptions();
         return $this->response($options, RC::HTTP_OK);
     }
