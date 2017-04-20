@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Professionals extends CI_Model{
 
+    private $table = "professionals";
+   
     public function __construct(){
         parent::__construct();
     }
@@ -209,4 +211,23 @@ class Professionals extends CI_Model{
         return "OK";
     }
 
+    public function searchData($param){
+
+        $result = [];
+        
+        $this->db->select('id_professional_data, registration_number, name');
+        $this->db->from($this->table);
+        $this->db->or_like('registration_number', $param);
+        $this->db->or_like('document_number', $param);
+        $this->db->or_like('name', $param);
+        $this->db->order_by("registration_number ASC, document_number ASC ");
+        $this->db->limit(15);
+        $query = $this->db->get();
+
+
+        foreach ($query->result_array() as $row){
+            array_push($result, $row);
+        }
+        return $result;
+    }
 }
