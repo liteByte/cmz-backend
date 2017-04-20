@@ -5,7 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Plan extends CI_Model{
 
   private $description;
-  private $medical_insurance_denom;
   private $medical_insurance_id;
 
   public function __construct(){
@@ -13,12 +12,11 @@ class Plan extends CI_Model{
   }
 
   //Creates the plan in 'plans'
-  public function save($description,$medical_insurance_denom,$medical_insurance_id){
+  public function save($description,$medical_insurance_id){
 
     $data = array(
         'description'                 => $description,
         'medical_insurance_id'        => $medical_insurance_id,
-        'medical_insurance_denom'     => $medical_insurance_denom,
         'active'                      => 'active'
     );
 
@@ -29,14 +27,13 @@ class Plan extends CI_Model{
   }
 
   //Updates the plan in 'plans'
-  public function update($description,$medical_insurance_denom,$medical_insurance_id,$id,$userID){
+  public function update($description,$medical_insurance_id,$id,$userID){
 
     $now = date('Y-m-d H:i:s');
 
     $data = array(
         'description'                 => $description,
         'medical_insurance_id'        => $medical_insurance_id,
-        'medical_insurance_denom'     => $medical_insurance_denom,
         'active'                      => 'active',
         'update_date'                 => $now,
         'modify_user_id'              => $userID
@@ -54,13 +51,17 @@ class Plan extends CI_Model{
 
     $result = array();
 
-    $this->db->where(array('active' => "active",'medical_insurance_id' => $medicalInsuranceID));
-    $this->db->order_by("description", "asc");
-    $this->db->order_by("medical_insurance_denom", "asc");
-    $query = $this->db->get('plans');
+    $this->db->select('P.*,MI.denomination as medical_insurance_denom');
+    $this->db->from('plans P');
+    $this->db->join('medical_insurance MI', 'P.medical_insurance_id = MI.medical_insurance_id');
+    $this->db->order_by("MI.denomination", "asc");
+    $this->db->order_by("P.description", "asc");
+    $this->db->order_by("MI.denomination", "asc");
+    $this->db->where('P.medical_insurance_id',$medicalInsuranceID);
+    $query = $this->db->get();
 
-    foreach ($query->result_array('Plan') as $row){
-      array_push($result,$row);
+    foreach ($query->result_array() as $row){
+      $result[] = $row;
     }
 
     return $result;
@@ -69,8 +70,6 @@ class Plan extends CI_Model{
 
   //Get a specific plan information
   public function getPlanById($planID){
-
-    $result = array();
 
     $query = $this->db->get_where('plans', array("plan_id" => $planID));
 

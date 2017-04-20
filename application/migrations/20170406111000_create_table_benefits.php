@@ -46,11 +46,6 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
-            'benefit' => array(
-                'type'          =>  'VARCHAR',
-                'constraint'    =>  50,
-                'null'          =>  FALSE
-            ),
             'quantity' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  4,

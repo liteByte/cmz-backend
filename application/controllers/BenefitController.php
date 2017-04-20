@@ -31,7 +31,6 @@ class BenefitController extends AuthController{
         $period                             = $post->period                             ?? "";
         $remesa                             = $post->remesa                             ?? "";
         $nomenclator_id                     = $post->nomenclator_id                     ?? "";
-        $benefit                            = $post->benefit                            ?? "";
         $quantity                           = $post->quantity                           ?? "";
         $billing_code_id                    = $post->billing_code_id                    ?? "";
         $multiple_operation_value           = $post->multiple_operation_value           ?? "";
@@ -55,7 +54,6 @@ class BenefitController extends AuthController{
         if(empty($id_professional_data))                return $this->response(['error'=>'No se han ingresado datos del profesional'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($period))                              return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($nomenclator_id))                      return $this->response(['error'=>'No se han ingresado datos del nomenclador'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($benefit))                             return $this->response(['error'=>'No se ha ingresado prestación'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($quantity) && $quantity !== '0')       return $this->response(['error'=>'No se ha ingresado cantidad'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($billing_code_id))                     return $this->response(['error'=>'No se ha ingresado código de facturación'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($multiple_operation_value))            return $this->response(['error'=>'No se ha ingresado porcentaje de operación múltiple'], REST_Controller::HTTP_BAD_REQUEST);
@@ -113,7 +111,7 @@ class BenefitController extends AuthController{
 
 
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $benefit, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
+        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
             return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
