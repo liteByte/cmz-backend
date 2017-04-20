@@ -99,16 +99,26 @@ class Nomenclator extends CI_Model{
 
     //Delete contact information in 'contacs'
     //TODO:El sistema valida que la prestación del Nomenclador al ser eliminada no este asociada a alguna liquidación actual o histórica.
-    public function delete($nomenclatorID,$userID){
+    public function delete($nomenclatorID){
 
         $now = date('Y-m-d H:i:s');
 
-        //Delete contact
-        $this->db->where('nomenclator_id', $nomenclatorID);
-        $this->db->update('nomenclators', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
+//        //Delete contact
+//        $this->db->where('nomenclator_id', $nomenclatorID);
+//        $this->db->update('nomenclators', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
 
+        $query = $this->db->get_where($this->table, array("nomenclator_id" => $nomenclatorID));
+
+        if($query->num_rows()){
+            $this->db->where('nomenclator_id', $nomenclatorID);
+            $result = $this->db->delete($this->table);
+            $errors = $this->db->error();
+            if($errors['code'] == '1451') return  "No se puede eliminar el nomenclador, ya que posee información relacionada";
+            if(!$result) return "Error al intentar Nomenclador";
+        }else{
+            return "El Id del Nomenclador no existe en la base de datos";
+        }
         return true;
-
     }
 
     public function validateData($code, $class){
@@ -125,15 +135,19 @@ class Nomenclator extends CI_Model{
 
         $result = [];
         $param = str_replace("-", " ", $param);
+        $param = explode(" ", $param);
 
         $this->db->select('nomenclator_id, type, code, class, description');
         $this->db->from ($this->table);
-        $this->db->like('code', $param);
-        $this->db->or_like('description', $param);
-        $this->db->or_like('class', $param);
+        foreach ($param as $p){
+            $this->db->or_like('code', $p);
+            $this->db->or_like('description', $p);
+            $this->db->or_like('class', $p);
+        }
         $this->db->order_by("code ASC, description ASC, class ASC ");
         $this->db->limit(15);
         $query = $this->db->get();
+        print_r($this->db->last_query());
 
         foreach ($query->result_array() as $row){
             array_push($result, $row);
