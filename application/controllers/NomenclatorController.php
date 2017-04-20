@@ -11,6 +11,7 @@ class NomenclatorController extends AuthController{
 
     private $token_valid;
     protected $access = "ABMnomenclador";
+    private $msgEmpty = "No hay información";
     function __construct(){
         parent::__construct();
         $this->load->model('Nomenclator');
@@ -142,5 +143,17 @@ class NomenclatorController extends AuthController{
         return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
+    }
+
+    public function nomenclatorData_get(){
+        $word = $this->get('word');
+
+        $result = $this->Nomenclator->searchData($word);
+
+        if(!$result){
+            return $this->response(array('error'=>$this->msgEmpty), REST_Controller::HTTP_NOT_FOUND);
+        }else {
+            return $this->response($result, REST_Controller::HTTP_OK);
+        }
     }
 }
