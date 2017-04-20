@@ -19,13 +19,15 @@ class Response_msg{
         if($msg != ''){
             $this->msg = $msg;
         }
+        header('Content-type: application/json');
         http_response_code($this->error_code);
         $result_json = $this->msg;
-        //$result_json  = ['error'=>$this->msg];
-        echo $json= json_encode($result_json, JSON_UNESCAPED_UNICODE);
 
+        if($this->error_code == 404){
+            echo  $result_json  =  json_encode(array('error' => $this->msg ));
+        }else{
+            echo $json= json_encode($result_json, JSON_UNESCAPED_UNICODE);
+        }
         exit;
-
     }
-
 }
