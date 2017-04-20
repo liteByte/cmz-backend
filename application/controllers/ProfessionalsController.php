@@ -10,6 +10,7 @@ class ProfessionalsController extends AuthController{
 
     private $token_valid;
     protected $access = "ABMprofesionales";
+    private $msgEmpty = "No hay información";
     function __construct(){
         parent::__construct();
         $this->load->model('Professionals');
@@ -245,6 +246,17 @@ class ProfessionalsController extends AuthController{
             return $this->response(array('msg'=>'Profesional eliminado satisfactoriamente'), RC::HTTP_OK);
         }else{
             return $this->response(array('error'=>'Error al intentar eliminar profesional'), RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function professionalsData_get(){
+
+        $word = $this->get('word');
+        $result = $this->Professionals->searchData($word);
+        if(!$result){
+            return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_NOT_FOUND);
+        }else {
+            return $this->response($result, RC::HTTP_OK);
         }
     }
 

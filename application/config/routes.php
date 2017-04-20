@@ -188,4 +188,5 @@ $route['earnings/(:num)']               = 'EarningsController/earnings/id/$1';
 
 ////////////////////////Autocomplete services routes////////////////////////
 $route['insurances/like']      = 'MedicalInsuranceController/insuranceData';
-$route['nomenclators/like/(:any)']    = 'NomenclatorController/nomenclatorData/word/$1';
+$route['nomenclators/like']    = 'NomenclatorController/nomenclatorData';
+$route['professionals/like']   = 'ProfessionalsController/professionalsData';

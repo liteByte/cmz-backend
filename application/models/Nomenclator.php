@@ -134,20 +134,15 @@ class Nomenclator extends CI_Model{
     public function searchData($param){
 
         $result = [];
-        $param = str_replace("-", " ", $param);
-        $param = explode(" ", $param);
-
         $this->db->select('nomenclator_id, type, code, class, description');
         $this->db->from ($this->table);
-        foreach ($param as $p){
-            $this->db->or_like('code', $p);
-            $this->db->or_like('description', $p);
-            $this->db->or_like('class', $p);
-        }
+        $this->db->or_like('code', $param);
+        $this->db->or_like('description', $param);
+        $this->db->or_like('class', $param);
+
         $this->db->order_by("code ASC, description ASC, class ASC ");
         $this->db->limit(15);
         $query = $this->db->get();
-        print_r($this->db->last_query());
 
         foreach ($query->result_array() as $row){
             array_push($result, $row);
@@ -155,3 +150,4 @@ class Nomenclator extends CI_Model{
         return $result;
     }
 }
+

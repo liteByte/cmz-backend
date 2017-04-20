@@ -148,9 +148,7 @@ class NomenclatorController extends AuthController{
     public function nomenclatorData_get(){
 
         $word = $this->get('word');
-
         $result = $this->Nomenclator->searchData($word);
-
         if(!$result){
             return $this->response(array('error'=>$this->msgEmpty), REST_Controller::HTTP_NOT_FOUND);
         }else {
