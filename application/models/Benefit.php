@@ -47,34 +47,38 @@ class Benefit extends CI_Model{
     //TODO: El sistema valida que la Prestación a ser modificada no haya sido facturada
     public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID, $invoiced){
 
-        $now = date('Y-m-d H:i:s');
+        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "invoiced" => false]);
 
-        $data = array(
-            'remesa'                           => (empty($remesa)                                       ? null : $remesa),
-            'quantity'                         => $quantity,
-            'billing_code_id'                  => $billing_code_id,
-            'multiple_operation_value'         => $multiple_operation_value,
-            'holiday_option_id'                => (empty($holiday_option_id)                            ? null : $holiday_option_id),
-            'maternal_plan_option_id'          => (empty($maternal_plan_option_id)                      ? null : $maternal_plan_option_id),
-            'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
-            'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
-            'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
-            'affiliate_id'                     => (empty($affiliate_id)                                 ? null : $affiliate_id),
-            'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
-            'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
-            'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
-            'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
-            'active'                           => 'active',
-            'update_date'                      => $now,
-            'modify_user_id'                   => $userID,
-            'invoiced'                         => $invoiced
-        );
+        if($query->num_rows()){
+            $now = date('Y-m-d H:i:s');
+            $data = array(
+                'remesa'                           => (empty($remesa)                                       ? null : $remesa),
+                'quantity'                         => $quantity,
+                'billing_code_id'                  => $billing_code_id,
+                'multiple_operation_value'         => $multiple_operation_value,
+                'holiday_option_id'                => (empty($holiday_option_id)                            ? null : $holiday_option_id),
+                'maternal_plan_option_id'          => (empty($maternal_plan_option_id)                      ? null : $maternal_plan_option_id),
+                'internment_ambulatory_option_id'  => $internment_ambulatory_option_id,
+                'unit_price'                       => ((empty($unit_price) && $unit_price !== '0')          ? null : $unit_price),
+                'benefit_date'                     => (empty($benefit_date)                                 ? null : $benefit_date),
+                'affiliate_id'                     => (empty($affiliate_id)                                 ? null : $affiliate_id),
+                'bill_number'                      => (empty($bill_number)                                  ? null : $bill_number),
+                'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
+                'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
+                'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
+                'active'                           => 'active',
+                'update_date'                      => $now,
+                'modify_user_id'                   => $userID,
+                'invoiced'                         => $invoiced
+            );
 
-        $this->db->where('benefit_id', $id);
-        $this->db->update('benefits', $data);
+            $this->db->where('benefit_id', $id);
+            $this->db->update('benefits', $data);
+        }else{
+            return "Este Prestación no puede ser modificada, porque la misma ya ha sido facturada";
+        }
 
         return true;
-
     }
 
     //Get all benefits
@@ -138,7 +142,7 @@ class Benefit extends CI_Model{
 
         } else {
 
-            return "La prestación ya se encuentra facturada y no puede ser eliminada";
+            return "Este Prestación no puede ser eliminada, porque la misma ya ha sido facturada";
 
         }
 

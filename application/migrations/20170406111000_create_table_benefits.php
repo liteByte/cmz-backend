@@ -147,10 +147,8 @@ class Migration_Create_table_benefits extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (billing_code_id)                     REFERENCES billing_codes(billing_code_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (nomenclator_id)                      REFERENCES nomenclators(nomenclator_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (affiliate_id)                        REFERENCES affiliates(affiliate_id)');
-        $this->dbforge->add_field('UNIQUE KEY benefit_key (medical_insurance_id,plan_id,id_professional_data,period,nomenclator_id)');
         $this->dbforge->add_key('benefit_id', TRUE);
         $this->dbforge->create_table('benefits');
-
 
     }
 
