@@ -216,14 +216,16 @@ class FeeController extends AuthController{
         if (empty($oldFee)) return $this->response(['error'=>'No se ha encontrado el arancel elegido para incrementar'], REST_Controller::HTTP_BAD_REQUEST);
         $plans [] = $oldFee["plan_id"];
 
+
         //Validate that new period_since is valid and bigger than all plan's period_since
         if (!$this->validator->validateDate($period_since))                                               return $this->response(array('error'=>'La fecha del nuevo período es inválida'), REST_Controller::HTTP_BAD_REQUEST);
         if (!$this->fee->validateNewPeriodForPlans($oldFee["medical_insurance_id"],$plans,$period_since)) return $this->response(array('error'=>'La fecha del nuevo período es anterior al período de alguno de los planes seleccionados'), REST_Controller::HTTP_BAD_REQUEST);
 
+
         //For each plan:
         //1) Obtain the in-force fee to close it
         //2) Create a new fee with increased percentage (this will be the new in-force fee)
-        foreach ($plans as $plan){
+        foreach (array_unique($plans) as $plan){
 
             $result = $this->fee->increaseFeePercentage($oldFee["medical_insurance_id"],$plan,date($period_since),$increase_value);
             if($result['status'] == "error"){
