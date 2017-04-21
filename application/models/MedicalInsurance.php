@@ -149,6 +149,29 @@ class MedicalInsurance extends CI_Model{
 
   }
 
+  public function getByDenominationLike($word){
+
+      $result = [];
+
+      $this->db->select('MI.denomination,MI.medical_insurance_id');
+      $this->db->from ('medical_insurance MI');
+      $this->db->where('MI.active',"active");
+      $this->db->like('MI.denomination', $word);
+      $this->db->order_by("MI.denomination", "asc");
+      $this->db->limit(15);
+      $query = $this->db->get();
+
+      if (!$query)                 return [];
+      if ($query->num_rows() == 0) return [];
+
+      foreach ($query->result_array() as $row){
+          $result[] = $row;
+      }
+
+      return $result;
+
+  }
+
   public function validateData($cuit, $iva_id, $scope_id){
 
     //CUIT validation

@@ -222,4 +222,14 @@ class MedicalInsuranceController extends AuthController{
       }
 
     }
+
+    //Autocomplete service for insurances
+    public function insuranceData_get(){
+
+        $word = $this->get('word');
+
+        $medicalInsuranceData = $this->MedicalInsurance->getByDenominationLike($word);
+        return $this->response($medicalInsuranceData, REST_Controller::HTTP_OK);
+
+    }
 }

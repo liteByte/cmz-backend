@@ -190,3 +190,5 @@ $route['earnings/(:num)']               = 'EarningsController/earnings/id/$1';
 $route['insurances/like']      = 'MedicalInsuranceController/insuranceData';
 $route['nomenclators/like']    = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']   = 'ProfessionalsController/professionalsData';
+
+
