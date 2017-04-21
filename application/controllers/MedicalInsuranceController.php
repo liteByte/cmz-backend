@@ -144,8 +144,9 @@ class MedicalInsuranceController extends AuthController{
         $ret_adherente_gastos     = $post->ret_adherente_gastos       ?? "";
         $cobertura_fer_noct       = $post->cobertura_fer_noct         ?? "";
         $id                       = (int) $this->get('id');
-        $judical                  = $post->type_of_values             ?? "";
+        $judicial                  = $post->judicial                  ?? "";
         $print                    = $post->print                      ?? "";
+
         if(empty($denomination))              return $this->response(['error'=>'No se ha ingresado denominación'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($settlement_name))           return $this->response(['error'=>'No se ha ingresado nombre de liquidación'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($address))                   return $this->response(['error'=>'No se ha ingresado dirección'], REST_Controller::HTTP_BAD_REQUEST);
@@ -167,8 +168,9 @@ class MedicalInsuranceController extends AuthController{
         if(empty($ret_adherente_gastos))      return $this->response(['error'=>'No se ha ingresado retención de gastos de adherentes'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($cobertura_fer_noct))        return $this->response(['error'=>'No se ha ingresado cobertura nocturna/feriados'], REST_Controller::HTTP_BAD_REQUEST);
 
-        $judical                  = (boolval($judical) ? 1 : 0);
+        $judicial                  = (boolval($judicial) ? 1 : 0);
         $print                    = (boolval($print) ? 1 : 0);
+        
         //If femeba is true, check for other necessaryparameters
         if($femeba == 1){
             if(strlen($ret_jub_femeba) <> 1)  return $this->response(['error'=>'Se ha ingresado retención de jubilación de FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
@@ -196,7 +198,7 @@ class MedicalInsuranceController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, update the insurance
-        if($this->MedicalInsurance->update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$maternal_plan,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$this->token_valid->user_id, $judical, $print)){
+        if($this->MedicalInsurance->update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$maternal_plan,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$this->token_valid->user_id, $judicial, $print)){
             return $this->response(['msg'=>'Obra social modificada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

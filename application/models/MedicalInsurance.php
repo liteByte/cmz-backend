@@ -75,7 +75,7 @@ class MedicalInsurance extends CI_Model{
     }
 
     //Updates the medical insurance in 'medical_insurance'
-    public function update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$maternal_plan,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$userID, $judical, $print){
+    public function update($denomination,$settlement_name,$address,$location,$postal_code,$website,$cuit,$iva_id,$gross_income,$payment_deadline,$scope_id,$maternal_plan,$femeba,$ret_jub_femeba,$federation_funds,$admin_rights,$ret_socios_honorarios,$ret_socios_gastos,$ret_nosocios_honorarios,$ret_nosocios_gastos,$ret_adherente_honorarios,$ret_adherente_gastos,$cobertura_fer_noct,$id,$userID, $judicial, $print){
 
         $now = date('Y-m-d H:i:s');
 
@@ -106,7 +106,7 @@ class MedicalInsurance extends CI_Model{
             'active'                      => 'active',
             'update_date'                 => $now,
             'modify_user_id'              => $userID,
-            'judical'                     => $judical,
+            'judicial'                     => $judicial,
             'print'                       => $print
         );
 
