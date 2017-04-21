@@ -96,4 +96,15 @@ class PlanController extends AuthController{
         if(strcmp($result, 1) != 0) return $this->response(array('error'=>$result), REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(array('msg'=>'Plan eliminado satisfactoriamente'), REST_Controller::HTTP_OK);
     }
+
+    public function getPlanByFeeId_get(){
+
+        $feeId = (int) $this->get('id');
+
+        if(empty($feeId)) return $this->response(['error'=>'No se ha informado el ID del arancel cuyos planes se quieren obtener'], REST_Controller::HTTP_BAD_REQUEST);
+
+        $plans = $this->Plan->getPlansByFeeID($feeId);
+        return $this->response($plans, REST_Controller::HTTP_OK);
+
+    }
 }

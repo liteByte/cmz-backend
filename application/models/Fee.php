@@ -9,24 +9,32 @@ class Fee extends CI_Model{
   }
 
   //Creates the fee in 'fees'
-  public function save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period, $units){
+  public function save($medical_insurance_id, $planArray, $fee_type_id, $upload_date, $period_since, $units){
 
-      //Make the fee structure
-      $feeData = array(
-                    'medical_insurance_id'  => $medical_insurance_id,
-                    'plan_id'               => $plan_id,
-                    'fee_type_id'           => $fee_type_id,
-                    'upload_date'           => $upload_date,
-                    'period'                => $period,
-                    'active'                => "active"
-      );
+      foreach($planArray as $plan) {
 
-      $this->db->insert('fees', $feeData);
+          //Make the fee structure
+          $feeData = array(
+              'medical_insurance_id'    => $medical_insurance_id,
+              'plan_id'                 => $plan,
+              'fee_type_id'             => $fee_type_id,
+              'upload_date'             => $upload_date,
+              'period_since'            => $period_since,
+              'period_until'            => null,
+              'active'                  => "active"
+          );
 
-      //Obtain last inserted fee id
-      $feeID = $this->db->insert_id();
+          $this->db->insert('fees', $feeData);
 
-      return $this->createUnits($units,$feeID);
+          //Obtain last inserted fee id
+          $feeID = $this->db->insert_id();
+
+          //If the DB can't create a fee's unit return error
+          if(!$this->createUnits($units, $feeID)) return false;
+
+      }
+
+      return true;
 
   }
 
@@ -61,7 +69,7 @@ class Fee extends CI_Model{
     foreach ($honoraries as $honorary) {
 
       $honorariesData = [
-          'unit_id'            => $unitID,
+          'unit_id'             => $unitID,
           'movement'            => $honorary->movement,
           'value'               => $honorary->value,
           'id_medical_career'   => (empty($honorary->id_medical_career) ? null : $honorary->id_medical_career),
@@ -211,29 +219,77 @@ class Fee extends CI_Model{
 
   }
 
-  public function validateData($medical_insurance_id, $plan_id, $fee_type_id, $period){
+  public function increaseFeePercentage($medical_insurance_id,$plan,$new_period_since,$increase_value){
 
-      //Validate repetead key
-      $query = $this->db->get_where('fees', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'fee_type_id' => $fee_type_id, 'period' => $period]);
-      if ($query->num_rows() > 0) return "Ya existe un arancel con la misma combinación de Obra Social + Plan + Tipo Arancel + Período";
+      //Obtain the in-force fee for this plan (field period_until is null)
+      $query = $this->db->get_where('fees', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan, 'period_until' => null,'active' => 'active']);
 
-      //Validate if the insurance and plan are OK
-      $query = $this->db->get_where('plans', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id]);
-      if ($query->num_rows() <> 1) return "El plan seleccionado no pertenece a la obra social seleccionada o viceversa";
+      if (!$query)                 return false;
+      if ($query->num_rows() == 0) return false;
 
-      return $this->validateIDs($medical_insurance_id,$plan_id,$fee_type_id);
+      $feeToClose = $query->row();
+
+      //Close the old fee a month before the new period.
+      // If the close period is < than the since period, dont't substract a month to the close period and add a month to the new period
+      $close_period_date = date('Y-m-d',(strtotime('-1 month', strtotime($new_period_since))));
+      if($close_period_date < $new_period_since) $close_period_date=$new_period_since;
+      $new_period_since  = date('Y-m-d',(strtotime('+1 month', strtotime($new_period_since))));
+
+      $feeToClose->period_until = $close_period_date;
+      $this->db->where('fee_id', $feeToClose->fee_id);
+      $this->db->update('fees', $feeToClose);
+
+      if ($this->db->affected_rows() == 0) return ['status' => 'error','message' => 'No se pudo cerrar periodo del arancel'];
+
+      //Once the old fee is closed, create the new fee (same data as old fee but increased value and new period_since)
+      $oldFee = $this->getFeeById($feeToClose->fee_id);
+      $newUnits = array_map(array($this,"unitArrayToObject"), $oldFee['units']);
+
+
+      foreach($newUnits as $unit){
+
+          $unit->expenses = $unit->expenses + ($unit->expenses * ($increase_value / 100));
+
+          foreach ($unit->honoraries as $honorary){
+              $honorary->value = $honorary->value + ($honorary->value * ($increase_value / 100));
+          }
+
+      }
+
+      if(!$this->save($feeToClose->medical_insurance_id, [$feeToClose->plan_id], $feeToClose->fee_type_id, $feeToClose->upload_date, $new_period_since,$newUnits)) return ['status' => 'error','message' => 'No se pudo incrementar los valores de los aranceles'];
+
+      return true;
+
+  }
+
+  public function validateData($medical_insurance_id, $planArray, $fee_type_id, $period_since){
+
+      foreach($planArray as $plan) {
+
+          //Validate repetead key
+          $query = $this->db->get_where('fees', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan, 'fee_type_id' => $fee_type_id, 'period_since' => $period_since]);
+          if ($query->num_rows() > 0) return "Ya existe un arancel con la misma combinación de Obra Social + Plan + Tipo Arancel + Período";
+
+          //Validate if the insurance and plan are OK
+          $query = $this->db->get_where('plans', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan]);
+          if ($query->num_rows() <> 1) return "El plan seleccionado no pertenece a la obra social seleccionada o viceversa";
+
+      }
+
+      return $this->validateIDs($medical_insurance_id,$planArray,$fee_type_id);
 
    }
 
-  public function validateIDs($medical_insurance_id,$plan_id,$fee_type_id){
+  public function validateIDs($medical_insurance_id,$planArray,$fee_type_id){
 
-    //Medical insurance existence validation
+   //Medical insurance existence validation
    $query = $this->db->get_where('medical_insurance', ["medical_insurance_id" => $medical_insurance_id]);
    if ($query->num_rows() <= 0) return "No existe la obra social especificada";
 
    //Plan existence validation
-   $query = $this->db->get_where('plans', ["plan_id" => $plan_id]);
-   if ($query->num_rows() <= 0) return "No existe el plan especificado";
+   $this->db->where_in('plan_id', $planArray);
+   $query = $this->db->get('plans');
+   if ($query->num_rows() < count($planArray) ) return "No existe alguno de los planes seleccionados";
 
    //Fee type existence validation
    $query = $this->db->get_where('fee_types', ["fee_type_id" => $fee_type_id]);
@@ -270,6 +326,43 @@ class Fee extends CI_Model{
 
       return true;
 
+  }
+
+  public function validateNewPeriodForPlans($medical_insurance_id,$plans,$new_period_since){
+
+      $this->db->select('F.*');
+      $this->db->from ('fees F');
+      $this->db->where('medical_insurance_id', $medical_insurance_id);
+      $this->db->where('active', 'active');
+      $this->db->where('period_until', null);
+      $this->db->where('period_since >', $new_period_since);
+      $this->db->where_in('plan_id', $plans);
+      $query = $this->db->get();
+
+      if ($query->num_rows() > 0) return false;
+
+      return true;
+
+  }
+
+  public function unitArrayToObject($unitArray){
+
+      $unitObject             = new stdClass();
+      $unitObject->unit       = $unitArray['unit'];
+      $unitObject->movement   = $unitArray['movement'];
+      $unitObject->expenses   = $unitArray['expenses'];
+      $unitObject->honoraries = [];
+      foreach($unitArray['honoraries'] as $honorary){
+          $honoraryObject                     = new stdClass();
+          $honoraryObject->movement           = $honorary['movement'];
+          $honoraryObject->value              = $honorary['value'];
+          $honoraryObject->id_medical_career  = $honorary['id_medical_career'];
+          $honoraryObject->id_category_femeba = $honorary['id_category_femeba'];
+          $honoraryObject->item_name          = $honorary['item_name'];
+          $unitObject->honoraries []          = $honoraryObject;
+      }
+
+      return $unitObject;
   }
 
 }

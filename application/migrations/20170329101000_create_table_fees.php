@@ -31,9 +31,13 @@ class Migration_Create_table_fees extends CI_Migration{
                     'type'          => 'DATE',
                     'null'          => FALSE,
                 ),
-                'period'  => array(
+                'period_since'  => array(
                     'type'          => 'DATE',
                     'null'          => FALSE,
+                ),
+                'period_until'  => array(
+                    'type'          => 'DATE',
+                    'null'          => TRUE,
                 ),
                 'active' => array(
                     'type'          =>  'VARCHAR',
@@ -54,7 +58,7 @@ class Migration_Create_table_fees extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)    REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                 REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (fee_type_id)             REFERENCES fee_types(fee_type_id)');
-        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period)');
+        $this->dbforge->add_field('UNIQUE KEY fee_key (medical_insurance_id,plan_id,fee_type_id,period_since)');
         $this->dbforge->add_key('fee_id', TRUE);
         $this->dbforge->create_table('fees');
 
@@ -66,7 +70,8 @@ class Migration_Create_table_fees extends CI_Migration{
                 'plan_id'               => "2",
                 'fee_type_id'           => "1",
                 'upload_date'           => $now,
-                'period'                => "2017-10-10",
+                'period_since'          => $now,
+                'period_until'          => null,
                 'active'                => "active"
             )
         );

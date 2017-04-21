@@ -9,6 +9,7 @@ class Plan extends CI_Model{
 
   public function __construct(){
     parent::__construct();
+    $this->load->model('fee');
   }
 
   //Creates the plan in 'plans'
@@ -74,6 +75,25 @@ class Plan extends CI_Model{
     $query = $this->db->get_where('plans', array("plan_id" => $planID));
 
     return $query->row();
+  }
+
+  public function getPlansByFeeID($feeId){
+
+      $fee = $this->fee->getFeeById($feeId);
+
+      if(empty($fee)) return [];
+
+      $this->db->select('P.plan_id,P.description');
+      $this->db->from ('plans P');
+      $this->db->where('P.medical_insurance_id',$fee['medical_insurance_id']);
+      $this->db->where('P.active','active');
+      $query = $this->db->get();
+
+      if (!$query)                 return [];
+      if ($query->num_rows() == 0) return [];
+
+      return $query->result_array();
+
   }
 
   //Delete plan information in 'plans'
