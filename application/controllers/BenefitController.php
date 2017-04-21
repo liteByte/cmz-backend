@@ -46,9 +46,10 @@ class BenefitController extends AuthController{
         $modify_coverage                    = $post->modify_coverage                    ?? "";
         $new_honorary                       = $post->new_honorary                       ?? "";
         $new_expenses                       = $post->new_expenses                       ?? "";
-
+        $invoiced                           = $post->invoiced                           ?? "";
 
         //Validate if any obligatory field is missing
+        $invoiced = (boolval($invoiced) ? 1 : 0);
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($plan_id))                             return $this->response(['error'=>'No se ha ingresado plan'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($id_professional_data))                return $this->response(['error'=>'No se han ingresado datos del profesional'], REST_Controller::HTTP_BAD_REQUEST);
@@ -111,7 +112,7 @@ class BenefitController extends AuthController{
 
 
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
+        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $invoiced)){
             return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -166,8 +167,10 @@ class BenefitController extends AuthController{
         $new_honorary                       = $post->new_honorary                       ?? "";
         $new_expenses                       = $post->new_expenses                       ?? "";
         $id                                 = (int) $this->get('id');
+        $invoiced                           = $post->invoiced                           ?? "";
 
         //Validate if any obligatory field is missing
+        $invoiced = (boolval($invoiced) ? 1 : 0);
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($plan_id))                             return $this->response(['error'=>'No se ha ingresado plan'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($quantity) && $quantity !== '0')       return $this->response(['error'=>'No se ha ingresado cantidad'], REST_Controller::HTTP_BAD_REQUEST);
@@ -217,7 +220,7 @@ class BenefitController extends AuthController{
 
 
         //If everything is valid, update the benefit
-        if($this->benefit->update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id)){
+        if($this->benefit->update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id, $invoiced)){
             return $this->response(['msg'=>'Prestación actualizada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);

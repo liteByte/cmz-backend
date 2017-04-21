@@ -116,6 +116,12 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'constraint'    =>  '5,2',
                 'null'          =>  TRUE
             ),
+            'invoiced' => array(
+                'type'          =>  'BOOLEAN',
+                'null'          =>  FALSE,
+                'comment'       => '1 -> Inv & 0 -> Charg',
+                'default'       => 0
+            ),
             'active' => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  30,
@@ -126,12 +132,13 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'null'          =>  TRUE
             ),
             'modify_user_id' => array(
-                'type'          =>  'INT',
-                'constraint'    =>  5,
-                'unsigned'      =>  TRUE,
-                'null'          =>  TRUE
+            'null'          =>  TRUE,
+            'type'          =>  'INT',
+            'constraint'    =>  5,
+            'unsigned'      =>  TRUE,
             )
         ));
+
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)                REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                             REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_professional_data)                REFERENCES professionals(id_professional_data)');
@@ -141,10 +148,8 @@ class Migration_Create_table_benefits extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (billing_code_id)                     REFERENCES billing_codes(billing_code_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (nomenclator_id)                      REFERENCES nomenclators(nomenclator_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (affiliate_id)                        REFERENCES affiliates(affiliate_id)');
-        $this->dbforge->add_field('UNIQUE KEY benefit_key (medical_insurance_id,plan_id,id_professional_data,period,nomenclator_id)');
         $this->dbforge->add_key('benefit_id', TRUE);
         $this->dbforge->create_table('benefits');
-
 
     }
 
