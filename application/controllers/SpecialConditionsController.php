@@ -21,7 +21,6 @@ class SpecialConditionsController extends AuthController{
         $post = json_decode(file_get_contents('php://input'));
         $medical_insurance_id   = $post->medical_insurance_id   ?? "";
         $plan_id                = $post->plan_id                ?? "";
-        $nomenclator_type       = $post->nomenclator_type       ?? "";
         $provision              = $post->provision              ?? "";
         $type                   = $post->type                   ?? "";
         $period_of_validity     = $post->period_of_validity     ?? "";
@@ -30,8 +29,7 @@ class SpecialConditionsController extends AuthController{
 
         if (empty($medical_insurance_id)) return $this->response(array('error' => 'No se ha ingresado código de la Obra social'), RC::HTTP_BAD_REQUEST);
         if (empty($plan_id))              return $this->response(array('error' => 'No se ha ingresado código del plan'), RC::HTTP_BAD_REQUEST);
-        if (empty($nomenclator_type))     return $this->response(array('error' => 'No se ha ingresado el tipo de nomenclador'), RC::HTTP_BAD_REQUEST);
-        if (empty($provision))            return $this->response(array('error' => 'No se ha ingresado la  prestación'), RC::HTTP_BAD_REQUEST);
+        if (empty($provision))            return $this->response(array('error' => 'No se ha ingresado el Id del nomenclador'), RC::HTTP_BAD_REQUEST);
         if (empty($type))                 return $this->response(array('error' => 'No se ha ingresado el tipo de prestación'), RC::HTTP_BAD_REQUEST);
         if (empty($period_of_validity))   return $this->response(array('error' => 'No se ha ingresado el período vigencia'), RC::HTTP_BAD_REQUEST);
 
@@ -42,6 +40,8 @@ class SpecialConditionsController extends AuthController{
         if(!isset($post->group_of_values)) return $this->response(array('error'=>'Se debe indicar el grupo de valores que se aplicara'), RC::HTTP_BAD_REQUEST);
         $group_of_values= $post->group_of_values                       ?? "";
         $group_of_values = (boolval($group_of_values) ? 1 : 0);
+
+
 
         if($group_of_values){
             // Specials Values
@@ -72,7 +72,7 @@ class SpecialConditionsController extends AuthController{
             if(!empty($check_result)) return $this->response(array('error'=>'Se debe ingresar el tipo de Unidad '), RC::HTTP_BAD_REQUEST);
 
             // Save data
-            $result = $this->SpecialConditions->save_special($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales );
+            $result = $this->SpecialConditions->save_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales );
             if(strcmp($result, true ) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
 
             if($result){
@@ -86,7 +86,7 @@ class SpecialConditionsController extends AuthController{
             if(empty($quantity_units) && !is_numeric($quantity_units))  return $this->response(array('error' => 'Se debe ingresar la ingresado la cantidad de unidades'), RC::HTTP_BAD_REQUEST);
             if($quantity_units < 0 ) return $this->response(array('error' => 'Valor de la unidad, es invalido'), RC::HTTP_BAD_REQUEST);
 
-            $result = $this->SpecialConditions->save_unit($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units );
+            $result = $this->SpecialConditions->save_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units );
 
             if(strcmp($result, true ) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
 
@@ -102,7 +102,6 @@ class SpecialConditionsController extends AuthController{
         $post = json_decode(file_get_contents('php://input'));
         $medical_insurance_id   = $post->medical_insurance_id   ?? "";
         $plan_id                = $post->plan_id                ?? "";
-        $nomenclator_type       = $post->nomenclator_type       ?? "";
         $provision              = $post->provision              ?? "";
         $type                   = $post->type                   ?? "";
         $period_of_validity     = $post->period_of_validity     ?? "";
@@ -112,7 +111,6 @@ class SpecialConditionsController extends AuthController{
 
         if (empty($medical_insurance_id)) return $this->response(array('error' => 'No se ha ingresado código de la Obra social'), RC::HTTP_BAD_REQUEST);
         if (empty($plan_id))              return $this->response(array('error' => 'No se ha ingresado código del plan'), RC::HTTP_BAD_REQUEST);
-        if (empty($nomenclator_type))     return $this->response(array('error' => 'No se ha ingresado el tipo de nomenclador'), RC::HTTP_BAD_REQUEST);
         if (empty($provision))            return $this->response(array('error' => 'No se ha ingresado la  prestación'), RC::HTTP_BAD_REQUEST);
         if (empty($type))                 return $this->response(array('error' => 'No se ha ingresado el tipo de prestación'), RC::HTTP_BAD_REQUEST);
         if (empty($period_of_validity))   return $this->response(array('error' => 'No se ha ingresado el período vigencia'), RC::HTTP_BAD_REQUEST);
@@ -155,7 +153,7 @@ class SpecialConditionsController extends AuthController{
             if(!empty($check_result)) return $this->response(array('error'=>'Se debe ingresar el tipo de Unidad '), RC::HTTP_BAD_REQUEST);
 
             // Update data
-            $result = $this->SpecialConditions->update_special($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales, $id );
+            $result = $this->SpecialConditions->update_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales, $id );
             if(strcmp($result, true ) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
 
             if($result){
@@ -169,7 +167,7 @@ class SpecialConditionsController extends AuthController{
             if(empty($quantity_units) && !is_numeric($quantity_units))  return $this->response(array('error' => 'Se debe ingresar la ingresado la cantidad de unidades'), RC::HTTP_BAD_REQUEST);
             if($quantity_units < 0 ) return $this->response(array('error' => 'Valor de la unidad, es invalido'), RC::HTTP_BAD_REQUEST);
 
-            $result = $this->SpecialConditions->update_unit($medical_insurance_id, $plan_id, $nomenclator_type, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units, $id );
+            $result = $this->SpecialConditions->update_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units, $id );
 
             if(strcmp($result, true ) != 0) return $this->response(array('error'=>$result), RC::HTTP_BAD_REQUEST);
 
@@ -206,7 +204,7 @@ class SpecialConditionsController extends AuthController{
     }
 
     public function specialconditions_delete(){
-        
+
         $id = $this->get('id');
         $result = $this->SpecialConditions->delete_specialconditions($id);
 
