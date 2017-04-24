@@ -85,8 +85,11 @@ class Plan extends CI_Model{
 
       $this->db->select('P.plan_id,P.description');
       $this->db->from ('plans P');
+      $this->db->join('fees F','P.plan_id = F.plan_id');
       $this->db->where('P.medical_insurance_id',$fee['medical_insurance_id']);
       $this->db->where('P.active','active');
+      $this->db->where('F.active','active');
+      $this->db->where('F.period_until',null);
       $query = $this->db->get();
 
       if (!$query)                 return [];

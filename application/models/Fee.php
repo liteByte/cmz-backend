@@ -140,7 +140,7 @@ class Fee extends CI_Model{
       $this->db->join('fee_types FT',               'FT.fee_type_id = F.fee_type_id');
       $this->db->order_by("MI.denomination", "asc");
       $this->db->order_by("P.description", "asc");
-      $this->db->order_by("F.period", "desc");
+      $this->db->order_by("F.period_since", "desc");
       $this->db->where('F.active',"active");
       $query = $this->db->get();
 
