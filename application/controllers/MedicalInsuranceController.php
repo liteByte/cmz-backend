@@ -171,7 +171,7 @@ class MedicalInsuranceController extends AuthController{
         $judicial                  = (boolval($judicial) ? 1 : 0);
         $print                    = (boolval($print) ? 1 : 0);
         
-        //If femeba is true, check for other necessaryparameters
+        //If femeba is true, check for other necessary parameters
         if($femeba == 1){
             if(strlen($ret_jub_femeba) <> 1)  return $this->response(['error'=>'Se ha ingresado retención de jubilación de FEMEBA incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($federation_funds))      return $this->response(['error'=>'No se han ingresado fondos de federación'], REST_Controller::HTTP_BAD_REQUEST);
@@ -186,7 +186,7 @@ class MedicalInsuranceController extends AuthController{
         if($ret_nosocios_gastos < 0      || $ret_nosocios_gastos > 100)       return $this->response(['error'=>'Porcentaje de retención de gastos de no socios ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
         if($ret_adherente_honorarios < 0 || $ret_adherente_honorarios > 100)  return $this->response(['error'=>'Porcentaje de retención de honorarios de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
         if($ret_adherente_gastos < 0     || $ret_adherente_gastos > 100)      return $this->response(['error'=>'Porcentaje de retención de gastos de adherentes ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
-        if($cobertura_fer_noct < 0       || $cobertura_fer_noct > 100)        return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
+        if($cobertura_fer_noct < 0)                                           return $this->response(['error'=>'Porcentaje de cobertura nocturna/feriados ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
         if($femeba == 1){
             if($federation_funds < 0     || $federation_funds > 100)          return $this->response(['error'=>'Porcentaje de fondos de federación ingresados incorrectamente'], REST_Controller::HTTP_BAD_REQUEST);
         }
