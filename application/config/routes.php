@@ -97,6 +97,7 @@ $route['plansByInsurance/(:num)']     = 'PlanController/plansByInsurance/id/$1';
 $route['plans/update/(:num)']         = 'PlanController/updatePlan/id/$1';
 $route['plans/remove/(:num)']         = 'PlanController/removePlan/id/$1';
 $route['plans/(:num)']                = 'PlanController/getPlan/id/$1';
+$route['plans/fee/(:num)']            = 'PlanController/getPlanByFeeId/id/$1';
 
 ////////////////////////Contact routes////////////////////////
 $route['contacts']                    = 'ContactController/contacts';  //Get -> show contacts  & post -> create contact
@@ -117,6 +118,7 @@ $route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/i
 ////////////////////////Fee routes////////////////////////
 $route['fees']                        = 'FeeController/fees';  //Get -> show fees  & post -> create fee & put -> update fees
 $route['fees/(:num)']                 = 'FeeController/fees/id/$1';
+$route['fees/increment']              = 'FeeController/incrementedFees';   //Post: create new fees with new values
 
 ////////////////////////Benefit routes////////////////////////
 $route['benefits']                    = 'BenefitController/benefits';  //Get -> show benefits  & post -> create benefit & put -> update benefit
