@@ -13,9 +13,10 @@ $pdf->SetDisplayMode('real', 'default');
 
 $pdf->AddPage();
 
-$pdf->Write(5, 'Some sample text');
-$pdf->Output('My-File-Name.pdf', 'I');
+$pdf->Write(5, $name);
+$pdf->Output('My-File-Namssse.pdf', 'I');
 
 
 
-?>
+
+
