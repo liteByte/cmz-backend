@@ -16,6 +16,7 @@ class BenefitController extends AuthController{
         parent::__construct();
         $this->load->model('benefit');
         $this->load->model('affiliate');
+        $this->load->model('Valuator');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
@@ -239,6 +240,12 @@ class BenefitController extends AuthController{
         if(strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(['msg'=>'Prestación eliminada satisfactoriamente'], REST_Controller::HTTP_OK);
 
+    }
+
+    public function validar_get(){
+        $result = $this->Valuator->valueBenefit('4');
+        print_r($result);
+        die();
     }
 
 }

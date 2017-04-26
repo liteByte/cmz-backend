@@ -193,4 +193,7 @@ $route['insurances/like']      = 'MedicalInsuranceController/insuranceData';
 $route['nomenclators/like']    = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']   = 'ProfessionalsController/professionalsData';
 
+//Test validator
+$route['benefits/test']             = 'BenefitController/validar';
+
 
