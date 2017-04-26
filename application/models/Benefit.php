@@ -33,7 +33,7 @@ class Benefit extends CI_Model{
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
             'active'                           => 'active',
-            'state'                         => $state
+            'state'                            => $state
         );
 
         $this->db->insert('benefits', $data);

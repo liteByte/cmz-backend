@@ -166,7 +166,7 @@ class BenefitController extends AuthController{
         $new_honorary                       = $post->new_honorary                       ?? "";
         $new_expenses                       = $post->new_expenses                       ?? "";
         $id                                 = (int) $this->get('id');
-        $state                           = $post->state                           ?? "";
+        $state                              = $post->state                           ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
