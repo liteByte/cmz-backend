@@ -10,7 +10,7 @@ class Benefit extends CI_Model{
 
     //Creates the benefit in 'benefits'
     //TODO: crear los datos del paciente en la tabla pacientes?? Falta que lo defina Priscila
-    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $invoiced){
+    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $state){
 
         $data = array(
             'medical_insurance_id'             => $medical_insurance_id,
@@ -33,7 +33,7 @@ class Benefit extends CI_Model{
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
             'active'                           => 'active',
-            'invoiced'                         => $invoiced
+            'state'                            => $state
         );
 
         $this->db->insert('benefits', $data);
@@ -45,9 +45,9 @@ class Benefit extends CI_Model{
 
     //Updates the benefit in 'benefits'
     //TODO: El sistema valida que la Prestación a ser modificada no haya sido facturada
-    public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID, $invoiced){
+    public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID, $state){
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "invoiced" => false]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state" => 1]);
 
         if($query->num_rows()){
             $now = date('Y-m-d H:i:s');
@@ -69,7 +69,7 @@ class Benefit extends CI_Model{
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID,
-                'invoiced'                         => $invoiced
+                'state'                         => $state
             );
 
             $this->db->where('benefit_id', $id);
@@ -129,7 +129,7 @@ class Benefit extends CI_Model{
 
         $now = date('Y-m-d H:i:s');
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "invoiced" => false]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "state" => 1]);
 
         if($query->num_rows()){
 
