@@ -118,6 +118,7 @@ class Migration_Create_table_benefits extends CI_Migration{
             ),
             'state' => array(
                 'type'          =>  'INT',
+                'null'          =>  FALSE,
                 'constraint'    =>  3,
                 'default'       => 1
             ),
