@@ -116,11 +116,11 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'constraint'    =>  '5,2',
                 'null'          =>  TRUE
             ),
-            'invoiced' => array(
-                'type'          =>  'BOOLEAN',
+            'state' => array(
+                'type'          =>  'INT',
                 'null'          =>  FALSE,
-                'comment'       => '1 -> Inv & 0 -> Charg',
-                'default'       => 0
+                'constraint'    =>  3,
+                'default'       => 1
             ),
             'active' => array(
                 'type'          =>  'VARCHAR',
