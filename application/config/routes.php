@@ -194,3 +194,9 @@ $route['nomenclators/like']    = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']   = 'ProfessionalsController/professionalsData';
 
 
+////////////////////////Billing Process////////////////////////
+$route['bill']      = 'BillController/bill';
+
+
+
+
