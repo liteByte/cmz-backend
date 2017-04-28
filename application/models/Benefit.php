@@ -9,8 +9,7 @@ class Benefit extends CI_Model{
     }
 
     //Creates the benefit in 'benefits'
-    //TODO: crear los datos del paciente en la tabla pacientes?? Falta que lo defina Priscila
-    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $state){
+    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
 
         $data = array(
             'medical_insurance_id'             => $medical_insurance_id,
@@ -18,6 +17,7 @@ class Benefit extends CI_Model{
             'id_professional_data'             => $id_professional_data,
             'period'                           => $period,
             'remesa'                           => (empty($remesa)                                       ? null : $remesa),
+            'additional'                       => (empty($additional)                                   ? null : $additional),
             'nomenclator_id'                   => $nomenclator_id,
             'quantity'                         => $quantity,
             'billing_code_id'                  => $billing_code_id,
@@ -33,7 +33,7 @@ class Benefit extends CI_Model{
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
             'active'                           => 'active',
-            'state'                            => $state
+            'state'                            => 1
         );
 
         $this->db->insert('benefits', $data);
@@ -44,8 +44,7 @@ class Benefit extends CI_Model{
     }
 
     //Updates the benefit in 'benefits'
-    //TODO: El sistema valida que la Prestación a ser modificada no haya sido facturada
-    public function update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID, $state){
+    public function update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID){
 
         $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state" => 1]);
 
@@ -53,6 +52,7 @@ class Benefit extends CI_Model{
             $now = date('Y-m-d H:i:s');
             $data = array(
                 'remesa'                           => (empty($remesa)                                       ? null : $remesa),
+                'additional'                       => (empty($additional)                                   ? null : $additional),
                 'quantity'                         => $quantity,
                 'billing_code_id'                  => $billing_code_id,
                 'multiple_operation_value'         => $multiple_operation_value,
@@ -68,17 +68,16 @@ class Benefit extends CI_Model{
                 'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
                 'active'                           => 'active',
                 'update_date'                      => $now,
-                'modify_user_id'                   => $userID,
-                'state'                         => $state
+                'modify_user_id'                   => $userID
             );
 
             $this->db->where('benefit_id', $id);
             $this->db->update('benefits', $data);
         }else{
-            return "Este Prestación no puede ser modificada, porque la misma ya ha sido facturada";
+            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser modificada, porque la misma ya ha sido facturada'];
         }
 
-        return true;
+        return ['status' => 'ok', 'msg' => 'Prestación actualizada satisfactoriamente'];
     }
 
     //Get all benefits
@@ -114,8 +113,9 @@ class Benefit extends CI_Model{
     //Get a specific benefit information
     public function getBenefitById($benefitID){
 
-        $this->db->select('B.*');
+        $this->db->select('B.*,N.surgery');
         $this->db->from('benefits B');
+        $this->db->join('nomenclators N','B.nomenclator_id = N.nomenclator_id');
         $this->db->where('B.benefit_id',$benefitID);
         $query = $this->db->get();
 
@@ -124,7 +124,6 @@ class Benefit extends CI_Model{
     }
 
     //Delete benefit information in 'benefits'
-    //TODO:El sistema valida que la Prestación a ser eliminada no haya sido facturada.
     public function delete($benefitID,$userID){
 
         $now = date('Y-m-d H:i:s');
@@ -137,16 +136,16 @@ class Benefit extends CI_Model{
             $this->db->where('benefit_id', $benefitID);
             $result = $this->db->delete('benefits');
             $errors = $this->db->error();
-            if($errors['code'] == '1451') return "No se puede eliminar la prestación ya que posee información relacionada";
-            if(!$result) return "Error al intentar eliminar prestación";
+            if($errors['code'] == '1451')   return ['status' => 'error', 'msg' => 'No se puede eliminar la prestación ya que contiene información relacionada'];
+            if(!$result)                    return ['status' => 'error', 'msg' => 'Error inesperado al intentar eliminar la prestación'];
 
         } else {
 
-            return "Este Prestación no puede ser eliminada, porque la misma ya ha sido facturada";
+            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser eliminada, porque la misma ya ha sido facturada'];
 
         }
 
-        return true;
+        return ['status' => 'ok', 'msg' => 'Prestación eliminada satisfactoriamente'];
     }
 
     public function validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id){
