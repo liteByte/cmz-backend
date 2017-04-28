@@ -10,7 +10,7 @@ class Benefit extends CI_Model{
     }
 
     //Creates the benefit in 'benefits'
-    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
+    public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses){
 
         //Get benefit unit from it's nomenclator
         $nomenclator = $this->nomenclator->getNomenclatorById($nomenclator_id);
@@ -36,9 +36,9 @@ class Benefit extends CI_Model{
             'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
-            'value_honorary'                   => ,
-            'value_expenses'                   => ,
-            'value_unit'                       => ,
+            'value_honorary'                   => (empty($value_honorary)                               ? null : $value_honorary),
+            'value_expenses'                   => (empty($value_expenses)                               ? null : $value_expenses),
+            'value_unit'                       => $nomenclator->unity,
             'active'                           => 'active',
             'state'                            => (empty($bill_number)                                  ? 1 : 2)
         );
