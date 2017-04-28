@@ -42,7 +42,7 @@ class NomenclatorController extends AuthController{
         if(empty($speciality_unity)   && strlen($speciality_unity) == 0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($surgery)     && $surgery !== '0')                       return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($surgery)     && $surgery !== 0)                       return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
         $unities = ['P','Q','R','G','B','V','A','E'];
@@ -98,7 +98,7 @@ class NomenclatorController extends AuthController{
         if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($surgery)            && $surgery !== '0')                return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($surgery)            && $surgery !== 0)                return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
         $unities = ['P','Q','R','G','B','V','A','E'];
