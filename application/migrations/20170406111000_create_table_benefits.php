@@ -122,6 +122,21 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'constraint'    =>  '5,2',
                 'null'          =>  TRUE
             ),
+            'value_honorary' => array(
+                'type'          =>  'DECIMAL',
+                'constraint'    =>  '5,2',
+                'null'          =>  TRUE
+            ),
+            'value_expenses' => array(
+                'type'          =>  'DECIMAL',
+                'constraint'    =>  '5,2',
+                'null'          =>  TRUE
+            ),
+            'value_unit'   => array(
+                'type'          =>  'VARCHAR',
+                'constraint'    =>  1,
+                'null'          =>  TRUE
+            ),
             'state' => array(
                 'type'          =>  'INT',
                 'null'          =>  FALSE,

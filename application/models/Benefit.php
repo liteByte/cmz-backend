@@ -6,10 +6,14 @@ class Benefit extends CI_Model{
 
     public function __construct(){
         parent::__construct();
+        $this->load->model('nomenclator');
     }
 
     //Creates the benefit in 'benefits'
     public function save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses){
+
+        //Get benefit unit from it's nomenclator
+        $nomenclator = $this->nomenclator->getNomenclatorById($nomenclator_id);
 
         $data = array(
             'medical_insurance_id'             => $medical_insurance_id,
@@ -32,8 +36,11 @@ class Benefit extends CI_Model{
             'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
+            'value_honorary'                   => ,
+            'value_expenses'                   => ,
+            'value_unit'                       => ,
             'active'                           => 'active',
-            'state'                            => 1
+            'state'                            => (empty($bill_number)                                  ? 1 : 2)
         );
 
         $this->db->insert('benefits', $data);
@@ -49,6 +56,7 @@ class Benefit extends CI_Model{
         $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state" => 1]);
 
         if($query->num_rows()){
+
             $now = date('Y-m-d H:i:s');
             $data = array(
                 'remesa'                           => (empty($remesa)                                       ? null : $remesa),
@@ -66,6 +74,7 @@ class Benefit extends CI_Model{
                 'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
                 'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
                 'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
+                'state'                            => (empty($bill_number)                                  ? 1 : 2),
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID
@@ -73,8 +82,11 @@ class Benefit extends CI_Model{
 
             $this->db->where('benefit_id', $id);
             $this->db->update('benefits', $data);
+
         }else{
+
             return ['status' => 'error', 'msg' => 'Esta prestación no puede ser modificada, porque la misma ya ha sido facturada'];
+
         }
 
         return ['status' => 'ok', 'msg' => 'Prestación actualizada satisfactoriamente'];

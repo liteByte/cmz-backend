@@ -79,6 +79,9 @@ class BenefitController extends AuthController{
             if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if(!empty($bill_number)){
+            if($unit_price <= 0)            return $this->response(['error'=>'Si se ingreso un numero de factura, el precio unitario debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
+        }
 
 
         //Validate fields and unique key
