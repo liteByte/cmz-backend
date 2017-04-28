@@ -21,7 +21,7 @@ class Nomenclator extends CI_Model{
     }
 
     //Creates the nomenclator in 'nomenclators'
-    public function save($type, $code, $class, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity){
+    public function save($type, $code, $class, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity,$surgery){
 
         $data = array(
             'type'               => $type,
@@ -34,6 +34,7 @@ class Nomenclator extends CI_Model{
             'help_unity'         => $help_unity,
             'anesthetist_unity'  => $anesthetist_unity,
             'spending_unity'     => $spending_unity,
+            'surgery'            => $surgery,
             'active'             => 'active'
         );
 
@@ -44,7 +45,7 @@ class Nomenclator extends CI_Model{
     }
 
     //Updates the nomenclator in 'nomenclators'
-    public function update($type, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity, $id, $userID){
+    public function update($type, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity, $surgery, $id, $userID){
 
         $now = date('Y-m-d H:i:s');
 
@@ -57,6 +58,7 @@ class Nomenclator extends CI_Model{
             'help_unity'         => $help_unity,
             'anesthetist_unity'  => $anesthetist_unity,
             'spending_unity'     => $spending_unity,
+            'surgery'            => $surgery,
             'active'             => 'active',
             'update_date'        => $now,
             'modify_user_id'     => $userID
