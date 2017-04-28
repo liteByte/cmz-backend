@@ -89,7 +89,7 @@ class BenefitController extends AuthController{
 
         //Validate additional field (depending on nomenclator)
         $nomenclator = $this->nomenclator->getNomenclatorById($nomenclator_id);
-        if($nomenclator['surgery'] == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
+        if($nomenclator->surgery == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
 
 
         ////Create the affiliate if informed and if it does not exist
@@ -200,7 +200,7 @@ class BenefitController extends AuthController{
 
         //Validate additional field (depending on nomenclator)
         $nomenclator = $this->nomenclator->getNomenclatorById($id);
-        if($nomenclator['surgery'] == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
+        if($nomenclator->surgery == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
 
         ////Create the affiliate if informed and if it does not exist
         $affiliateOperation = ["status" => "", "affiliate_id" => $affiliate_id];

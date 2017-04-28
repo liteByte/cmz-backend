@@ -174,7 +174,7 @@ class Benefit extends CI_Model{
 
         //Nomenclator existence validation
         $query = $this->db->get_where('nomenclators', ["nomenclator_id" => $nomenclator_id]);
-        if ($query->num_rows() <= 0) return "No existe la prestación especificada";
+        if ($query->num_rows() <= 0) return "No existe el nomenclador especificado";
 
         return "OK";
 
