@@ -63,6 +63,10 @@ class Migration_Create_table_nomenclators extends CI_Migration{
                     'constraint'    =>  '10,2',
                     'null'          =>  FALSE
                 ),
+                'surgery' => array(
+                    'type'          =>  'BOOLEAN',
+                    'null'          =>  FALSE
+                ),
                 'active' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  30,

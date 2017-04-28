@@ -33,6 +33,7 @@ class NomenclatorController extends AuthController{
         $help_unity         = $post->help_unity          ?? 0;
         $anesthetist_unity  = $post->anesthetist_unity   ?? 0;
         $spending_unity     = $post->spending_unity      ?? 0;
+        $surgery            = $post->surgery             ?? 0;
 
         if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($code))                                                  return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
@@ -41,7 +42,7 @@ class NomenclatorController extends AuthController{
         if(empty($speciality_unity)   && strlen($speciality_unity) == 0)  return $this->response(['error'=>'No se ha ingresado unidad de especialidad'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($surgery)     && $surgery !== '0')                       return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
         $unities = ['P','Q','R','G','B','V','A','E'];
@@ -60,7 +61,7 @@ class NomenclatorController extends AuthController{
         if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, save the contact
-        if($this->Nomenclator->save($type, $code, $class, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity)){
+        if($this->Nomenclator->save($type, $code, $class, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity, $surgery)){
             return $this->response(['msg'=>'Nomenclador creado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -87,6 +88,7 @@ class NomenclatorController extends AuthController{
         $help_unity         = $post->help_unity          ?? 0;
         $anesthetist_unity  = $post->anesthetist_unity   ?? 0;
         $spending_unity     = $post->spending_unity      ?? 0;
+        $surgery            = $post->surgery             ?? 0;
         $id                 = (int) $this->get('id');
 
         if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
@@ -96,6 +98,7 @@ class NomenclatorController extends AuthController{
         if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($surgery)     && $surgery !== '0')                       return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
         $unities = ['P','Q','R','G','B','V','A','E'];
@@ -109,7 +112,7 @@ class NomenclatorController extends AuthController{
         }
 
         //If everything is valid, update the contact
-        if($this->Nomenclator->update($type, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity, $id, $this->token_valid->user_id)){
+        if($this->Nomenclator->update($type, $description, $unity, $speciality_unity, $helpers, $help_unity, $anesthetist_unity, $spending_unity, $surgery, $id, $this->token_valid->user_id)){
             return $this->response(['msg'=>'Nomenclador modificado satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
