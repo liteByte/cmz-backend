@@ -33,7 +33,7 @@ class NomenclatorController extends AuthController{
         $help_unity         = $post->help_unity          ?? 0;
         $anesthetist_unity  = $post->anesthetist_unity   ?? 0;
         $spending_unity     = $post->spending_unity      ?? 0;
-        $surgery            = $post->surgery             ?? 0;
+        $surgery            = (int) $post->surgery       ?? 0;
 
         if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($code))                                                  return $this->response(['error'=>'No se ha ingresado código'], REST_Controller::HTTP_BAD_REQUEST);
@@ -88,7 +88,7 @@ class NomenclatorController extends AuthController{
         $help_unity         = $post->help_unity          ?? 0;
         $anesthetist_unity  = $post->anesthetist_unity   ?? 0;
         $spending_unity     = $post->spending_unity      ?? 0;
-        $surgery            = $post->surgery             ?? 0;
+        $surgery            = (int) $post->surgery       ?? 0;
         $id                 = (int) $this->get('id');
 
         if(empty($type))                                                  return $this->response(['error'=>'No se ha ingresado tipo'], REST_Controller::HTTP_BAD_REQUEST);
@@ -98,7 +98,7 @@ class NomenclatorController extends AuthController{
         if(empty($help_unity)         && strlen($help_unity) == 0)        return $this->response(['error'=>'No se ha ingresado unidad de ayuda'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($anesthetist_unity)  && strlen($anesthetist_unity) == 0) return $this->response(['error'=>'No se ha ingresado unidad de anestesista'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($spending_unity)     && strlen($spending_unity) == 0)    return $this->response(['error'=>'No se ha ingresado unidad de gasto'], REST_Controller::HTTP_BAD_REQUEST);
-        if(empty($surgery)            && $surgery !== 0)                return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($surgery)            && $surgery !== 0)                  return $this->response(['error'=>'No se ha ingresado si es cirugía'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
         $unities = ['P','Q','R','G','B','V','A','E'];
