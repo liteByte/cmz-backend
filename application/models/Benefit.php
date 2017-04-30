@@ -36,11 +36,11 @@ class Benefit extends CI_Model{
             'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
             'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
             'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
-            'value_honorary'                   => (empty($value_honorary)                               ? null : $value_honorary),
-            'value_expenses'                   => (empty($value_expenses)                               ? null : $value_expenses),
-            'value_unit'                       => $nomenclator->unity,
-            'active'                           => 'active',
-            'state'                            => (empty($bill_number)                                  ? 1 : 2)
+            'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
+            'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
+            'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
+            'state'                            => (empty($bill_number)                                  ? 1 : 2),
+            'active'                           => 'active'
         );
 
         $this->db->insert('benefits', $data);
@@ -51,11 +51,14 @@ class Benefit extends CI_Model{
     }
 
     //Updates the benefit in 'benefits'
-    public function update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $userID){
+    public function update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $value_honorary, $value_expenses, $id, $userID){
 
         $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state" => 1]);
 
         if($query->num_rows()){
+
+            //Get benefit unit from it's nomenclator
+            $nomenclator = $this->nomenclator->getNomenclatorById($query->row()->nomenclator_id);
 
             $now = date('Y-m-d H:i:s');
             $data = array(
@@ -74,7 +77,10 @@ class Benefit extends CI_Model{
                 'modify_coverage'                  => (empty($modify_coverage) && $modify_coverage !== '0'  ? null : $modify_coverage),
                 'new_honorary'                     => (empty($new_honorary) && $new_honorary !== '0'        ? null : $new_honorary),
                 'new_expenses'                     => (empty($new_expenses) && $new_expenses !== '0'        ? null : $new_expenses),
-                'state'                            => (empty($bill_number)                                  ? 1 : 2),
+                'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
+                'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
+                'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
+                'state'                            => (empty($bill_number)                                  ? 1    : 2),
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID

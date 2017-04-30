@@ -81,6 +81,22 @@ class BenefitController extends AuthController{
         }
         if(!empty($bill_number)){
             if($unit_price <= 0)            return $this->response(['error'=>'Si se ingreso un numero de factura, el precio unitario debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
+            switch ($billing_code_id) { //1-Just honoraries - 2-Just expenses - 3-Both
+                case 1:
+                    $value_honorary = $unit_price;
+                    $value_expenses = 0;
+                    break;
+                case 2:
+                    $value_honorary = 0;
+                    $value_expenses = $unit_price;
+                    break;
+                case 3:
+                    $value_honorary = $unit_price;
+                    $value_expenses = $unit_price;
+                    break;
+                default:
+                    return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
+            }
         }
 
 
@@ -119,7 +135,7 @@ class BenefitController extends AuthController{
         }
 
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses)){
+        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses)){
             return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -200,6 +216,25 @@ class BenefitController extends AuthController{
             if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if(!empty($bill_number)){
+            if($unit_price <= 0)            return $this->response(['error'=>'Si se ingreso un numero de factura, el precio unitario debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
+            switch ($billing_code_id) { //1-Just honoraries - 2-Just expenses - 3-Both
+                case 1:
+                    $value_honorary = $unit_price;
+                    $value_expenses = 0;
+                    break;
+                case 2:
+                    $value_honorary = 0;
+                    $value_expenses = $unit_price;
+                    break;
+                case 3:
+                    $value_honorary = $unit_price;
+                    $value_expenses = $unit_price;
+                    break;
+                default:
+                    return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }
 
         //Validate additional field (depending on nomenclator)
         $nomenclator = $this->nomenclator->getNomenclatorById($id);
@@ -229,7 +264,7 @@ class BenefitController extends AuthController{
         }
 
         //If everything is valid, update the benefit
-        $result = $this->benefit->update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id);
+        $result = $this->benefit->update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses, $id, $this->token_valid->user_id);
         if ($result['status'] == 'error'){
             return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }else{
