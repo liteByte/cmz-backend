@@ -8,85 +8,132 @@ class SpecialConditions extends CI_Model{
         parent::__construct();
     }
 
-    public function save_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,  $especiales){
+    public function save_special($medical_insurance_id, $planArray, $provision, $type, $period_since, $type_of_values, $group_of_values,  $especiales){
 
-        $data = [
-            "medical_insurance_id"  => $medical_insurance_id,
-            "plan_id"               => $plan_id,
-            "provision"             => $provision,
-            "type"                  => $type,
-            "period_of_validity"    => $period_of_validity ,
-            "type_of_values"        => $type_of_values,
-            "group_of_values"       => $group_of_values
-        ];
+        foreach($planArray as $plan_id) {
 
-        $result = $this->db->insert('special_conditions', $data);
-        $errors = $this->db->error();
+            //Get current special condition and validate if it's date is newer than this one. If so, close the old one
+            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision);
+            if (!empty($currentSpecialCondition)) {
+                if ($period_since > $currentSpecialCondition['period_since']) {
 
-        if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
-        if(!$result)                return "Error al intentar crear nueva Cobertura";
+                    $close_period_date = date('Y-m-d', (strtotime('-1 month', strtotime($period_since))));
+                    $data = ['period_until' => $close_period_date];
+
+                    //Update old special condition by closing it's period_until
+                    $this->db->where('id_special_conditions', $currentSpecialCondition['id_special_conditions']);
+                    $this->db->update('special_conditions', $data);
+
+                } else {
+
+                    return "Ya existe una condición especial para la Obra Social, Plan y Nomenclador seleccionado en el período ingresado";
+
+                }
+            }
+
+            $data = [
+                "medical_insurance_id"  => $medical_insurance_id,
+                "plan_id"               => $plan_id,
+                "provision"             => $provision,
+                "type"                  => $type,
+                "period_since"          => $period_since,
+                "type_of_values"        => $type_of_values,
+                "group_of_values"       => $group_of_values
+            ];
+
+            $result = $this->db->insert('special_conditions', $data);
+            $errors = $this->db->error();
+
+            if ($errors['code'] == 1062)    return "Error: Datos duplicados, en la base de datos";
+            if (!$result)                   return "Error al intentar crear nueva Cobertura";
 
 
-        //Obtain last inserted user id
-        $id_special_conditions = $this->db->insert_id();
+            //Obtain last inserted user id
+            $id_special_conditions = $this->db->insert_id();
 
-        foreach ($especiales as $esp){
+            foreach ($especiales as $esp) {
+                $new_row = [
+                    "type_unit"             => $esp->type_unit,
+                    "honorary"              => $esp->honorary,
+                    "expenses"              => $esp->expenses,
+                    "id_special_conditions" => $id_special_conditions,
+                ];
+                $result = $this->db->insert('special_conditions_details', $new_row);
+
+                $errors = $this->db->error();
+
+                if ($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
+                if (!$result) return "Error al intentar crear nueva Cobertura";
+            }
+        }
+
+        return  true;
+    }
+
+    public function save_unit($medical_insurance_id, $planArray, $provision, $type, $period_since, $type_of_values, $group_of_values, $unit, $quantity_units){
+
+        foreach($planArray as $plan_id) {
+
+            //Get current special condition and validate if it's date is newer than this one. If so, close the old one
+            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision);
+            if (!empty($currentSpecialCondition)) {
+                if ($period_since > $currentSpecialCondition['period_since']) {
+
+                    $close_period_date = date('Y-m-d', (strtotime('-1 month', strtotime($period_since))));
+                    $data = ['period_until' => $close_period_date];
+
+                    //Update old special condition by closing it's period_until
+                    $this->db->where('id_special_conditions', $currentSpecialCondition['id_special_conditions']);
+                    $this->db->update('special_conditions', $data);
+
+                } else {
+
+                    return "Ya existe una condición especial para la Obra Social, Plan y Nomenclador seleccionado en el período ingresado";
+
+                }
+            }
+
+            $data = [
+                "medical_insurance_id"  => $medical_insurance_id,
+                "plan_id"               => $plan_id,
+                "provision"             => $provision,
+                "type"                  => $type,
+                "period_since"          => $period_since,
+                "type_of_values"        => $type_of_values,
+                "group_of_values"       => $group_of_values
+            ];
+
+            $result = $this->db->insert('special_conditions', $data);
+            $errors = $this->db->error();
+
+            if ($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
+            if (!$result) return "Error al intentar crear nueva Cobertura";
+
+            //Obtain last inserted user id
+            $id_special_conditions = $this->db->insert_id();
+
             $new_row = [
-                "type_unit"             => $esp->type_unit,
-                "honorary"              => $esp->honorary,
-                "expenses"              => $esp->expenses,
+                "unit"                  => $unit,
+                "quantity_units"        => $quantity_units,
                 "id_special_conditions" => $id_special_conditions,
             ];
             $result = $this->db->insert('special_conditions_details', $new_row);
-
             $errors = $this->db->error();
 
-            if($errors['code'] == 1062) return "Error: Datos duplicados, en la base de datos";
-            if(!$result)                return "Error al intentar crear nueva Cobertura";
+            if ($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
+            if (!$result) return "Error al intentar crear nueva Cobertura";
         }
+
         return  true;
     }
 
-    public function save_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $unit, $quantity_units){
+    public function  update_special($medical_insurance_id, $plan_id, $provision, $type, $period_since, $type_of_values, $group_of_values, $especiales, $id ){
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
             "provision"             => $provision,
             "type"                  => $type,
-            "period_of_validity"    => $period_of_validity ,
-            "type_of_values"        => $type_of_values,
-            "group_of_values"       => $group_of_values
-        ];
-
-        $result = $this->db->insert('special_conditions', $data);
-        $errors = $this->db->error();
-
-        if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
-        if(!$result)                return "Error al intentar crear nueva Cobertura";
-
-        //Obtain last inserted user id
-        $id_special_conditions = $this->db->insert_id();
-
-        $new_row =[
-            "unit"              => $unit,
-            "quantity_units"    => $quantity_units,
-            "id_special_conditions" => $id_special_conditions,
-        ];
-        $result = $this->db->insert('special_conditions_details', $new_row);
-        $errors = $this->db->error();
-
-        if($errors['code'] == 1062) return "Error: Datos duplicadoss, en la base de datos";
-        if(!$result)                return "Error al intentar crear nueva Cobertura";
-        return  true;
-    }
-
-    public function  update_special($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values, $especiales, $id ){
-        $data = [
-            "medical_insurance_id"  => $medical_insurance_id,
-            "plan_id"               => $plan_id,
-            "provision"             => $provision,
-            "type"                  => $type,
-            "period_of_validity"    => $period_of_validity ,
+            "period_since"          => $period_since ,
             "type_of_values"        => $type_of_values,
             "group_of_values"       => $group_of_values
         ];
@@ -115,13 +162,13 @@ class SpecialConditions extends CI_Model{
         return 1;
     }
 
-    public function  update_unit($medical_insurance_id, $plan_id, $provision, $type, $period_of_validity, $type_of_values, $group_of_values,$unit, $quantity_units, $id ){
+    public function  update_unit($medical_insurance_id, $plan_id, $provision, $type, $period_since, $type_of_values, $group_of_values,$unit, $quantity_units, $id ){
         $data = [
             "medical_insurance_id"  => $medical_insurance_id,
             "plan_id"               => $plan_id,
             "provision"             => $provision,
             "type"                  => $type,
-            "period_of_validity"    => $period_of_validity ,
+            "period_since"          => $period_since ,
             "type_of_values"        => $type_of_values,
             "group_of_values"       => $group_of_values
         ];
@@ -258,5 +305,22 @@ class SpecialConditions extends CI_Model{
         }else{
             return "El Id no existe en la base de datos";
         }
+    }
+
+    function getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $nomenclator_id){
+
+        $this->db->select('SC.*');
+        $this->db->from ('special_conditions SC');
+        $this->db->where('SC.medical_insurance_id',$medical_insurance_id);
+        $this->db->where('SC.provision',$nomenclator_id);
+        $this->db->where('SC.plan_id',$plan_id);
+        $this->db->where('SC.active',"active");
+        $this->db->where('SC.period_until',null);
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+        return $query->result_array();
+
     }
 }
