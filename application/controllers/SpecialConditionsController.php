@@ -13,6 +13,7 @@ class SpecialConditionsController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->model('SpecialConditions');
+        $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
@@ -40,6 +41,9 @@ class SpecialConditionsController extends AuthController{
         if(!isset($post->group_of_values)) return $this->response(array('error'=>'Se debe indicar el grupo de valores que se aplicara'), RC::HTTP_BAD_REQUEST);
         $group_of_values= $post->group_of_values                       ?? "";
         $group_of_values = (boolval($group_of_values) ? 1 : 0);
+
+        //Validate period
+        if(!$this->validator->validateDate($period_since)) return $this->response(array('error'=>'Fecha del periodo invalida'), RC::HTTP_BAD_REQUEST);
 
         if($group_of_values){
             // Specials Values

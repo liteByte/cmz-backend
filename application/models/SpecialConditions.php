@@ -13,9 +13,10 @@ class SpecialConditions extends CI_Model{
         foreach($planArray as $plan_id) {
 
             //Get current special condition and validate if it's date is newer than this one. If so, close the old one
-            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision);
+            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision)[0];
             if (!empty($currentSpecialCondition)) {
-                if ($period_since > $currentSpecialCondition['period_since']) {
+
+                if (date($period_since) > date($currentSpecialCondition['period_since'])) {
 
                     $close_period_date = date('Y-m-d', (strtotime('-1 month', strtotime($period_since))));
                     $data = ['period_until' => $close_period_date];
@@ -75,9 +76,10 @@ class SpecialConditions extends CI_Model{
         foreach($planArray as $plan_id) {
 
             //Get current special condition and validate if it's date is newer than this one. If so, close the old one
-            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision);
+            $currentSpecialCondition = $this->SpecialConditions->getCurrentSpecialConditionByKey($medical_insurance_id, $plan_id, $provision)[0];
             if (!empty($currentSpecialCondition)) {
-                if ($period_since > $currentSpecialCondition['period_since']) {
+
+                if (date($period_since) > date($currentSpecialCondition['period_since'])) {
 
                     $close_period_date = date('Y-m-d', (strtotime('-1 month', strtotime($period_since))));
                     $data = ['period_until' => $close_period_date];
@@ -314,7 +316,6 @@ class SpecialConditions extends CI_Model{
         $this->db->where('SC.medical_insurance_id',$medical_insurance_id);
         $this->db->where('SC.provision',$nomenclator_id);
         $this->db->where('SC.plan_id',$plan_id);
-        $this->db->where('SC.active',"active");
         $this->db->where('SC.period_until',null);
         $query = $this->db->get();
 
