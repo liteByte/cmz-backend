@@ -40,6 +40,12 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'constraint'    =>  1,
                 'null'          =>  TRUE
             ),
+            'additional' => array(
+                'type'          =>  'INT',
+                'constraint'    =>  1,
+                'null'          =>  TRUE,
+                'comment'       => '1 -> specialist, 2 -> helper, 3-> anesthetic'
+            ),
             'nomenclator_id' => array(
                 'type'          =>  'INT',
                 'constraint'    =>  5,
@@ -135,7 +141,8 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'type'          =>  'INT',
                 'null'          =>  FALSE,
                 'constraint'    =>  3,
-                'default'       => 1
+                'default'       =>  1,
+                'comment'       => '1 -> Cargado, 2-> Valorizado y 3 -> Facturado'
             ),
             'active' => array(
                 'type'          =>  'VARCHAR',
@@ -147,10 +154,10 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'null'          =>  TRUE
             ),
             'modify_user_id' => array(
-            'null'              =>  TRUE,
-            'type'              =>  'INT',
-            'constraint'        =>  5,
-            'unsigned'          =>  TRUE,
+                'null'          =>  TRUE,
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE
             )
         ));
 

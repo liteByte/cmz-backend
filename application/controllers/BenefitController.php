@@ -17,6 +17,7 @@ class BenefitController extends AuthController{
         $this->load->model('benefit');
         $this->load->model('affiliate');
         $this->load->model('Valuator');
+        $this->load->model('nomenclator');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
@@ -31,6 +32,7 @@ class BenefitController extends AuthController{
         $id_professional_data               = $post->id_professional_data               ?? "";
         $period                             = $post->period                             ?? "";
         $remesa                             = $post->remesa                             ?? "";
+        $additional                         = $post->additional                         ?? "";
         $nomenclator_id                     = $post->nomenclator_id                     ?? "";
         $quantity                           = $post->quantity                           ?? "";
         $billing_code_id                    = $post->billing_code_id                    ?? "";
@@ -47,7 +49,6 @@ class BenefitController extends AuthController{
         $modify_coverage                    = $post->modify_coverage                    ?? "";
         $new_honorary                       = $post->new_honorary                       ?? "";
         $new_expenses                       = $post->new_expenses                       ?? "";
-        $state                           = $post->state                           ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
@@ -79,12 +80,36 @@ class BenefitController extends AuthController{
             if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if(!empty($bill_number)){
+            if($unit_price <= 0)            return $this->response(['error'=>'Si se ingreso un numero de factura, el precio unitario debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
+            switch ($billing_code_id) { //1-Just honoraries - 2-Just expenses - 3-Both
+                case 1:
+                    $value_honorary = $unit_price;
+                    $value_expenses = 0;
+                    break;
+                case 2:
+                    $value_honorary = 0;
+                    $value_expenses = $unit_price;
+                    break;
+                case 3:
+                    $value_honorary = $unit_price;
+                    $value_expenses = $unit_price;
+                    break;
+                default:
+                    return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }
 
 
         //Validate fields and unique key
         $error = $this->benefit->validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id);
 
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
+
+
+        //Validate additional field (depending on nomenclator)
+        $nomenclator = $this->nomenclator->getNomenclatorById($nomenclator_id);
+        if($nomenclator->surgery == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
 
 
         ////Create the affiliate if informed and if it does not exist
@@ -112,7 +137,7 @@ class BenefitController extends AuthController{
 
 
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $state)){
+        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses)){
             return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
         } else {
             return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
@@ -151,6 +176,7 @@ class BenefitController extends AuthController{
         $medical_insurance_id               = $post->medical_insurance_id               ?? "";
         $plan_id                            = $post->plan_id                            ?? "";
         $remesa                             = $post->remesa                             ?? "";
+        $additional                         = $post->additional                         ?? "";
         $quantity                           = $post->quantity                           ?? "";
         $billing_code_id                    = $post->billing_code_id                    ?? "";
         $multiple_operation_value           = $post->multiple_operation_value           ?? "";
@@ -167,7 +193,7 @@ class BenefitController extends AuthController{
         $new_honorary                       = $post->new_honorary                       ?? "";
         $new_expenses                       = $post->new_expenses                       ?? "";
         $id                                 = (int) $this->get('id');
-        $state                              = $post->state                           ?? "";
+
 
         //Validate if any obligatory field is missing
         if(empty($medical_insurance_id))                return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
@@ -192,7 +218,29 @@ class BenefitController extends AuthController{
             if(empty($new_honorary) && $new_honorary !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de honorarios no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
             if(empty($new_expenses) && $new_expenses !== '0')    return $this->response(['error'=>'Si se redefinen los porcentajes de cobertura, la nueva cobertura de gastos no puede ser vacía'], REST_Controller::HTTP_BAD_REQUEST);
         }
+        if(!empty($bill_number)){
+            if($unit_price <= 0)            return $this->response(['error'=>'Si se ingreso un numero de factura, el precio unitario debe ser mayor a 0'], REST_Controller::HTTP_BAD_REQUEST);
+            switch ($billing_code_id) { //1-Just honoraries - 2-Just expenses - 3-Both
+                case 1:
+                    $value_honorary = $unit_price;
+                    $value_expenses = 0;
+                    break;
+                case 2:
+                    $value_honorary = 0;
+                    $value_expenses = $unit_price;
+                    break;
+                case 3:
+                    $value_honorary = $unit_price;
+                    $value_expenses = $unit_price;
+                    break;
+                default:
+                    return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }
 
+        //Validate additional field (depending on nomenclator)
+        $nomenclator = $this->nomenclator->getNomenclatorById($id);
+        if($nomenclator->surgery == 1 && empty($additional)) return $this->response(['error'=>'Se debe seleccionar obligatoriamente un elemento del campo cirugía debido al nomenclador seleccionado'], REST_Controller::HTTP_BAD_REQUEST);
 
         ////Create the affiliate if informed and if it does not exist
         $affiliateOperation = ["status" => "", "affiliate_id" => $affiliate_id];
@@ -219,10 +267,11 @@ class BenefitController extends AuthController{
 
 
         //If everything is valid, update the benefit
-        if($this->benefit->update($remesa, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses, $id, $this->token_valid->user_id, $state)){
-            return $this->response(['msg'=>'Prestación actualizada satisfactoriamente'], REST_Controller::HTTP_OK);
-        } else {
-            return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        $result = $this->benefit->update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses, $id, $this->token_valid->user_id);
+        if ($result['status'] == 'error'){
+            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }else{
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         }
 
     }
@@ -235,8 +284,11 @@ class BenefitController extends AuthController{
         if (empty($id)) return $this->response(['error'=>'No se ha informado el ID de la prestación a eliminar'], REST_Controller::HTTP_BAD_REQUEST);
 
         $result = $this->benefit->delete($id, $this->token_valid->user_id);
-        if(strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
-        return $this->response(['msg'=>'Prestación eliminada satisfactoriamente'], REST_Controller::HTTP_OK);
+        if ($result['status'] == 'error'){
+            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }else{
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
+        }
 
     }
 

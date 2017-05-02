@@ -6,7 +6,7 @@ class Migration_Create_data extends CI_Migration{
 
     public function up(){
 
-        $dump_file = dirname(__FILE__) . '\backup.sql';
+        $dump_file = dirname(__FILE__) . '/backup.sql';
         $sql = file_get_contents($dump_file);
         $sqls = explode(';', $sql);
         $test = array_pop($sqls);
