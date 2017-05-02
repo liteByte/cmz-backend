@@ -136,7 +136,7 @@ class Nomenclator extends CI_Model{
     public function searchData($param){
 
         $result = [];
-        $this->db->select('nomenclator_id, type, code, class, description');
+        $this->db->select('nomenclator_id, type, code, class, description, surgery');
         $this->db->from ($this->table);
         $this->db->or_like('code', $param);
         $this->db->or_like('description', $param);

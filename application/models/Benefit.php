@@ -103,7 +103,7 @@ class Benefit extends CI_Model{
 
         $result = array();
 
-        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, PF.registration_number, PF.name, CONCAT(N.code,"/",IFNULL(N.class,"-")) as benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price');
+        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, PF.registration_number, PF.name, CONCAT(N.code,"/",IFNULL(N.class,"-")) as benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price, B.state');
         $this->db->from('benefits B');
         $this->db->join('medical_insurance MI',         'B.medical_insurance_id = MI.medical_insurance_id');
         $this->db->join('plans PL',                     'B.plan_id = PL.plan_id');
