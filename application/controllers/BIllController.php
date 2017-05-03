@@ -15,7 +15,6 @@ class BillController extends AuthController{
 
     function __construct(){
         parent::__construct();
-        $this->token_valid = $this->validateToken(apache_request_headers());
         $this->load->library('Response_msg');
         $this->load->model('bill');
 
@@ -23,16 +22,17 @@ class BillController extends AuthController{
 
     public function bill_post()    {
         $data = json_decode(file_get_contents('php://input'), TRUE);
+        
         $this->form_validation->set_data($data);
-
         if ($this->form_validation->run() == FALSE) {
             $msg = $this->form_validation->error_array();
             $msg = reset($msg);
             return $this->response(['error' => $msg], RC::HTTP_BAD_REQUEST);
-            // validation_errors()
         }
 
-        $this->bill->bill_init($data);
+        $result = $this->bill->bill_init($data);
+
+        print_r($result);
 
     }
 }

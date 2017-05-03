@@ -31,6 +31,12 @@ $config = [
             'label' => 'Perido de Facturación',
             'rules' => 'required',
             'errors' => ['required' => " Debe ingresar el %s."]
+        ],
+        [
+            'field' => 'branch_officce',
+            'label' => 'Sucrusal',
+            'rules' => 'required',
+            'errors' => ['required' => " Debe ingresar la %s."]
         ]
 
     ]

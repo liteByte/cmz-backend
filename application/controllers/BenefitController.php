@@ -81,7 +81,7 @@ class BenefitController extends AuthController{
 
 
         //Validate fields and unique key
-        $error = $this->benefit->validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id);
+        $error = $this->benefit->validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $nomenclator_id);
 
         if(strcmp($error,"OK") != 0) return $this->response(['error'=>$error], REST_Controller::HTTP_BAD_REQUEST);
 

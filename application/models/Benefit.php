@@ -149,15 +149,15 @@ class Benefit extends CI_Model{
         return true;
     }
 
-    public function validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id){
-
-        //Repeated key validation
-        $query = $this->db->get_where('benefits', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'id_professional_data' => $id_professional_data, 'period' => $period, 'nomenclator_id' => $nomenclator_id]);
-        if ($query->num_rows() > 0) return "Ya existe una prestación con la misma combinación de OS + Plan + Matricula + Prestación + Período";
-
-        return $this->validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $nomenclator_id);
-
-    }
+//    public function validateData($medical_insurance_id, $plan_id, $id_professional_data, $period, $nomenclator_id){
+//
+//        //Repeated key validation
+//        $query = $this->db->get_where('benefits', ['medical_insurance_id' => $medical_insurance_id, 'plan_id' => $plan_id, 'id_professional_data' => $id_professional_data, 'period' => $period, 'nomenclator_id' => $nomenclator_id]);
+//        if ($query->num_rows() > 0) return "Ya existe una prestación con la misma combinación de OS + Plan + Matricula + Prestación + Período";
+//
+//        return $this->validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $nomenclator_id);
+//
+//    }
 
     public function validateIDs($medical_insurance_id, $plan_id, $id_professional_data, $nomenclator_id){
 

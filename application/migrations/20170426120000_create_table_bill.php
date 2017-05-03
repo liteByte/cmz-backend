@@ -38,6 +38,10 @@ class Migration_Create_table_bill extends CI_Migration{
                 'type'           => 'DATE',
                 'null'           => FALSE,
             ],
+            'date_created'   => [
+                'type'           => 'DATE',
+                'null'           => FALSE,
+            ],
             'date_due'   => [
                 'type'           => 'DATE',
                 'null'           => FALSE,
