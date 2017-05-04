@@ -209,6 +209,40 @@ class Fee extends CI_Model{
   //TODO:El sistema valida que el Arancel al ser eliminado no esté asociado a valoración de prestaciones sean actuales o pasadas
   public function delete($feeID,$userID){
 
+      //Get the fee to delete
+      $query = $this->db->get_where('fees', ["fee_id" => $feeID]);
+      $feeToDelete = $query->row();
+
+      if ($query->num_rows()) {
+
+          //Validate if the fee is the in-forge one. If so, open the last fee if there is one
+          if ($feeToDelete->period_until == null) {
+
+              //Get the previous fee (the one that was in-forge before the one being deleted)
+              $this->db->select('F.*');
+              $this->db->from('fees F');
+              $this->db->where('F.period_until <>', null);
+              $this->db->order_by("F.period_until", "desc");
+              $this->db->limit(1);
+              $query = $this->db->get();
+              $previousFee = $query->row();
+print_r($previousFee);die();
+              if (!empty($previousFee)) {
+
+                  $this->db->where('fee_id', $previousFee->fee_id);
+                  $this->db->update('fees', ['period_until' => null]);
+
+                  if (!$query)                  return false;
+                  if ($query->num_rows() == 0)  return false;
+
+              }
+          }
+      } else {
+
+          return false;
+
+      }
+
       $now = date('Y-m-d H:i:s');
 
       //Delete fee
