@@ -80,11 +80,11 @@ class Valuator extends CI_Model{
         //Benefit is a surgery and benefit's additional is the same type as special condition's type
         } elseif($nomenclator->surgery) {
             if (!empty($specialCondition)) {
-                if (($valueBenefit->additional == $specialCondition->type)) {
+                if (($valueBenefit->additional == $specialCondition['type'])) {
 
                     $valueArray = $this->valueBenefitBySpecialCondition($valueBenefit, $specialCondition);
                     if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
-                    $coveredArray = $this->applyCoverage($valueArray['honorary_calculated_value'], $valueArray['expenses_calculated_value'], $valueBenefit, $specialCondition);
+                    $coveredArray = $this->applyCoverage($valueArray['msg']['honoraryValue'], $valueArray['msg']['expensesValue'], $valueBenefit, $specialCondition);
                     if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
                     return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
@@ -92,7 +92,7 @@ class Valuator extends CI_Model{
 
                     $valueArray = $this->valueBenefitByDefault($valueBenefit);
                     if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
-                    $coveredArray = $this->applyCoverage($valueArray['honorary_calculated_value'], $valueArray['expenses_calculated_value'], $valueBenefit, $specialCondition);
+                    $coveredArray = $this->applyCoverage($valueArray['msg']['honoraryValue'], $valueArray['msg']['expensesValue'], $valueBenefit, 0);
                     if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
                     return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
@@ -101,19 +101,19 @@ class Valuator extends CI_Model{
 
                 $valueArray = $this->valueBenefitByDefault($valueBenefit);
                 if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
-                $coveredArray = $this->applyCoverage($valueArray['honorary_calculated_value'], $valueArray['expenses_calculated_value'], $valueBenefit, $specialCondition);
+                $coveredArray = $this->applyCoverage($valueArray['msg']['honoraryValue'], $valueArray['msg']['expensesValue'], $valueBenefit, 0);
                 if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
                 return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
             }
 
-        ////CASE 4)
+        ////CASE 3)
         //The benefit isn't a surgery but it has a special condition
         }elseif(!empty($specialCondition)){
 
             $valueArray = $this->valueBenefitBySpecialCondition($valueBenefit, $specialCondition);
             if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
-            $coveredArray = $this->applyCoverage($valueArray['honorary_calculated_value'], $valueArray['expenses_calculated_value'], $valueBenefit, $specialCondition);
+            $coveredArray = $this->applyCoverage($valueArray['msg']['honoraryValue'], $valueArray['msg']['expensesValue'], $valueBenefit, $specialCondition);
             if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
             return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
@@ -123,7 +123,7 @@ class Valuator extends CI_Model{
 
             $valueArray = $this->valueBenefitByDefault($valueBenefit);
             if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
-            $coveredArray = $this->applyCoverage($valueArray['honorary_calculated_value'],$valueArray['expenses_calculated_value'],$valueBenefit,$specialCondition);
+            $coveredArray = $this->applyCoverage($valueArray['msg']['honoraryValue'], $valueArray['msg']['expensesValue'], $valueBenefit, 0);
             if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
             return $this->saveValorizedBenefit($valueBenefit,$coveredArray['msg']);
 
@@ -224,11 +224,15 @@ class Valuator extends CI_Model{
             $unit   = reset($data['msg']['unit']);  //Sanitize unit array
 
             $UG = $nomenclator->spending_unity;
-            $AG = $unit->expenses;
+            $AG = $unit['expenses'];
 
-            //Obtain the fee using special condition's unit
-            $valueBenefit->nomenclator_id = $specialCondition->provision;
-            $valueBenefit->unit           = $specialCondition->unit;
+            //Obtain the fee using special condition's unit. Create a new benefit modifying unit and nomenclator
+            $newValueBenefit = new stdClass();
+            $newValueBenefit->medical_insurance_id = $valueBenefit->medical_insurance_id;
+            $newValueBenefit->plan_id              = $valueBenefit->plan_id;
+            $newValueBenefit->period               = $valueBenefit->period;
+            $newValueBenefit->nomenclator_id       = $specialCondition['provision'];
+            $newValueBenefit->unit                 = $specialCondition['unit'];
 
             $data = $this->getBenefitFee($valueBenefit);
             if($data['status'] == 'error') return ['status'=>'error','msg' => $data['msg']];
@@ -248,7 +252,7 @@ class Valuator extends CI_Model{
                 if ($honorary['movement'] == 'F') { //$$
                     $honorary_calculated_value = $honorary['value'] * $valueBenefit->quantity;
                 } else { // %%
-                    $honorary_calculated_value = (($honorary['value'] / 100) * $specialCondition->quantity_units) * $valueBenefit->quantity;
+                    $honorary_calculated_value = (($honorary['value'] / 100) * $specialCondition['quantity_units']) * $valueBenefit->quantity;
                 }
 
             } else { //Arancel FEMEBA
@@ -260,7 +264,7 @@ class Valuator extends CI_Model{
                 if ($honorary['movement'] == 'F') { // $$
                     $honorary_calculated_value = $honorary['value'] * $valueBenefit->quantity;
                 } else {
-                    $honorary_calculated_value = ($honorary['value'] * $specialCondition->quantity_units) * $valueBenefit->quantity;
+                    $honorary_calculated_value = ($honorary['value'] * $specialCondition['quantity_units']) * $valueBenefit->quantity;
                 }
 
             }
@@ -364,18 +368,18 @@ class Valuator extends CI_Model{
 
         //Obtain the wanted unit coverage
         if(!empty($specialCondition)){
-            if ((!empty($specialCondition->unit)) && $specialCondition->unit != $valueBenefit->unit){
 
+            if ((!empty($specialCondition['unit'])) && ($specialCondition['unit'] != $valueBenefit->unit)){
+                //print_r("distintas");die();
                 $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray($valueBenefit->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
                 $unitCoverageExpenses = reset($wantedUnitCoverageExpenses);
                 $unitCoverageHonorary = $unitCoverageExpenses;
 
-
             } else {
-
-                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray($valueBenefit->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
+                //print_r($specialCondition['unit']);die();
+                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray(c,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
                 $unitCoverageExpenses = reset($wantedUnitCoverageExpenses);
-                $wantedUnitCoverageHonoraries = array_filter($coverage['data'], array(new FilterUnitCoverageArray($specialCondition->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
+                $wantedUnitCoverageHonoraries = array_filter($coverage['data'], array(new FilterUnitCoverageArray($specialCondition['unit'],$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
                 $unitCoverageHonorary = reset($wantedUnitCoverageHonoraries);
 
             }
@@ -386,7 +390,7 @@ class Valuator extends CI_Model{
             $unitCoverageHonorary = $unitCoverageExpenses;
 
         }
-        print_r($wantedUnitCoverageExpenses);die();
+
         if(empty($unitCoverageHonorary) || empty($unitCoverageExpenses)) return ['status' => 'error', 'msg' => 'No existe unidad de cobertura que coincida con la unidad de la prestación o de su condición especial (si tuviese)'];
 
         //Obtain the benefit's medical insurance
@@ -403,7 +407,7 @@ class Valuator extends CI_Model{
 
 
         //2)Check if the benefit's medical insurance has maternal plan
-        if($medicalInsurance->maternal_plan) {
+        if($medicalInsurance->maternal_plan && $valueBenefit->maternal_plan_value) {
 
             $coveredHonorary = $honorary_value;
             $coveredExpenses = $expenses_value;
@@ -414,7 +418,6 @@ class Valuator extends CI_Model{
             $coveredHonorary = $honorary_value * ($valueBenefit->new_honorary / 100);
             $coveredExpenses = $expenses_value * ($valueBenefit->new_expenses / 100);
 
-
         //4)Default case: apply benefit's coverage values
         }else{
 
@@ -424,11 +427,12 @@ class Valuator extends CI_Model{
         }
 
 
-
         //5) Apply multiple operation value
         if($valueBenefit->multiple_operation_value < 100){
+
             $coveredHonorary = $coveredHonorary * ($valueBenefit->multiple_operation_value / 100);
             $coveredExpenses = $coveredExpenses * ($valueBenefit->multiple_operation_value / 100);
+
         }
 
 
@@ -446,7 +450,7 @@ class Valuator extends CI_Model{
 
         );
 
-        return ['status'=>'ok','msg' => $data ];
+        return ['status'=>'ok','data' => $data ];
 
     }
 

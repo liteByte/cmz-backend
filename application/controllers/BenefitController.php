@@ -293,7 +293,7 @@ class BenefitController extends AuthController{
     }
 
     public function validar_get(){
-        $result = $this->Valuator->valueBenefit('1');
+        $result = $this->Valuator->valueBenefit('2');
         print_r($result);
         die();
     }
