@@ -164,16 +164,16 @@ $route['conceptgroup']                = 'ConceptGroupController/conceptGroups';
 $route['paymenttypes']                = 'PaymentTypesController/payment_types';
 
 ////////////////////////Professionals routes////////////////////////
-$route['professionals']                = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
-$route['professionals/(:num)']         = 'ProfessionalsController/getProfessionals/id/$1';
-$route['professionals/update/(:num)']  = 'ProfessionalsController/updateProfessionals/id/$1';
-$route['professionals/remove/(:num)']  = 'ProfessionalsController/removeProfessional/id/$1';
+$route['professionals']               = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
+$route['professionals/(:num)']        = 'ProfessionalsController/getProfessionals/id/$1';
+$route['professionals/update/(:num)'] = 'ProfessionalsController/updateProfessionals/id/$1';
+$route['professionals/remove/(:num)'] = 'ProfessionalsController/removeProfessional/id/$1';
 
 ////////////////////////Coverage routes////////////////////////
-$route['coverages']                     = 'CoverageController/coverages';
-$route['coverages/(:num)']              = 'CoverageController/getCoverage/id/$1';
-$route['coverages/update/(:num)']       = 'CoverageController/updateCoverage/id/$1';
-$route['coverages/remove/(:num)']       = 'CoverageController/removeCoverage/id/$1';
+$route['coverages']                   = 'CoverageController/coverages';
+$route['coverages/(:num)']            = 'CoverageController/getCoverage/id/$1';
+$route['coverages/update/(:num)']     = 'CoverageController/updateCoverage/id/$1';
+$route['coverages/remove/(:num)']     = 'CoverageController/removeCoverage/id/$1';
 
 ////////////////////////Special Conditions routes////////////////////////
 $route['specialconditionstypes']            = 'SpecialConditionsTypesController/types';
@@ -185,13 +185,13 @@ $route['specialconditions/(:num)']          = 'SpecialConditionsController/speci
 
 //////////////////////// Manage Earnings  ////////////////////////
 
-$route['earnings']                      = 'EarningsController/earnings';
-$route['earnings/(:num)']               = 'EarningsController/earnings/id/$1';
+$route['earnings']                    = 'EarningsController/earnings';
+$route['earnings/(:num)']             = 'EarningsController/earnings/id/$1';
 
 ////////////////////////Autocomplete services routes////////////////////////
-$route['insurances/like']      = 'MedicalInsuranceController/insuranceData';
-$route['nomenclators/like']    = 'NomenclatorController/nomenclatorData';
-$route['professionals/like']   = 'ProfessionalsController/professionalsData';
+$route['insurances/like']             = 'MedicalInsuranceController/insuranceData';
+$route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
+$route['professionals/like']          = 'ProfessionalsController/professionalsData';
 
 //Test validator
 $route['benefits/test']             = 'BenefitController/validar';
