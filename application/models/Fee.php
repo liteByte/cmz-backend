@@ -210,7 +210,7 @@ class Fee extends CI_Model{
   public function delete($feeID,$userID){
 
       //Get the fee to delete
-      $query = $this->db->get_where('fees', ["fee_id" => $feeID]);
+      $query = $this->db->get_where('fees', ["fee_id" => $feeID, 'active' => 'active']);
       $feeToDelete = $query->row();
 
       if ($query->num_rows()) {
@@ -226,7 +226,7 @@ class Fee extends CI_Model{
               $this->db->limit(1);
               $query = $this->db->get();
               $previousFee = $query->row();
-print_r($previousFee);die();
+
               if (!empty($previousFee)) {
 
                   $this->db->where('fee_id', $previousFee->fee_id);
