@@ -69,10 +69,11 @@ class FeeController extends AuthController{
       if(strcmp($error,"OK") != 0) return $this->response(array('error'=>$error), REST_Controller::HTTP_BAD_REQUEST);
 
       //If everything is valid, save the fee
-      if($this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period_since, $units)){
-        return $this->response(['msg'=>'Arancel creado satisfactoriamente'], REST_Controller::HTTP_OK);
+      $result = $this->fee->save($medical_insurance_id, $plan_id, $fee_type_id, $upload_date, $period_since, $units);
+      if($result['status'] == "ok"){
+        return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
       } else {
-        return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
       }
 
     }

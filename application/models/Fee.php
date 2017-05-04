@@ -13,6 +13,27 @@ class Fee extends CI_Model{
 
       foreach($planArray as $plan) {
 
+          //Get current fee and validate if it's date is newer than this one. If so, close the old one
+          $currentFee = $this->getCurrentFeeByKey($medical_insurance_id, $plan, $fee_type_id)[0];
+
+          if (!empty($currentFee)) {
+
+              if (date($period_since) > date($currentFee['period_since'])) {
+
+                  $close_period_date = date('Y-m-d', (strtotime('-1 month', strtotime($period_since))));
+                  $data = ['period_until' => $close_period_date];
+
+                  //Update old fee by closing it's period_until
+                  $this->db->where('fee_id', $currentFee['fee_id']);
+                  $this->db->update('fees', $data);
+
+              } else {
+
+                  return ['status' => "error", 'msg' => "Ya existe un arancel para la Obra Social, Plan y Tipo de Arancel en el período ingresado"];
+
+              }
+          }
+
           //Make the fee structure
           $feeData = array(
               'medical_insurance_id'    => $medical_insurance_id,
@@ -30,11 +51,11 @@ class Fee extends CI_Model{
           $feeID = $this->db->insert_id();
 
           //If the DB can't create a fee's unit return error
-          if(!$this->createUnits($units, $feeID)) return false;
+          if(!$this->createUnits($units, $feeID)) return ['status' => "error", 'msg' => "No se pudieron crear los valores de unidades para el arancel"];
 
       }
 
-      return true;
+      return ['status' => "ok", 'msg' => "Arancel creado satisfactoriamente"];
 
   }
 
@@ -237,6 +258,7 @@ class Fee extends CI_Model{
 
               }
           }
+
       } else {
 
           return false;
@@ -290,7 +312,8 @@ class Fee extends CI_Model{
 
       }
 
-      if(!$this->save($feeToClose->medical_insurance_id, [$feeToClose->plan_id], $feeToClose->fee_type_id, $feeToClose->upload_date, $new_period_since,$newUnits)) return ['status' => 'error','message' => 'No se pudo incrementar los valores de los aranceles'];
+      $result = $this->save($feeToClose->medical_insurance_id, [$feeToClose->plan_id], $feeToClose->fee_type_id, $feeToClose->upload_date, $new_period_since,$newUnits);
+      if($result['status'] == "error") return ['status' => 'error','message' => 'No se pudo incrementar los valores de los aranceles'];
 
       return true;
 
@@ -398,5 +421,22 @@ class Fee extends CI_Model{
 
       return $unitObject;
   }
+
+    function getCurrentFeeByKey($medical_insurance_id, $plan_id, $fee_type_id){
+
+        $this->db->select('F.*');
+        $this->db->from ('fees F');
+        $this->db->where('F.medical_insurance_id',$medical_insurance_id);
+        $this->db->where('F.fee_type_id',$fee_type_id);
+        $this->db->where('F.plan_id',$plan_id);
+        $this->db->where('F.period_until',null);
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        return $query->result_array();
+
+    }
 
 }
