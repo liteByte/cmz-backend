@@ -166,6 +166,9 @@ class FeeController extends AuthController{
         if (empty($oldFee)) return $this->response(['error'=>'No se ha encontrado el arancel elegido para incrementar'], REST_Controller::HTTP_BAD_REQUEST);
         $plans [] = $oldFee["plan_id"];
 
+        //Validate this fee is the in-forge fee (you can only increase in-forge fees)
+        if($oldFee['period_until'] != null) return $this->response(['error'=>'No se puede incrementar el porcentaje de este arancel ya que no es un arancel vigente'], REST_Controller::HTTP_BAD_REQUEST);
+
 
         //Validate that new period_since is valid and bigger than all plan's period_since
         if (!$this->validator->validateDate($period_since))                                               return $this->response(array('error'=>'La fecha del nuevo período es inválida'), REST_Controller::HTTP_BAD_REQUEST);
