@@ -80,6 +80,7 @@ class Valuator extends CI_Model{
         //Benefit is a surgery and benefit's additional is the same type as special condition's type
         } elseif($nomenclator->surgery) {
             if (!empty($specialCondition)) {
+
                 if (($valueBenefit->additional == $specialCondition['type'])) {
 
                     $valueArray = $this->valueBenefitBySpecialCondition($valueBenefit, $specialCondition);
@@ -88,7 +89,7 @@ class Valuator extends CI_Model{
                     if ($coveredArray['status'] == 'error') return ['status' => 'error', 'msg' => $coveredArray['msg']];
                     return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
-                }else {
+                } else {
 
                     $valueArray = $this->valueBenefitByDefault($valueBenefit);
                     if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
@@ -97,6 +98,7 @@ class Valuator extends CI_Model{
                     return $this->saveValorizedBenefit($valueBenefit, $coveredArray['msg']);
 
                 }
+
             } else {
 
                 $valueArray = $this->valueBenefitByDefault($valueBenefit);
@@ -302,6 +304,7 @@ class Valuator extends CI_Model{
         $fee    = $data['msg']['fee'];
         $unit   = reset($data['msg']['unit']);  //Sanitize unit array
 
+
         //Calculate expenses depending on the unit's movement
         if($unit['movement'] == 'F'){ // $$
             $expenses_calculated_value = $unit['expenses'] * $valueBenefit->quantity;
@@ -370,17 +373,17 @@ class Valuator extends CI_Model{
         if(!empty($specialCondition)){
 
             if ((!empty($specialCondition['unit'])) && ($specialCondition['unit'] != $valueBenefit->unit)){
-                //print_r("distintas");die();
-                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray($valueBenefit->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
-                $unitCoverageExpenses = reset($wantedUnitCoverageExpenses);
-                $unitCoverageHonorary = $unitCoverageExpenses;
 
-            } else {
-                //print_r($specialCondition['unit']);die();
-                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray(c,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
+                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray($valueBenefit->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
                 $unitCoverageExpenses = reset($wantedUnitCoverageExpenses);
                 $wantedUnitCoverageHonoraries = array_filter($coverage['data'], array(new FilterUnitCoverageArray($specialCondition['unit'],$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
                 $unitCoverageHonorary = reset($wantedUnitCoverageHonoraries);
+
+            } else {
+
+                $wantedUnitCoverageExpenses = array_filter($coverage['data'], array(new FilterUnitCoverageArray($valueBenefit->unit,$valueBenefit->internment_ambulatory_value), 'containsUnitAndType'));
+                $unitCoverageExpenses = reset($wantedUnitCoverageExpenses);
+                $unitCoverageHonorary = $unitCoverageExpenses;
 
             }
         } else {
@@ -400,9 +403,11 @@ class Valuator extends CI_Model{
 
         //1)Check for nocturne/holiday value to add additional value
         if($valueBenefit->holiday_value == 1){
+
             $additional = ($medicalInsurance->cobertura_fer_noct - 100)/100;
             $honorary_value = $honorary_value + ($honorary_value*$additional);
             $expenses_value = $expenses_value + ($expenses_value*$additional);
+
         }
 
 
@@ -450,7 +455,7 @@ class Valuator extends CI_Model{
 
         );
 
-        return ['status'=>'ok','data' => $data ];
+        return ['status'=>'ok','msg' => $data ];
 
     }
 
