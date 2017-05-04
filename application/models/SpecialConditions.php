@@ -311,8 +311,8 @@ class SpecialConditions extends CI_Model{
                     $this->db->where('id_special_conditions', $previousSpecialCondition->id_special_conditions);
                     $this->db->update('special_conditions', ['period_until' => null]);
 
-                    if (!$query)                 return "No se pudo abrir el arancel antecesor al que se desea eliminar";
-                    if ($query->num_rows() == 0) return "No se pudo abrir el arancel antecesor al que se desea eliminar";
+                    if (!$query)                 return "No se pudo abrir la condición especial antecesora al que se desea eliminar";
+                    if ($query->num_rows() == 0) return "No se pudo abrir la condición especial antecesora al que se desea eliminar";
 
                 }
 
