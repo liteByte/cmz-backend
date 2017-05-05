@@ -214,7 +214,7 @@ class Benefit extends CI_Model{
 
         } else {
 
-            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser eliminada, porque la misma ya ha sido valorizada o facturada'];
+            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser eliminada, porque la misma ya ha sido facturada'];
 
         }
 
