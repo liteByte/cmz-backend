@@ -290,8 +290,33 @@ class SpecialConditions extends CI_Model{
     public function delete_specialconditions($id){
 
         $query = $this->db->get_where('special_conditions', ["id_special_conditions" => $id]);
+        $specialConditionToDelete = $query->row();
 
         if ($query->num_rows()) {
+
+            //Validate if the special condition is the in-forge one. If so, open the last special condition if there is one
+            if($specialConditionToDelete->period_until == null){
+
+                //Get the old special condition (the one that was in-forge before the one being deleted)
+                $this->db->select('SC.*');
+                $this->db->from('special_conditions SC');
+                $this->db->where('SC.period_until <>', null);
+                $this->db->order_by("SC.period_until", "desc");
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $previousSpecialCondition = $query->row();
+
+                if (!empty($previousSpecialCondition)){
+
+                    $this->db->where('id_special_conditions', $previousSpecialCondition->id_special_conditions);
+                    $this->db->update('special_conditions', ['period_until' => null]);
+
+                    if (!$query)                 return "No se pudo abrir la condición especial antecesora al que se desea eliminar";
+                    if ($query->num_rows() == 0) return "No se pudo abrir la condición especial antecesora al que se desea eliminar";
+
+                }
+
+            }
 
             $this->db->where('id_special_conditions', $id);
             $result = $this->db->delete('special_conditions_details');
