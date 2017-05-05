@@ -6953,3 +6953,13 @@ INSERT INTO `units_coverage` (`id_units_coverage`, `id_coverage`, `unit`, `type_
 (2418, 999, 'A', 'Internación', 100, 100),
 (2419, 999, 'G', 'Ambulatorio', 100, 100),
 (2420, 999, 'G', 'Internación', 100, 100);
+
+
+INSERT INTO `manage_earnings` (`since`, `until`, `fixed`, `percentage`, `minimun`, `impuni`) VALUES
+(0,2000,0,10,7500,90),
+(2000,4000,200,14,0,0),
+(4000,8000,480,18,0,0),
+(8000,14000,1200,22,0,0),
+(14000,24000,2520,26,0,0),
+(24000,40000,5120,28,0,0),
+(40000,9999999,9600,30,0,0);

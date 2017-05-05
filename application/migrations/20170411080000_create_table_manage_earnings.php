@@ -47,33 +47,6 @@ class Migration_Create_table_manage_earnings extends CI_Migration{
         $this->dbforge->add_field('UNIQUE KEY coverage_key (since, until)');
         $this->dbforge->create_table('manage_earnings');
 
-        $data = array(
-            array(
-                'since'         => "10,4",
-                'until'         => "20,2",
-                'fixed'         => "10,2",
-                'percentage'    => "10",
-                'minimun'       => "5",
-                'impuni'        => "10",
-            ),
-            array(
-                'since'         => "15",
-                'until'         => "20",
-                'fixed'         => "25",
-                'percentage'    => "5",
-                'minimun'       => "2",
-                'impuni'        => "10",
-            ),
-            array(
-                'since'         => "25",
-                'until'         => "15,5",
-                'fixed'         => "10",
-                'percentage'    => "12",
-                'minimun'       => "23",
-                'impuni'        => "10",
-            ),
-        );
-        $this->db->insert_batch('manage_earnings', $data);
     }
 
 

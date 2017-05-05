@@ -95,7 +95,12 @@ class Migration_Create_table_role_permission extends CI_Migration{
             array(
                 'permission_id' => "14",
                 'role_id' => "1"
+            ),
+            array(
+                'permission_id' => "15",
+                'role_id' => "1"
             )
+
         );
 
         $this->db->insert_batch('role_permissions', $data);
