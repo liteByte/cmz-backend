@@ -40,7 +40,7 @@ class Benefit extends CI_Model{
             'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
             'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
             'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-            'state'                            => (empty($bill_number)                                  ? 1 : 2),
+            'state'                            => (empty($bill_number)                                  ? 1    : 3),
             'active'                           => 'active'
         );
 
@@ -101,7 +101,7 @@ class Benefit extends CI_Model{
                 'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
                 'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
                 'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-                'state'                            => (empty($bill_number)                                  ? 1    : 2),
+                'state'                            => (empty($bill_number)                                  ? 1    : 3),
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID
