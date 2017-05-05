@@ -7,6 +7,7 @@ NC='\033[0m'
 
 # Pull latest changes from the staging branch
 echo "\n${PURPLE}Pulling repo...${NC}\n"
+git checkout -f staging
 git pull origin staging
 
 # Compose
