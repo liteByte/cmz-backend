@@ -142,7 +142,7 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'null'          =>  FALSE,
                 'constraint'    =>  3,
                 'default'       =>  1,
-                'comment'       => '1 -> Cargado, 2-> Valorizado y 3 -> Facturado'
+                'comment'       => '1 -> Valorizada, 2-> Facturada, 3 -> Cobrada y 4-> Pagada'
             ),
             'active' => array(
                 'type'          =>  'VARCHAR',

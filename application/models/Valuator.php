@@ -451,7 +451,7 @@ class Valuator extends CI_Model{
             'value_unit'     => $valueBenefit->unit,
             'value_honorary' => $valueArray['honoraryValue'],
             'value_expenses' => $valueArray['expensesValue'],
-            'state'          => 2,
+            'state'          => 1,
 
         );
 

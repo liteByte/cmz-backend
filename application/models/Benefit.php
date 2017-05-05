@@ -40,7 +40,7 @@ class Benefit extends CI_Model{
             'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
             'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
             'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-            'state'                            => (empty($bill_number)                                  ? 1    : 3),
+            'state'                            => (empty($bill_number)                                  ? 5    : 2),
             'active'                           => 'active'
         );
 
@@ -74,7 +74,7 @@ class Benefit extends CI_Model{
     //Updates the benefit in 'benefits'
     public function update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $value_honorary, $value_expenses, $id, $userID){
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state <=" => 2]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state <" => 2]);
 
         if($query->num_rows()){
 
@@ -101,7 +101,7 @@ class Benefit extends CI_Model{
                 'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
                 'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
                 'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-                'state'                            => (empty($bill_number)                                  ? 1    : 3),
+                'state'                            => (empty($bill_number)                                  ? 5    : 2),
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID
@@ -141,7 +141,7 @@ class Benefit extends CI_Model{
 
         $result = array();
 
-        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, PF.registration_number, PF.name, CONCAT(N.code,"/",IFNULL(N.class,"-")) as benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price, B.state');
+        $this->db->select('B.benefit_id, B.medical_insurance_id, MI.denomination as medical_insurance_denom, B.plan_id, PL.description as plan_description, B.period, B.id_professional_data, PF.registration_number, PF.name, CONCAT(N.code,"/",IFNULL(N.class,"-")) as benefit, B.nomenclator_id, N.description as nomenclator_description, B.quantity, B.unit_price, B.state, B.value_honorary, B.value_expenses, B.value_unit');
         $this->db->from('benefits B');
         $this->db->join('medical_insurance MI',         'B.medical_insurance_id = MI.medical_insurance_id');
         $this->db->join('plans PL',                     'B.plan_id = PL.plan_id');
@@ -159,6 +159,23 @@ class Benefit extends CI_Model{
         if ($query->num_rows() == 0) return [];
 
         foreach ($query->result_array('Benefit') as $row){
+            switch ($row['state']) {
+                case 1:
+                    $row['state_name'] = 'Valorizada';
+                    break;
+                case 2:
+                    $row['state_name'] = 'Facturada';
+                    break;
+                case 3:
+                    $row['state_name'] = 'Cobrada';
+                    break;
+                case 4:
+                    $row['state_name'] = 'Pagada';
+                    break;
+                default:
+                    $row['state_name'] = 'Desconocida';
+            }
+
             $result[] = $row;
         }
 
@@ -184,7 +201,7 @@ class Benefit extends CI_Model{
 
         $now = date('Y-m-d H:i:s');
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "state <=" => 2]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "state <" => 2]);
 
         if($query->num_rows()){
 
