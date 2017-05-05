@@ -28,7 +28,7 @@ class Valuator extends CI_Model{
         $this->db->where('B.active','active');
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado'];
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado al tratar de valorizar la prestación'];
         if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la prestación'];
 
         $valueBenefit = $query->row();
@@ -51,7 +51,7 @@ class Valuator extends CI_Model{
         $this->db->group_end();
         $query = $this->db->get();
 
-        if (!$query) return ['status' => 'error', 'msg' => 'Error inesperado'];
+        if (!$query) return ['status' => 'error', 'msg' => 'Error inesperado al tratar de valorizar la prestación'];
 
         if($query->num_rows() !== 0) {
             $specialConditionID = $query->row()->id_special_conditions;
@@ -363,7 +363,7 @@ class Valuator extends CI_Model{
         $this->db->where('C.plan_id',$valueBenefit->plan_id);
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado'];
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado al tratar de valorizar la prestación'];
         if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró una cobertura para la prestación a valorizar'];
 
         $coverage = $this->Coverages->getCoveragesById($query->row()->id_coverage);
@@ -492,7 +492,7 @@ class Valuator extends CI_Model{
         $this->db->group_end();
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado'];
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado al tratar de valorizar la prestación'];
         if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró un arancel para la prestación a valorizar'];
 
         $feeID = $query->row()->fee_id;

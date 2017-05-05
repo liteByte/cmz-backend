@@ -7,6 +7,7 @@ class Benefit extends CI_Model{
     public function __construct(){
         parent::__construct();
         $this->load->model('nomenclator');
+        $this->load->model('Valuator');
     }
 
     //Creates the benefit in 'benefits'
@@ -44,16 +45,36 @@ class Benefit extends CI_Model{
         );
 
         $this->db->insert('benefits', $data);
-        if ($this->db->affected_rows() == 0) return false;
+        if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
 
-        return true;
+        //If the benefit had a bill number, it's already valuated
+        if(!empty($bill_number)) return ['status' => 'ok', 'msg' => 'Prestación creada satisfactoriamente'];
+
+        //Once inserted, valuate the benefit
+        $benefitID = $this->db->insert_id();
+
+        $result = $this->Valuator->valueBenefit($benefitID);
+        if($result['status'] == 'error'){
+
+            return ['status' => 'error', 'msg' => $result['msg']];
+
+        } else {
+
+            //Update the benefit with it's new values
+            $this->db->where('benefit_id', $benefitID);
+            $this->db->update('benefits', $result['msg']);
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
+
+            return ['status' => 'ok', 'msg' => 'Prestación creada y valorizada correctamente'];
+
+        }
 
     }
 
     //Updates the benefit in 'benefits'
     public function update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliate_id, $bill_number, $modify_coverage, $new_honorary, $new_expenses, $value_honorary, $value_expenses, $id, $userID){
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state" => 1]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $id, "state <=" => 2]);
 
         if($query->num_rows()){
 
@@ -89,13 +110,30 @@ class Benefit extends CI_Model{
             $this->db->where('benefit_id', $id);
             $this->db->update('benefits', $data);
 
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
+
+            //Once the benefit was updated, valuate it
+            $result = $this->Valuator->valueBenefit($id);
+            if($result['status'] == 'error'){
+
+                return ['status' => 'error', 'msg' => $result['msg']];
+
+            } else {
+
+                //Update the benefit with it's new values
+                $this->db->where('benefit_id', $id);
+                $this->db->update('benefits', $result['msg']);
+                if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
+
+                return ['status' => 'ok', 'msg' => 'Prestación creada y valorizada correctamente'];
+            }
+
         }else{
 
             return ['status' => 'error', 'msg' => 'Esta prestación no puede ser modificada, porque la misma ya ha sido facturada'];
 
         }
 
-        return ['status' => 'ok', 'msg' => 'Prestación actualizada satisfactoriamente'];
     }
 
     //Get all benefits
@@ -146,7 +184,7 @@ class Benefit extends CI_Model{
 
         $now = date('Y-m-d H:i:s');
 
-        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "state" => 1]);
+        $query = $this->db->get_where('benefits', ["benefit_id" => $benefitID, "state <=" => 2]);
 
         if($query->num_rows()){
 
@@ -159,7 +197,7 @@ class Benefit extends CI_Model{
 
         } else {
 
-            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser eliminada, porque la misma ya ha sido facturada'];
+            return ['status' => 'error', 'msg' => 'Esta prestación no puede ser eliminada, porque la misma ya ha sido valorizada o facturada'];
 
         }
 

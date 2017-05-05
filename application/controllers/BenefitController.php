@@ -98,6 +98,9 @@ class BenefitController extends AuthController{
                 default:
                     return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
             }
+        } else {
+            $value_honorary = null;
+            $value_expenses = null;
         }
 
 
@@ -135,12 +138,12 @@ class BenefitController extends AuthController{
             }
         }
 
-
         //If everything is valid, save the benefit
-        if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses)){
-            return $this->response(['msg'=>'Prestación creada satisfactoriamente'], REST_Controller::HTTP_OK);
-        } else {
-            return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        $result = $this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses);
+        if ($result['status'] == 'error'){
+            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }else{
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         }
 
     }
@@ -236,6 +239,9 @@ class BenefitController extends AuthController{
                 default:
                     return $this->response(['error'=>'El código de facturación ingresado no existe'], REST_Controller::HTTP_BAD_REQUEST);
             }
+        } else {
+            $value_honorary = null;
+            $value_expenses = null;
         }
 
         //Validate additional field (depending on nomenclator)
