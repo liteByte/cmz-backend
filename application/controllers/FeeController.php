@@ -63,6 +63,9 @@ class FeeController extends AuthController{
       if(!$this->validator->validateDate($upload_date))                         return $this->response(array('error'=>'Fecha de carga invalida'), REST_Controller::HTTP_BAD_REQUEST);
       if(!$this->fee->validateHonoraryQuantity($fee_type_id,$honoraryQuantity)) return $this->response(array('error'=>'No se han cargado todos los datos de honorarios para todas las unidades'), REST_Controller::HTTP_BAD_REQUEST);
 
+      //Validate the informed period is previous than the actual period (actual month)
+      if (date($period_since) > date("Y-m-d")) return $this->response(array('error'=>'El período no puede ser posterior al periodo actual (Año/Mes actual)'), REST_Controller::HTTP_BAD_REQUEST);
+
       //Validate fields and unique key
       $error = $this->fee->validateData($medical_insurance_id, $plan_id, $fee_type_id, $period_since);
 
@@ -161,6 +164,9 @@ class FeeController extends AuthController{
         if(empty($period_since))                          return $this->response(['error'=>'No se ha ingresado el nuevo período de vigencia'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($increase_value) || $increase_value < 0) return $this->response(['error'=>'No se ha ingresado el porcentaje de incremento o ha ingresado 0'], REST_Controller::HTTP_BAD_REQUEST);
 
+        //Validate the informed period is previous than the actual period (actual month)
+        if (!$this->validator->validateDate($period_since)) return $this->response(array('error'=>'La fecha del nuevo período es inválida'), REST_Controller::HTTP_BAD_REQUEST);
+        if (date($period_since) > date("Y-m-d"))     return $this->response(array('error'=>'El período no puede ser posterior al periodo actual (Año/Mes actual)'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Obtain the old fee data and add it's plan id to plans array. Now, plans array has every plan to modify
         $oldFee = $this->fee->getFeeById($selected_fee_id);
@@ -170,9 +176,7 @@ class FeeController extends AuthController{
         //Validate this fee is the in-forge fee (you can only increase in-forge fees)
         if($oldFee['period_until'] != null) return $this->response(['error'=>'No se puede incrementar el porcentaje de este arancel ya que no es un arancel vigente'], REST_Controller::HTTP_BAD_REQUEST);
 
-
         //Validate that new period_since is valid and bigger than all plan's period_since
-        if (!$this->validator->validateDate($period_since))                                               return $this->response(array('error'=>'La fecha del nuevo período es inválida'), REST_Controller::HTTP_BAD_REQUEST);
         if (!$this->fee->validateNewPeriodForPlans($oldFee["medical_insurance_id"],$plans,$period_since)) return $this->response(array('error'=>'La fecha del nuevo período es anterior al período de alguno de los planes seleccionados'), REST_Controller::HTTP_BAD_REQUEST);
 
 
