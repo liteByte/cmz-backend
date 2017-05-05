@@ -157,7 +157,7 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'null'          =>  TRUE,
                 'type'          =>  'INT',
                 'constraint'    =>  5,
-                'unsigned'      =>  TRUE,
+                'unsigned'      =>  TRUE
             )
         ));
 

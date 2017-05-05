@@ -16,6 +16,7 @@ class BenefitController extends AuthController{
         parent::__construct();
         $this->load->model('benefit');
         $this->load->model('affiliate');
+        $this->load->model('Valuator');
         $this->load->model('nomenclator');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
@@ -133,6 +134,7 @@ class BenefitController extends AuthController{
                 }
             }
         }
+
 
         //If everything is valid, save the benefit
         if($this->benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, $remesa, $additional, $nomenclator_id, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses)){
@@ -263,6 +265,7 @@ class BenefitController extends AuthController{
             }
         }
 
+
         //If everything is valid, update the benefit
         $result = $this->benefit->update($remesa, $additional, $quantity, $billing_code_id, $multiple_operation_value, $holiday_option_id, $maternal_plan_option_id, $internment_ambulatory_option_id, $unit_price, $benefit_date, $affiliateOperation["affiliate_id"], $bill_number, $modify_coverage, $new_honorary, $new_expenses,$value_honorary, $value_expenses, $id, $this->token_valid->user_id);
         if ($result['status'] == 'error'){
@@ -287,6 +290,12 @@ class BenefitController extends AuthController{
             return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         }
 
+    }
+
+    public function validar_get(){
+        $result = $this->Valuator->valueBenefit('3');
+        print_r($result);
+        die();
     }
 
 }
