@@ -38,12 +38,16 @@ class SpecialConditionsController extends AuthController{
         $type_of_values = $post->type_of_values ?? "";
         $type_of_values = (boolval($type_of_values) ? 1 : 0);
 
-        if(!isset($post->group_of_values)) return $this->response(array('error'=>'Se debe indicar el grupo de valores que se aplicara'), RC::HTTP_BAD_REQUEST);
+        if(!isset($post->group_of_values)) return $this->response(array('error'=>'Se debe indicar el grupo de valores que se aplicará'), RC::HTTP_BAD_REQUEST);
         $group_of_values= $post->group_of_values                       ?? "";
         $group_of_values = (boolval($group_of_values) ? 1 : 0);
 
         //Validate period
-        if(!$this->validator->validateDate($period_since)) return $this->response(array('error'=>'Fecha del periodo invalida'), RC::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateDate($period_since)) return $this->response(array('error'=>'Fecha del período inválida'), RC::HTTP_BAD_REQUEST);
+
+        //Validate the informed period is previous than the actual period (actual month)
+        if (date($period_since) > date("Y-m-d")) return $this->response(array('error'=>'El período no puede ser posterior al periodo actual (Año/Mes actual)'), REST_Controller::HTTP_BAD_REQUEST);
+
 
         if($group_of_values){
             // Specials Values
