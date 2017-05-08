@@ -19,6 +19,12 @@ class Migration_Create_table_bill_details_grouped extends  CI_Migration{
                 'unsigned'       => TRUE,
                 'null'           => FALSE,
             ],
+            'plan_id'   => [
+                'type'           => 'INT',
+                'constraint'     =>  5,
+                'unsigned'       => TRUE,
+                'null'           => FALSE,
+            ],
             'billing_period'   => [
                 'type'           => 'VARCHAR',
                 'constraint'     =>  10,
@@ -34,19 +40,15 @@ class Migration_Create_table_bill_details_grouped extends  CI_Migration{
                 'constraint'     =>  10,2,
                 'null'           => FALSE,
             ],
-            'total_honorary_plan'   => [
-                'type'           => 'DECIMAL',
-                'constraint'     =>  10,2,
+            'total_benefit'   => [
+                'type'           => 'INT',
+                'constraint'     =>  10,
                 'null'           => FALSE,
-            ],
-            'total_expenses_plan'   => [
-                'type'           => 'DECIMAL',
-                'constraint'     =>  10,2,
-                'null'           => FALSE,
-            ],
+            ]
         ]);
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)    REFERENCES bill(id_bill)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)    REFERENCES plans(plan_id)');
         $this->dbforge->add_key('id_group_details', TRUE);
         $this->dbforge->create_table('bill_details_grouped');
     }

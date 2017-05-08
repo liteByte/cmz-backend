@@ -19,6 +19,11 @@ class Migration_Create_table_bill extends CI_Migration{
                 'null'           => FALSE,
                 'unique'         =>  TRUE,
             ],
+            'type_bill'   => [
+                'type'           => 'BOOLEAN',
+                'null'          =>  FALSE,
+                'comment'       => '1 -> Obra | 0 -> Plan'
+            ],
             'branch_officce'   => [
                 'type'           => 'INT',
                 'constraint'     => '4',
@@ -63,7 +68,8 @@ class Migration_Create_table_bill extends CI_Migration{
             ],
             'percentage_paid'   => [
                 'type'           => 'INT',
-                'constraint'     =>  3
+                'constraint'     =>  3,
+                'null'          =>  TRUE,
             ],
             'annulled'   => [
                 'type'           => 'BOOLEAN',

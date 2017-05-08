@@ -12,7 +12,6 @@ class BillController extends AuthController{
     private $token_valid;
     protected $access = "Facturacion";
 
-
     function __construct(){
         parent::__construct();
         $this->load->library('Response_msg');
@@ -31,7 +30,6 @@ class BillController extends AuthController{
         }
 
         $result = $this->bill->bill_init($data);
-
         print_r($result);
 
     }
