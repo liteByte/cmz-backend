@@ -43,6 +43,7 @@ class Bill extends CI_Model{
 
             if($id_Bill){
                 $saveDetails = $this->saveDetails($id_Bill,  $totalOfPlansbyPeriod );
+                // TODO send response to the front
             }
 
         }else{
@@ -57,9 +58,6 @@ class Bill extends CI_Model{
         }
 
     }
-
-
-
 
     /**
      * @param $id_medical_insurance
@@ -133,7 +131,7 @@ class Bill extends CI_Model{
             $errors = $this->db->error();
 
             if($result || $errors['code'] == 0){
-              $id_bill =  $this->db->insert_id();
+                $id_bill =  $this->db->insert_id();
             }
 
             foreach ($p as $per){
@@ -150,41 +148,7 @@ class Bill extends CI_Model{
             }
             $numberOfBill++;
         }
-
-//        foreach ($totalOfPlansbyPeriod as $t){
-//            print_r($t);
-//            $total =  $t['total_honorary'] + $t['total_expenses'];
-//            $number_bill =  $this->number_bill++;
-//
-//            $dataOfBill = [
-//                'number_bill'       => $this->number_bill,
-//                'type_bill'         => $this->type_of_print,
-//                'branch_officce'    => $branch_officce,
-//                'type_document'     => 'abc',
-//                'type_form'         => 'c',
-//                'date_billing'      => $this->header['date_billing'],
-//                'date_created'      => $now,
-//                'date_due'          => $this->header['due_date'],
-//                'id_medical_insurance'  => $id_medical_insurance,
-//                'total'             => $total,
-//                'state_billing'     => 'c',
-//                'percentage_paid'   => 0,
-//                'annulled'          => 0
-//            ];
-//
-//            $result = $this->db->insert($this->table, $dataOfBill);
-//            $id_bill =  $this->db->insert_id();
-//
-//            $data = [
-//                'id_bill' => $id_bill,
-//                'plan_id' => $t['plan_id'],
-//                'billing_period' => $t['period'],
-//                'total_honorary_period' =>$t['total_honorary'],
-//                'total_expenses_period	' => $t['total_expenses'],
-//                'total_benefit	' => $t['total_benefit'],
-//            ];
-//            $result = $this->db->insert($this->table_d, $data);
-        }
+    }
 
 
     /**
@@ -307,7 +271,11 @@ class Bill extends CI_Model{
         return $result;
     }
 
-
+    /**
+     * get total for plans when type of print eguals to 1 "medical Insu...."
+     * @param $id_medical
+     * @return mixed
+     */
     private function getTotalGeneral($id_medical){
 
         $this->db->select('SUM(value_honorary) +  SUM(value_expenses) as total_benefit', FALSE);
