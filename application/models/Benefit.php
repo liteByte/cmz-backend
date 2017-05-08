@@ -44,11 +44,18 @@ class Benefit extends CI_Model{
             'active'                           => 'active'
         );
 
+        //Start transaction
+        $this->db->trans_start();
+
         $this->db->insert('benefits', $data);
         if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
 
         //If the benefit had a bill number, it's already valuated
-        if(!empty($bill_number)) return ['status' => 'ok', 'msg' => 'Prestación creada satisfactoriamente'];
+        if(!empty($bill_number)){
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación. Error en el ingreso de la prestación valorizada'];
+            return ['status' => 'ok', 'msg' => 'Prestación creada satisfactoriamente'];
+        }
 
         //Once inserted, valuate the benefit
         $benefitID = $this->db->insert_id();
@@ -64,6 +71,9 @@ class Benefit extends CI_Model{
             $this->db->where('benefit_id', $benefitID);
             $this->db->update('benefits', $result['msg']);
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
+
+            $this->db->trans_complete();
+            if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación. Error en el ingreso y/o valorización de la prestación'];
 
             return ['status' => 'ok', 'msg' => 'Prestación creada y valorizada correctamente'];
 
@@ -107,12 +117,22 @@ class Benefit extends CI_Model{
                 'modify_user_id'                   => $userID
             );
 
+            //Start transaction
+            $this->db->trans_start();
+
             $this->db->where('benefit_id', $id);
             $this->db->update('benefits', $data);
 
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
 
-            //Once the benefit was updated, valuate it
+            //If the benefit had a bill number, it's already valuated
+            if(!empty($bill_number)){
+                $this->db->trans_complete();
+                if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación. Error en el ingreso de la prestación valorizada'];
+                return ['status' => 'ok', 'msg' => 'Prestación creada satisfactoriamente'];
+            }
+
+            //Once the benefit was updated, re-valuate it
             $result = $this->Valuator->valueBenefit($id);
             if($result['status'] == 'error'){
 
@@ -124,6 +144,10 @@ class Benefit extends CI_Model{
                 $this->db->where('benefit_id', $id);
                 $this->db->update('benefits', $result['msg']);
                 if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación'];
+
+                //Finish the transaction and check it was OK
+                $this->db->trans_complete();
+                if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'No se pudo grabar la prestación. Error en el ingreso y/o valorización de la prestación'];
 
                 return ['status' => 'ok', 'msg' => 'Prestación creada y valorizada correctamente'];
             }
