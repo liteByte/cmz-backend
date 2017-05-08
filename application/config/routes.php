@@ -197,3 +197,9 @@ $route['professionals/like']          = 'ProfessionalsController/professionalsDa
 $route['benefits/test']             = 'BenefitController/validar';
 
 
+////////////////////////Billing Process////////////////////////
+$route['bill']      = 'BillController/bill';
+
+
+
+
