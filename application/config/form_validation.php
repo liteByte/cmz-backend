@@ -33,7 +33,7 @@ $config = [
             'errors' => ['required' => " Debe ingresar el %s."]
         ],
         [
-            'field' => 'branch_officce',
+            'field' => 'branch_office',
             'label' => 'Sucrusal',
             'rules' => 'required',
             'errors' => ['required' => " Debe ingresar la %s."]

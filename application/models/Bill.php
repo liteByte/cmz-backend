@@ -16,43 +16,44 @@ class Bill extends CI_Model{
     }
 
     public function bill_init($data){
+
         $id_medical_insurance = $data['id_medical_insurance'];
-        $branch_officce = $data['branch_officce'];
-        $date_billing  = $data['date_billing'];
+        $branch_office        = $data['branch_office'];
+        $date_billing         = $data['date_billing'];
+        $form_type            = $data['form_type'];
 
         /**
          * Generate Number of Bill.
          */
-        $this->number_bill = $this->generate_number_bill($id_medical_insurance, $branch_officce);
+        $this->number_bill = $this->generate_number_bill($branch_office);
 
         /**
          *  Get data for the header of bill and  Set type of PRINT..
          */
         $this->header = $this->getHeader($id_medical_insurance, $date_billing);
 
-        /**
-         * Get data group by period and plans  TODO: is necesary???
-         */
-        /*$this->benefits = $this->getBenefits($id_medical_insurance);*/
 
-//        $this->type_of_print = 0;
-        if($this->type_of_print == 1 ){
-            $totalOfPlansbyPeriod = $this->getTotalForMedical($id_medical_insurance);
-            $totalGeneral = $this->getTotalGeneral($id_medical_insurance);
-            $id_Bill = $this->saveDataForBill($id_medical_insurance, $branch_officce, $totalGeneral);
+        $this->type_of_print = 0;
+        if($this->type_of_print == 1 ){  //1- Un numero de factura por obra social
+            
+            $totalOfPlansByPeriod = $this->getTotalForMedical($id_medical_insurance);
+            $totalGeneral         = $this->getTotalGeneral($id_medical_insurance);
+            $id_Bill              = $this->saveDataForBill($id_medical_insurance, $branch_office, $totalGeneral);
 
             if($id_Bill){
-                $saveDetails = $this->saveDetails($id_Bill,  $totalOfPlansbyPeriod );
+                
+                $saveDetails = $this->saveDetails($id_Bill, $totalOfPlansByPeriod);
                 // TODO send response to the front
+                
             }
 
-        }else{
+        }else{ //0- Un numero de factura por plan
 
             /// TODO Create Bill for Plans
             /// TODO Each plan has its own bill number
             /// TODO Calculate total for each plan
-            $totalOfPlansbyPeriod = $this->getTotalForPlans($id_medical_insurance);
-            $data = $this->saveDataForPlans($id_medical_insurance, $branch_officce, $totalOfPlansbyPeriod);
+            $totalOfPlansByPeriod = $this->getTotalForPlans($id_medical_insurance);
+            $data                 = $this->saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod);
 
 
         }
@@ -61,26 +62,26 @@ class Bill extends CI_Model{
 
     /**
      * @param $id_medical_insurance
-     * @param $branch_officce
+     * @param $branch_office
      * @param $totalGeneral
      */
-    private function saveDataForBill($id_medical_insurance, $branch_officce, $totalGeneral){
+    private function saveDataForBill($id_medical_insurance, $branch_office, $totalGeneral){
         $now = date('Y-m-d H:i:s');
 
         $dataOfBill = [
-            'number_bill'       => $this->number_bill,
-            'type_bill'         => $this->type_of_print,
-            'branch_officce'    => $branch_officce,
-            'type_document'     => 'abc',
-            'type_form'         => 'c',
-            'date_billing'      => $this->header['date_billing'],
-            'date_created'      => $now,
-            'date_due'          => $this->header['due_date'],
+            'number_bill'           => $this->number_bill,
+            'type_bill'             => $this->type_of_print,
+            'branch_office'         => $branch_office,
+            'type_document'         => 'abc',
+            'type_form'             => 'c',
+            'date_billing'          => $this->header['date_billing'],
+            'date_created'          => $now,
+            'date_due'              => $this->header['due_date'],
             'id_medical_insurance'  => $id_medical_insurance,
-            'total'             => $totalGeneral,
-            'state_billing'     => 'c',
-            'percentage_paid'   => 0,
-            'annulled'          => 0
+            'total'                 => $totalGeneral,
+            'state_billing'         => 'c',
+            'percentage_paid'       => 0,
+            'annulled'              => 0
         ];
 
         $result = $this->db->insert($this->table, $dataOfBill);
@@ -95,36 +96,36 @@ class Bill extends CI_Model{
 
         foreach ($total_result as $t){
             $data = [
-                'id_bill' => $id_Bill,
-                'plan_id' => $t['plan_id'],
-                'billing_period' => $t['period'],
-                'total_honorary_period' =>$t['total_honorary'],
-                'total_expenses_period	' => $t['total_expenses'],
-                'total_benefit	' => $t['total_benefit'],
+                'id_bill'               => $id_Bill,
+                'plan_id'               => $t['plan_id'],
+                'billing_period'        => $t['period'],
+                'total_honorary_period' => $t['total_honorary'],
+                'total_expenses_period' => $t['total_expenses'],
+                'total_benefit	'       => $t['total_benefit'],
             ];
             $result = $this->db->insert($this->table_d, $data);
         }
     }
 
-    private function saveDataForPlans($id_medical_insurance, $branch_officce, $totalOfPlansbyPeriod ){
+    private function saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod ){
 
         $now = date('Y-m-d H:i:s');
         $numberOfBill = $this->number_bill;
-        foreach ($totalOfPlansbyPeriod as $plans => $p){
+        foreach ($totalOfPlansByPeriod as $plans => $p){
             $dataOfBill = [
-                'number_bill'       => $numberOfBill,
-                'type_bill'         => $this->type_of_print,
-                'branch_officce'    => $branch_officce,
-                'type_document'     => 'abc',
-                'type_form'         => 'c',
-                'date_billing'      => $this->header['date_billing'],
-                'date_created'      => $now,
-                'date_due'          => $this->header['due_date'],
+                'number_bill'           => $numberOfBill,
+                'type_bill'             => $this->type_of_print,
+                'branch_office'         => $branch_office,
+                'type_document'         => 'abc',
+                'type_form'             => 'c',
+                'date_billing'          => $this->header['date_billing'],
+                'date_created'          => $now,
+                'date_due'              => $this->header['due_date'],
                 'id_medical_insurance'  => $id_medical_insurance,
-                'total'             => '222222', // TODO get totol for any  plans
-                'state_billing'     => 'c',
-                'percentage_paid'   => 0,
-                'annulled'          => 0
+                'total'                 => '222222', // TODO get totol for any  plans
+                'state_billing'         => 'c',
+                'percentage_paid'       => 0,
+                'annulled'              => 0
             ];
 
             $result = $this->db->insert($this->table, $dataOfBill);
@@ -137,12 +138,12 @@ class Bill extends CI_Model{
             foreach ($p as $per){
                 //TODO save Details
                 $data = [
-                    'id_bill' => $id_bill,
-                    'plan_id' => $per['plan_id'],
-                    'billing_period' => $per['period'],
-                    'total_honorary_period' =>$per['total_honorary'],
-                    'total_expenses_period	' => $per['total_expenses'],
-                    'total_benefit	' => $per['total_benefit'],
+                    'id_bill'               => $id_bill,
+                    'plan_id'               => $per['plan_id'],
+                    'billing_period'        => $per['period'],
+                    'total_honorary_period' => $per['total_honorary'],
+                    'total_expenses_period' => $per['total_expenses'],
+                    'total_benefit	'       => $per['total_benefit'],
                 ];
                 $result = $this->db->insert($this->table_d, $data);
             }
@@ -157,13 +158,15 @@ class Bill extends CI_Model{
      * @return array|bool
      */
     private function getHeader($id_medical, $date_billing){
-        $now =  $date_billing;
+        
+        $now = $date_billing;
         $this->db->select('settlement_name, address, location, postal_code, iva_id , cuit, payment_deadline, print ');
         $this->db->from('medical_insurance as mi');
         $this->db->where('mi.medical_insurance_id', $id_medical);
         $query =  $this->db->get();
 
         if(!$this->db->affected_rows()) return false;
+        
         $header = (array)$query->row();
         $days = $header['payment_deadline'];
         $due_date = date('Y-m-d', strtotime($now. ' +  '. $days .' days'));
@@ -231,6 +234,7 @@ class Bill extends CI_Model{
 
     /**
      * Get Total for "Plans" group by "ID_plan - Period"
+     *  Dependiendo lo que diga la obra social, voy a mostrar la factura solo por periodos o por Plan-Periodo
      * @param $id_medical
      * @return mixed
      */
@@ -268,6 +272,8 @@ class Bill extends CI_Model{
         $query = $this->db->get();
         $result = $query->result_array();
         $result = $this->array_group_by($result, 'plan_id');
+
+//Obtener el total por plan cuando se hace una factura por plan
         return $result;
     }
 
@@ -291,26 +297,28 @@ class Bill extends CI_Model{
 
     /**
      * @param $id_medical
-     * @param $branch_officce
+     * @param $branch_office
      * @return number of bill
      */
-    private  function generate_number_bill ($id_medical, $branch_officce ){
+    private  function generate_number_bill ($branch_office ){
+
         $this->db->select_max('number_bill');
-        $this->db->where('branch_officce', $branch_officce);
+        $this->db->where('branch_office', $branch_office);
         $this->db->from('bill');
         $query = $this->db->get();
+
         foreach ($query->row() as $r){
             $result = $r;
         }
 
-        // If is the first bill
+        // Check if it's the first bill
         if($result == 0){
             $result++;
         }else{
             $result++;
         }
         return $result;
-        // TODO: Invoice length must be equals  8
+        // TODO: Invoice length must be equals 8
     }
 
 

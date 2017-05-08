@@ -24,7 +24,7 @@ class Migration_Create_table_bill extends CI_Migration{
                 'null'          =>  FALSE,
                 'comment'       => '1 -> Obra | 0 -> Plan'
             ],
-            'branch_officce'   => [
+            'branch_office'   => [
                 'type'           => 'INT',
                 'constraint'     => '4',
                 'null'           => FALSE,
