@@ -37,9 +37,9 @@ class Bill extends CI_Model{
 
 
         /**
-         *  Obtain the medical insurance's print type
+         *  Obtain the medical insurance's print type and validate judicial
          */
-        $this->db->select('mi.print');
+        $this->db->select('mi.print, mi.judicial');
         $this->db->from('medical_insurance as mi');
         $this->db->where('mi.medical_insurance_id', $id_medical_insurance);
         $query =  $this->db->get();
@@ -47,13 +47,15 @@ class Bill extends CI_Model{
         if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
         if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
 
+        if($query->row()->judicial == 1) return ['status' => 'error', 'msg' => 'No se pudo facturar: la obra social está en Proceso Judicial'];
+
+        //If everything is OK, get the print type
         $this->type_of_print = $query->row()->print;
 
 
         /**
          *  Generate the bill in base of the print type (1->una factura por obra social completa y 2->una factura por plan)
          */
-        $this->type_of_print =0;
         if($this->type_of_print == 1 ){  //1- Una factura por obra social
 
             //Start transaction
@@ -121,7 +123,7 @@ class Bill extends CI_Model{
             'date_due'              => $this->header['due_date'],
             'id_medical_insurance'  => $id_medical_insurance,
             'total'                 => $totalGeneral,
-            'state_billing'         => 'c',
+            'state_billing'         => 1,
             'percentage_paid'       => 0,
             'annulled'              => 0
         ];
@@ -205,7 +207,7 @@ class Bill extends CI_Model{
                 'date_due'              => $this->header['due_date'],
                 'id_medical_insurance'  => $id_medical_insurance,
                 'total'                 => $planTotal,
-                'state_billing'         => 'c',
+                'state_billing'         => 1,
                 'percentage_paid'       => 0,
                 'annulled'              => 0
             ];

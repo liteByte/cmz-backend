@@ -62,9 +62,10 @@ class Migration_Create_table_bill extends CI_Migration{
                 'null'           =>  FALSE
             ],
             'state_billing'   => [
-                'type'           => 'VARCHAR',
-                'constraint'     =>  20,
-                'null'           =>  FALSE
+                'type'           => 'INT',
+                'constraint'     =>  1,
+                'null'           =>  FALSE,
+                'comment'        => '1 -> Cargada, 2-> Cobrada y 3 -> Facturada'
             ],
             'percentage_paid'   => [
                 'type'           => 'INT',
