@@ -25,7 +25,7 @@ class Bill extends CI_Model{
         /**
          * Generate bill number based on branch office, document form (A,B,C) and document type (F -> factura)
          */
-        $this->number_bill = $this->generate_number_bill($branch_office);
+        $this->number_bill = $this->generate_number_bill($branch_office,$form_type,'F');
         if(empty($this->number_bill)) return ['status' => 'error', 'msg' => 'No se pudo generar el número de factura'];
 
 
@@ -402,10 +402,12 @@ class Bill extends CI_Model{
     }
 
     //Generate the correct bill number based on Branch Office + Document Type + Document Form
-    private  function generate_number_bill ($branch_office ){
+    private  function generate_number_bill ($branch_office,$form_type,$document_type ){
 
         $this->db->select_max('number_bill');
         $this->db->where('branch_office', $branch_office);
+        $this->db->where('type_document', $document_type);
+        $this->db->where('type_form', $form_type);
         $this->db->from('bill');
         $query = $this->db->get();
 
@@ -413,14 +415,11 @@ class Bill extends CI_Model{
             $result = $r;
         }
 
-        // Check if it's the first bill
-        if($result == 0){
-            $result++;
-        }else{
-            $result++;
-        }
+        // Add 1 to the number obtained so we get the next bill number
+        $result ++;
+
         return $result;
-        // TODO: Invoice length must be equals 8
+
     }
 
 
