@@ -23,45 +23,90 @@ class Bill extends CI_Model{
         $form_type            = $data['form_type'];
 
         /**
-         * Generate Number of Bill.
+         * Generate bill number based on branch office, document form (A,B,C) and document type (F -> factura)
          */
         $this->number_bill = $this->generate_number_bill($branch_office);
+        if(empty($this->number_bill)) return ['status' => 'error', 'msg' => 'No se pudo generar el número de factura'];
+
 
         /**
-         *  Get data for the header of bill and  Set type of PRINT..
+         *  Obtain the bill's header data
          */
         $this->header = $this->getHeader($id_medical_insurance, $date_billing);
         if(empty($this->header)) return ['status' => 'error', 'msg' => 'No se pudo generar la cabecera de la factura'];
 
 
-        $this->type_of_print = 0;
-        if($this->type_of_print == 1 ){  //1- Un numero de factura por obra social
-            
-            $totalOfPlansByPeriod = $this->getTotalForMedical($id_medical_insurance);
-            $totalGeneral         = $this->getTotalGeneral($id_medical_insurance);
-            $id_Bill              = $this->saveDataForBill($id_medical_insurance, $branch_office, $totalGeneral,$form_type);
+        /**
+         *  Obtain the medical insurance's print type
+         */
+        $this->db->select('mi.print');
+        $this->db->from('medical_insurance as mi');
+        $this->db->where('mi.medical_insurance_id', $id_medical_insurance);
+        $query =  $this->db->get();
 
-            if($id_Bill){
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
+
+        $this->type_of_print = $query->row()->print;
+
+
+        /**
+         *  Generate the bill in base of the print type (1->una factura por obra social completa y 2->una factura por plan)
+         */
+        $this->type_of_print =0;
+        if($this->type_of_print == 1 ){  //1- Una factura por obra social
+
+            //Start transaction
+            $this->db->trans_start();
+
+                //Generate an array of every valued benefit that is going to be billed
+                $totalOfPlansByPeriod = $this->getTotalForMedical($id_medical_insurance);
+                if(empty($totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones valorizadas para la obra social ingresada'];
+
+                //Generate the bill's total number
+                $totalGeneral = $this->getTotalGeneral($id_medical_insurance);
+
+                //Save the bill
+                $id_Bill = $this->saveDataForBill($id_medical_insurance, $branch_office, $totalGeneral,$form_type);
+                if(empty($id_Bill)) return ['status' => 'error', 'msg' => 'No se pudo generar la factura'];
+
+                //Save the bill's detail and it's header
+                if(!$this->saveDetails($id_Bill, $totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se pudo generar el detalle de la factura'];
+
+                //Update benefits of the medical insurance
+                if(!$this->updateBenefitsWithOneBillNumber($this->number_bill,$id_medical_insurance)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
+
+            //Close transaction
+            $this->db->trans_complete();
+
+            return ['status' => 'ok', 'msg' => 'Facturación de la obra social completada satisfactoriamente'];
+
+            // TODO send response to the front
                 
-                $saveDetails = $this->saveDetails($id_Bill, $totalOfPlansByPeriod);
-                // TODO send response to the front
-                
-            }
 
-        }else{ //0- Un numero de factura por plan
+        }else{ //0- Un numero de factura por plan de la obra social
 
-            $totalOfPlansByPeriod = $this->getTotalForPlans($id_medical_insurance);
-            $data                 = $this->saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod,$form_type);
+            //Start transaction
+            $this->db->trans_start();
+
+                //Generate an array of every valued benefit that is going to be billed, group by plan
+                $totalOfPlansByPeriod = $this->getTotalForPlans($id_medical_insurance);
+                if(empty($totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones valorizadas para la obra social ingresada'];
+
+                //Save the bill, bill's detail and bill's header for each plan. Update the benefits
+                $result = $this->saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod,$form_type);
+                if($result != "ok") return ['status' => 'error', 'msg' => $result];
+
+            //Close transaction
+            $this->db->trans_complete();
+
+            return ['status' => 'ok', 'msg' => 'Facturación de la obra social completada satisfactoriamente'];
             // TODO send response to the front
         }
 
     }
 
-    /**
-     * @param $id_medical_insurance
-     * @param $branch_office
-     * @param $totalGeneral
-     */
+    //Save only one bill for a medical insurance
     private function saveDataForBill($id_medical_insurance, $branch_office, $totalGeneral,$form_type){
         $now = date('Y-m-d H:i:s');
 
@@ -84,7 +129,6 @@ class Bill extends CI_Model{
         $result = $this->db->insert($this->table, $dataOfBill);
         $errors = $this->db->error();
 
-
         if($result || $errors['code'] == 0){
             return $id_bill =  $this->db->insert_id();
         }else{
@@ -93,9 +137,11 @@ class Bill extends CI_Model{
 
     }
 
+    //Save the detail of a bill made by medical insurance and its header
     private function saveDetails($id_Bill, $total_result){
 
         foreach ($total_result as $t){
+
             $data = [
                 'id_bill'               => $id_Bill,
                 'plan_id'               => $t['plan_id'],
@@ -104,27 +150,42 @@ class Bill extends CI_Model{
                 'total_expenses_period' => $t['total_expenses'],
                 'total_benefit	'       => $t['total_benefit'],
             ];
+
             $this->db->insert($this->table_d, $data);
+            if ($this->db->affected_rows() == 0) return false;
+
         }
 
         //Save the bill header
-        $this->header['id_bill'] = $id_Bill;
+        if(!$this->saveBillHeader($id_Bill)) return false;
+
+        return true;
+
+    }
+
+
+    //Save a bill's header
+    public function saveBillHeader($bill_id){
+
+        $this->header['id_bill'] = $bill_id;
 
         $this->db->insert('bill_header', $this->header);
         $errors = $this->db->error();
 
         if($errors['code'] != 0){
             return false;
+        }else{
+            return true;
         }
-
-        return true;
 
     }
 
+    //Save a bill for every plan of a medical insurance. Save the detail of every bill and its header.
     private function saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod,$form_type ){
 
         $now = date('Y-m-d H:i:s');
         $numberOfBill = $this->number_bill;
+
         foreach ($totalOfPlansByPeriod as $plans => $p){
 
             //For each plan, obtain the sum of every honorary + expense for all periods
@@ -151,20 +212,14 @@ class Bill extends CI_Model{
 
             $result = $this->db->insert($this->table, $dataOfBill);
             $errors = $this->db->error();
-            
-            if($result || $errors['code'] == 0){
-                $id_bill =  $this->db->insert_id();
-            }
+
+            if($errors['code'] != 0) return "No se pudo generar la factura";
+
+            //Obtengo el ID de la factura
+            $id_bill =  $this->db->insert_id();
 
             //Save the bill header
-            $this->header['id_bill'] = $id_bill;
-
-            $this->db->insert('bill_header', $this->header);
-            $errors = $this->db->error();
-
-            if($errors['code'] != 0){
-                return false;
-            }
+            if(!$this->saveBillHeader($id_bill)) return "No se pudo generar el encabezado de la factura";
 
             //For each benefit of the plan, save a detail
             foreach ($p as $per){
@@ -178,21 +233,22 @@ class Bill extends CI_Model{
                     'total_expenses_period' => $per['total_expenses'],
                     'total_benefit	'       => $per['total_benefit'],
                 ];
-                $result = $this->db->insert($this->table_d, $data);
+
+                $this->db->insert($this->table_d, $data);
+                if ($this->db->affected_rows() == 0) return "No se pudo generar el detalle de la factura";
 
             }
+
+            //Update all benefits of the plan
+            if (!$this->updateBenefitsWithManyBillNumber($numberOfBill,$id_medical_insurance,$p[0]['plan_id'])) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
+
             $numberOfBill++;
         }
 
-        return true;
+        return "ok";
     }
 
-
-    /**
-     * Search data for bill header
-     * @param $id_medical
-     * @return array|bool
-     */
+    //Get the bill header's data
     private function getHeader($id_medical, $date_billing){
         
         $now = $date_billing;
@@ -202,7 +258,7 @@ class Bill extends CI_Model{
         $this->db->where('mi.medical_insurance_id', $id_medical);
         $query =  $this->db->get();
 
-        if(!$this->db->affected_rows()) return [];
+        if($query->num_rows() <= 0) return [];
         
         $header = (array)$query->row();
         $days = $header['payment_deadline'];
@@ -345,11 +401,7 @@ class Bill extends CI_Model{
         return $result;
     }
 
-    /**
-     * @param $id_medical
-     * @param $branch_office
-     * @return number of bill
-     */
+    //Generate the correct bill number based on Branch Office + Document Type + Document Form
     private  function generate_number_bill ($branch_office ){
 
         $this->db->select_max('number_bill');
@@ -369,6 +421,43 @@ class Bill extends CI_Model{
         }
         return $result;
         // TODO: Invoice length must be equals 8
+    }
+
+
+    //Update all benefits of a certain medical insurance with the same bill number
+    private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id){
+
+        $data = array(
+            'state'       => 2,
+            'bill_number' => $bill_number
+        );
+
+        $this->db->where('medical_insurance_id', $medical_insurance_id);
+        $this->db->where('state', 1);
+        $this->db->update('benefits', $data);
+
+        if ($this->db->affected_rows() == 0) return false;
+
+        return true;
+    }
+
+    //Update a benefit of a certain medical insurance and plan
+    private function updateBenefitsWithManyBillNumber($bill_number,$medical_insurance_id,$plan_id){
+
+        $data = array(
+            'state'       => 2,
+            'bill_number' => $bill_number
+        );
+
+        $this->db->where('medical_insurance_id', $medical_insurance_id);
+        $this->db->where('plan_id', $plan_id);
+        $this->db->where('state', 1);
+        $query = $this->db->update('benefits', $data);
+
+        if (!$query)                            return false;
+        if ($this->db->affected_rows() == 0)    return false;
+
+        return true;
     }
 
 
