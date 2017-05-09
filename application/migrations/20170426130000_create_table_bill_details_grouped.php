@@ -32,12 +32,12 @@ class Migration_Create_table_bill_details_grouped extends  CI_Migration{
             ],
             'total_honorary_period'   => [
                 'type'           => 'DECIMAL',
-                'constraint'     =>  10,2,
+                'constraint'     =>  '10,2',
                 'null'           => FALSE,
             ],
             'total_expenses_period'   => [
                 'type'           => 'DECIMAL',
-                'constraint'     =>  10,2,
+                'constraint'     =>  '10,2',
                 'null'           => FALSE,
             ],
             'total_benefit'   => [
