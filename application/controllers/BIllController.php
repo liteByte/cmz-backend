@@ -15,6 +15,7 @@ class BillController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->library('Response_msg');
+        $this->load->library('pdf');
         $this->load->model('bill');
         $this->token_valid = $this->validateToken();
     }
@@ -70,8 +71,10 @@ class BillController extends AuthController{
 
         if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
 
+
         print_r($result['msg']);die();
-        $this->load->view('documents/factura.html',$result['msg']);
+        return $this->pdf->pdf_create('documents/factura.html',$result['msg']);
+
 
     }
 }

@@ -14,6 +14,7 @@ class Bill extends CI_Model{
 
     public function __construct(){
         parent::__construct();
+        $this->load->library('numbertoletter');
     }
 
     public function bill_init($data){
@@ -438,6 +439,18 @@ class Bill extends CI_Model{
         $billData ['generalInformation'] = $query->result_array()[0];
 
 
+        //Get medical insurance information
+        $this->db->select('mi.denomination');
+        $this->db->from('medical_insurance as mi');
+        $this->db->where('mi.medical_insurance_id', $billData ['generalInformation']['id_medical_insurance']);
+        $query =  $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el nombre de la obra social para la factura'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontró nombre de obra social para la factura'];
+
+        $billData ['generalInformation']['medical_insurance_denomination'] = $query->row()->denomination;
+
+
         //Get bill header
         $this->db->select('BH.*');
         $this->db->from('bill_header BH');
@@ -465,6 +478,16 @@ class Bill extends CI_Model{
 
             $billData ['body'] = $query->result_array();
 
+            $this->db->select('P.description');
+            $this->db->from('plans as P');
+            $this->db->where('P.plan_id', $billData ['body']['0']['plan_id']);
+            $query =  $this->db->get();
+
+            if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el nombre del plan de la obra social a facturar'];
+            if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontró el nombre del plan de la obra social a facturar'];
+
+            $billData ['generalInformation']['plan_description'] = $query->row()->description;
+
         }else{
 
             $this->db->select('sum(total_honorary_period) as total_honorary,
@@ -481,8 +504,24 @@ class Bill extends CI_Model{
             if ($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para el cuerpo de la factura'];
 
             $billData ['body'] = $query->result_array();
+            $billData ['generalInformation']['plan_description'] = "";
 
         }
+
+        //Convert the total number into letters
+        $billData['generalInformation']['letter_total'] = $this->numbertoletter->to_word($billData['generalInformation']['total'],'ARS');
+
+        //Complete bill number with zeros (8 zeros)
+        $billData['generalInformation']['number_bill'] = str_pad($billData['generalInformation']['number_bill'], 8, '0', STR_PAD_LEFT);
+
+        //Complete branch office with zeros (4 zeros)
+        $billData['generalInformation']['branch_office'] = str_pad($billData['generalInformation']['branch_office'], 4, '0', STR_PAD_LEFT);
+
+        //Complete cuit with zeros to fill 11 numbers. Then, add a -
+        $billData['header']['cuit'] = str_pad($billData['header']['cuit'], 11, '0', STR_PAD_LEFT);
+        $billData['header']['cuit'] = substr($billData['header']['cuit'], 0, 2) . '-' . substr($billData['header']['cuit'], 2);
+        $billData['header']['cuit'] = substr($billData['header']['cuit'], 0, 11) . '-' . substr($billData['header']['cuit'], 11);
+
 
         return ['status' => 'ok', 'msg' => $billData];
 
