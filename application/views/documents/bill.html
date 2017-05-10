@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura</title>
+</head>
+<body style="margin: 0">
+    <!-- width 100px y height 150px mas de lo medido con la imagen sacada del scanner. Sumar eso a cada elmento de html si se ve mal-->
+    <div style="width: 2480px; height: 3508px; margin: 0;">
+        <div style="position: relative">
+            <p style="position: absolute; top: 125px; left: 1624px; font-size: 100px; margin: 0;"><?php
+             echo $array['generalInformation']['branch_office']
+             ? ></p>
+            <p style="position: absolute; top: 125px; left: 1880px; font-size: 100px; margin: 0; "><?php
+             echo $array['generalInformation']['number_bill']
+             ? ></p>
+            <p style="position: absolute; top: 280px; left: 1500px; font-size: 50px; margin: 0;"><?php
+            echo $array['header']['date_billing']
+             ? >
+            </p>
+            <p style="position: absolute; top: 585px; left: 288px; font-size: 50px; margin: 0;"><?php
+             echo $array['header']['settlement_name']
+             ? >
+            </p>
+            <p style="position: absolute; top: 630px; left: 288px; font-size: 50px; margin: 0;"><?php
+             echo $array['header']['iva_description']
+             ? ></p>
+            <p style="position: absolute; top: 585px; left: 1500px; font-size: 50px; margin: 0;"><?php
+             echo $array['header']['address']
+             ? ></p>
+            <p style="position: absolute; top: 630px; left: 1500px; font-size: 50px; margin: 0;"><?php
+             echo $array['header']['cuit']
+             ? ></p>
+            <p style="position: absolute; top: 750px; left: 470px; font-size: 50px; margin: 0;">PLAZO DE PAGO: <?php
+             echo $array['header']['payment_deadline']
+             ? > DIAS FECHA FACTURA
+            </p>
+        </div>
+        <div style="position: relative; top: 1050px; left: 50px; font-size: 50px; margin: 50px; width: 100%; float: left">
+            <?php foreach($array['body'] as $key=>$value): ?>
+            <div style="width: 100%; float: left">
+                <p style="float: left; margin: 20px">251&#8195;TOTAL PERIODO: <?php
+                 echo $value['billing_period']
+                 ? >
+                </p>
+                <p style="float: right; margin: 20px 350px 20px 20px"><?php
+                 echo $value['total_honorary'] + $value['total_expenses']
+                 ? ></p>
+            </div>
+            <?php endforeach; ?>
+            <div style="width: 100%; float: left">
+                <p style="float: left; margin: 20px 20px 20px 150px">SUBTOTAL.....</p>
+                <p style="float: right; margin: 20px 350px 20px 20px"><?php
+                 echo $value['generalInformation']['total']
+                 ? ></p>
+            </div>
+            <div style="width: 100%; float: left; margin-top: 100px;">
+                <p style="float: left; margin: 20px" >638</p>
+                <p style="float: left; margin: 20px 20px 20px 30px">****TOTAL GENERAL</p>
+                <p style="float: right; margin: 20px 350px 20px 20px"><?php
+                 echo $value['generalInformation']['total']
+                 ? ></p>
+            </div>
+            <div style="width: 100%; float: left; text-align: justify; ">
+                <p style="float: left; margin: 20px" >SON PESOS: QUINIENTOS CUARENTA Y SIETE MIL SEISCIENTOS NOVENTA Y DOS CON 55/100</p>
+            </div>
+            <div style="width: 100%; float: left; margin-top: 100px; display: flex">
+                <p style="float: left; margin: auto; text-align: justify; width: 70%" >
+                    LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php
+                 echo $value['generalInformation']['date_due']
+                 ? >*** CASO CONTRARIO Y
+                    -SIN OTRA COMUNICACION- DEVENGARA LOS INTERESES PACTADOS CONTRACTUALMENTE O LOS QUE DISPONGAN LA LEGISLACION VIGENTE
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
