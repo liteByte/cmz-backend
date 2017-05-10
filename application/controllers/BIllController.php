@@ -29,8 +29,38 @@ class BillController extends AuthController{
             return $this->response(['error' => $msg], RC::HTTP_BAD_REQUEST);
         }
 
+        //Set document type to F->Factura
+        $data['document_type'] = 'F';
+
+        //Start billing process
         $result = $this->bill->bill_init($data);
-        print_r($result);
+
+        if($result['status'] == "ok"){
+
+            ////Check if medical insurance is O.S.D.E. If so, change document_type to 'L' and bill again
+            //O.S.D.E id is 17
+            if($data['id_medical_insurance'] == 17){
+
+                $data['document_type'] = 'L';
+
+                //Start billing process again for OSDE, this time with document type L
+                $result = $this->bill->bill_init($data);
+
+                if($result['status'] == "ok") {
+                    return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+                }else{
+                    return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
+            }
+
+            return $this->response(['msg'=>$result['msg']], RC::HTTP_OK);
+
+        } else {
+
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+
+        }
 
     }
 }

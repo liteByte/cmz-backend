@@ -10,6 +10,7 @@ class Bill extends CI_Model{
     private $number_bill;
     private $type_of_print;
     private $benefits;
+    private $document_type;
 
     public function __construct(){
         parent::__construct();
@@ -21,11 +22,15 @@ class Bill extends CI_Model{
         $branch_office        = $data['branch_office'];
         $date_billing         = $data['date_billing'];
         $form_type            = $data['form_type'];
+        $document_type        = $data['document_type'];
+
+        //Load the document type
+        $this->document_type = $document_type;
 
         /**
-         * Generate bill number based on branch office, document form (A,B,C) and document type (F -> factura)
+         * Generate bill number based on branch office, document form (A,B,C) and document type (generally F -> factura)
          */
-        $this->number_bill = $this->generate_number_bill($branch_office,$form_type,'F');
+        $this->number_bill = $this->generate_number_bill($branch_office,$form_type,$this->document_type);
         if(empty($this->number_bill)) return ['status' => 'error', 'msg' => 'No se pudo generar el número de factura'];
 
 
@@ -75,16 +80,16 @@ class Bill extends CI_Model{
                 //Save the bill's detail and it's header
                 if(!$this->saveDetails($id_Bill, $totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se pudo generar el detalle de la factura'];
 
-                //Update benefits of the medical insurance
-                if(!$this->updateBenefitsWithOneBillNumber($this->number_bill,$id_medical_insurance)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
+                //Update benefits of the medical insurance only if document type is not L
+                if($this->document_type != 'L') {
+                    if (!$this->updateBenefitsWithOneBillNumber($this->number_bill, $id_medical_insurance)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
+                }
 
             //Close transaction
             $this->db->trans_complete();
 
             return ['status' => 'ok', 'msg' => 'Facturación de la obra social completada satisfactoriamente'];
 
-            // TODO send response to the front
-                
 
         }else{ //0- Un numero de factura por plan de la obra social
 
@@ -103,7 +108,7 @@ class Bill extends CI_Model{
             $this->db->trans_complete();
 
             return ['status' => 'ok', 'msg' => 'Facturación de la obra social completada satisfactoriamente'];
-            // TODO send response to the front
+
         }
 
     }
@@ -116,7 +121,7 @@ class Bill extends CI_Model{
             'number_bill'           => $this->number_bill,
             'type_bill'             => $this->type_of_print,
             'branch_office'         => $branch_office,
-            'type_document'         => 'F',
+            'type_document'         => $this->document_type,
             'type_form'             => $form_type,
             'date_billing'          => $this->header['billing_date'],
             'date_created'          => $now,
@@ -128,10 +133,10 @@ class Bill extends CI_Model{
             'annulled'              => 0
         ];
 
-        $result = $this->db->insert($this->table, $dataOfBill);
+        $this->db->insert($this->table, $dataOfBill);
         $errors = $this->db->error();
 
-        if($result || $errors['code'] == 0){
+        if($errors['code'] == 0){
             return $id_bill =  $this->db->insert_id();
         }else{
             return 0;
@@ -200,7 +205,7 @@ class Bill extends CI_Model{
                 'number_bill'           => $numberOfBill,
                 'type_bill'             => $this->type_of_print,
                 'branch_office'         => $branch_office,
-                'type_document'         => 'F',
+                'type_document'         => $this->document_type,
                 'type_form'             => $form_type,
                 'date_billing'          => $this->header['billing_date'],
                 'date_created'          => $now,
@@ -241,8 +246,10 @@ class Bill extends CI_Model{
 
             }
 
-            //Update all benefits of the plan
-            if (!$this->updateBenefitsWithManyBillNumber($numberOfBill,$id_medical_insurance,$p[0]['plan_id'])) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
+            //Update benefits of the medical insurance only if document type is not L
+            if($this->document_type != 'L') {
+                if (!$this->updateBenefitsWithManyBillNumber($numberOfBill, $id_medical_insurance, $p[0]['plan_id'])) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
+            }
 
             $numberOfBill++;
         }
@@ -349,11 +356,13 @@ class Bill extends CI_Model{
      */
     private function getTotalForMedical($id_medical){
 
+        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
+        //with state = 2 (billed state)
         $this->db->select('medical_insurance_id, plan_id, period, 
                            SUM(value_honorary) AS total_honorary, SUM(value_expenses) AS total_expenses, count(benefit_id) as total_benefit', FALSE);
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
-        $this->db->where('state', 1);
+        $this->db->where('state', ($this->document_type == 'L')? 2:1);
         $this->db->order_by("period", "asc");
         $this->db->order_by("plan_id", "asc");
         $this->db->group_by(array("period", "plan_id"));
@@ -370,11 +379,13 @@ class Bill extends CI_Model{
      */
     private function getTotalForPlans($id_medical){
 
+        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
+        //with state = 2 (billed state)
         $this->db->select('benefit_id, plan_id, period, value_honorary, value_expenses, value_unit,
            SUM(value_honorary) AS total_honorary, SUM(value_expenses) AS total_expenses, count(benefit_id) as total_benefit', FALSE);
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
-        $this->db->where('state', 1);
+        $this->db->where('state', ($this->document_type == 'L')? 2:1);
         $this->db->order_by("plan_id", "asc");
         $this->db->order_by("period", "asc");
         $this->db->group_by(array("plan_id", "period"));
@@ -392,10 +403,12 @@ class Bill extends CI_Model{
      */
     private function getTotalGeneral($id_medical){
 
+        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
+        //with state = 2 (billed state)
         $this->db->select('SUM(value_honorary) +  SUM(value_expenses) as total_benefit', FALSE);
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
-        $this->db->where('state', 1);
+        $this->db->where('state', ($this->document_type == 'L')? 2:1);
         $query = $this->db->get();
         foreach ($query->row() as $total){
             $result = $total;
@@ -416,6 +429,8 @@ class Bill extends CI_Model{
         foreach ($query->row() as $r){
             $result = $r;
         }
+
+        if (empty($result)) $result = 0;
 
         // Add 1 to the number obtained so we get the next bill number
         $result ++;
