@@ -79,7 +79,7 @@ class Migration_Create_table_bill extends CI_Migration{
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_insurance)    REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_key('id_bill', TRUE);
-        $this->dbforge->add_field('UNIQUE KEY bill_number_key (number_bill,type_document,type_form)');
+        $this->dbforge->add_field('UNIQUE KEY bill_number_key (number_bill,type_document,type_form,branch_office)');
         $this->dbforge->create_table('bill');
 
     }
