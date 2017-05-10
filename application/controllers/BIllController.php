@@ -16,7 +16,7 @@ class BillController extends AuthController{
         parent::__construct();
         $this->load->library('Response_msg');
         $this->load->model('bill');
-
+        $this->token_valid = $this->validateToken();
     }
 
     public function bill_post()    {
@@ -63,4 +63,11 @@ class BillController extends AuthController{
         }
 
     }
+
+    public function billPrint_get(){
+
+        $this->load->view('documents/factura.html');
+
+    }
 }
+
