@@ -435,20 +435,7 @@ class Bill extends CI_Model{
         if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la factura'];
         if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para la factura que desea imprimir'];
 
-        $billData ['generalInformation'] = $query->resukt_array();
-        $billMedicalInsurance            = $billData['generalInformation']['id_medical_insurance'];
-
-
-        //Get bill's print type
-        $this->db->select('mi.print');
-        $this->db->from('medical_insurance as mi');
-        $this->db->where('mi.medical_insurance_id', $billMedicalInsurance);
-        $query =  $this->db->get();
-
-        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
-        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para el tipo de impresión de la factura'];
-
-        $printType = $query->row()->print;
+        $billData ['generalInformation'] = $query->result_array()[0];
 
 
         //Get bill header
@@ -458,35 +445,46 @@ class Bill extends CI_Model{
         $query = $this->db->get();
 
         if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la cabecera de la factura'];
-        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para cabecera de la factra'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para cabecera de la factura'];
 
-        $billData ['header'] = $query->resukt_array();
+        $billData ['header'] = $query->result_array()[0];
 
 
         //Get bill body information
-        if($printType == 1){ //Group by medical insurance
+        if($billData ['generalInformation']['type_bill'] == 0) {
 
             $this->db->select('BB.*');
-            $this->db->from('bill_details_grouped');
-            $this->db->where('id_bill', $billMedicalInsurance);
-            $this->db->where('state', 2);
-            $this->db->where('bill_number', $billData['generalInformation']['bill_number']);
-            $this->db->order_by("period", "asc");
-            $this->db->order_by("plan_id", "asc");
-            $this->db->group_by(array("period", "plan_id"));
+            $this->db->from('bill_details_grouped BB');
+            $this->db->where('BB.id_bill', $billID);
+            $this->db->order_by("BB.billing_period", "asc");
+            $this->db->order_by("BB.plan_id", "asc");
             $query = $this->db->get();
-            $result = $query->result_array();
 
-        }else{ //Group by plan (a bill for plan)
+            if (!$query) return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos del cuerpo de la factura'];
+            if ($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para el cuerpo de la factura'];
 
+            $billData ['body'] = $query->result_array();
 
+        }else{
+
+            $this->db->select('sum(total_honorary_period) as total_honorary,
+	                           sum(total_expenses_period) as total_expenses,
+                               sum(total_benefit) as total_benefit,
+                               billing_period');
+            $this->db->from('bill_details_grouped BB');
+            $this->db->where('BB.id_bill', $billID);
+            $this->db->group_by('BB.billing_period');
+            $this->db->order_by("BB.billing_period", "asc");
+            $query = $this->db->get();
+
+            if (!$query) return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos del cuerpo de la factura'];
+            if ($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para el cuerpo de la factura'];
+
+            $billData ['body'] = $query->result_array();
 
         }
 
-
-
-
-
+        return ['status' => 'ok', 'msg' => $billData];
 
     }
 

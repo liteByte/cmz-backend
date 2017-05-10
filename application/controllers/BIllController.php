@@ -66,7 +66,11 @@ class BillController extends AuthController{
 
     public function billPrint_get(){
 
+        $result = $this->bill->getPrintData('1');
 
+        if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+
+        print_r($result['msg']);die();
         $this->load->view('documents/factura.html');
 
     }
