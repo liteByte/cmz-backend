@@ -66,6 +66,7 @@ class BillController extends AuthController{
 
     public function billPrint_get(){
 
+
         $this->load->view('documents/factura.html');
 
     }

@@ -170,7 +170,6 @@ class Bill extends CI_Model{
 
     }
 
-
     //Save a bill's header
     public function saveBillHeader($bill_id){
 
@@ -259,7 +258,7 @@ class Bill extends CI_Model{
 
     //Get the bill header's data
     private function getHeader($id_medical, $date_billing){
-        
+
         $now = $date_billing;
         $this->db->select('mi.settlement_name, mi.address, mi.location, mi.postal_code, mi.iva_id , mi.cuit, mi.payment_deadline, mi.print, ides.description as iva_description');
         $this->db->from('medical_insurance as mi');
@@ -268,7 +267,7 @@ class Bill extends CI_Model{
         $query =  $this->db->get();
 
         if($query->num_rows() <= 0) return [];
-        
+
         $header = (array)$query->row();
         $days = $header['payment_deadline'];
         $due_date = date('Y-m-d', strtotime($now. ' +  '. $days .' days'));
@@ -293,59 +292,6 @@ class Bill extends CI_Model{
         ];
 
         return $headerData;
-    }
-
-    /**
-     * @param $id_medical
-     * @return mixed
-     */
-    private function getBenefits($id_medical)     {
-
-        $this->db->select('	');
-        $this->db->from('benefits');
-        $this->db->where('medical_insurance_id', $id_medical);
-        $this->db->where('state', 1);
-        $this->db->order_by("period", "asc");
-        $this->db->order_by("plan_id", "asc");
-        $query = $this->db->get();
-
-
-        /**
-         * Group by Period
-         */
-        $lastPeriod = null;
-
-        foreach ($query->result_array() as $row) {
-            if ($row['period'] != $lastPeriod) {
-                $lastPeriod = $row['period'];
-                $orderPeriod[$lastPeriod][] = $row;
-            } else {
-                $orderPeriod[$lastPeriod][] = $row;
-            }
-        }
-
-        /**
-         * Group by Plans for each Period
-         */
-
-        $final_result = $orderPlan = [];
-        $lastPlan = null;
-        $parent_index = "plan_id";
-
-        foreach ($orderPeriod as $plan => $p) {
-            for($i= 0; $i<count($p); $i++){
-                if($p[$i][$parent_index] != $lastPlan){
-                    $lastPlan = $p[$i][$parent_index];
-                    $orderPlan[$lastPlan][] = $p[$i];
-                }else{
-                    $orderPlan[$lastPlan][] = $p[$i];
-                }
-            }
-            $final_result[$plan] = $orderPlan;
-            $orderPlan = [];
-        }
-
-        return $final_result;
     }
 
     /**
@@ -439,7 +385,6 @@ class Bill extends CI_Model{
 
     }
 
-
     //Update all benefits of a certain medical insurance with the same bill number
     private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id){
 
@@ -476,6 +421,74 @@ class Bill extends CI_Model{
         return true;
     }
 
+    //Get all information needed to print
+    public function getPrintData($billID){
+
+        $billData = [];
+
+        //Get bill general information
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill', $billID);
+        $query = $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la factura'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para la factura que desea imprimir'];
+
+        $billData ['generalInformation'] = $query->resukt_array();
+        $billMedicalInsurance            = $billData['generalInformation']['id_medical_insurance'];
+
+
+        //Get bill's print type
+        $this->db->select('mi.print');
+        $this->db->from('medical_insurance as mi');
+        $this->db->where('mi.medical_insurance_id', $billMedicalInsurance);
+        $query =  $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudo obtener el tipo de impresión de la factura'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para el tipo de impresión de la factura'];
+
+        $printType = $query->row()->print;
+
+
+        //Get bill header
+        $this->db->select('BH.*');
+        $this->db->from('bill_header BH');
+        $this->db->where('BH.id_bill', $billID);
+        $query = $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la cabecera de la factura'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos para cabecera de la factra'];
+
+        $billData ['header'] = $query->resukt_array();
+
+
+        //Get bill body information
+        if($printType == 1){ //Group by medical insurance
+
+            $this->db->select('BB.*');
+            $this->db->from('bill_details_grouped');
+            $this->db->where('id_bill', $billMedicalInsurance);
+            $this->db->where('state', 2);
+            $this->db->where('bill_number', $billData['generalInformation']['bill_number']);
+            $this->db->order_by("period", "asc");
+            $this->db->order_by("plan_id", "asc");
+            $this->db->group_by(array("period", "plan_id"));
+            $query = $this->db->get();
+            $result = $query->result_array();
+
+        }else{ //Group by plan (a bill for plan)
+
+
+
+        }
+
+
+
+
+
+
+    }
 
     /**
      * Help to group by array for any key
