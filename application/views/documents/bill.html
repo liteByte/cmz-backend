@@ -11,7 +11,7 @@
             <p style="position: absolute; top: 30px; left: 390px; font-size: 24px; margin: 0;"><?php echo $generalInformation['branch_office']?></p>
             <p style="position: absolute; top: 30px; left: 451px; font-size: 24px; margin: 0; "><?php echo $generalInformation['number_bill'] ?></p>
             <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['billing_date'] ?> </p>
-            <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($header['plan_description'])) echo $header['plan_description'] ?></p>
+            <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
             <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['iva_description']?></p>
             <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['address'] ?></p>
             <p style="position: absolute; top: 151px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['cuit'] ?></p>
