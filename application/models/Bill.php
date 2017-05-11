@@ -508,6 +508,13 @@ class Bill extends CI_Model{
 
         }
 
+        //Calculate total benefits of the bill
+        $totalBillBenefit = 0;
+        foreach ($billData ['body'] as $planOrPeriod){
+            $totalBillBenefit = $totalBillBenefit + $planOrPeriod['total_benefit'];
+        }
+        $billData['generalInformation']['total_bill_benefits'] = $totalBillBenefit;
+
         //Create the receipt number (bill number with no zeros)
         $billData['generalInformation']['receipt_number'] = $billData['generalInformation']['number_bill'];
 
