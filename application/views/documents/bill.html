@@ -25,18 +25,17 @@
         <div style="position: relative; top: 252px; left: 12px; font-size: 12px; margin: 12px; width: 100%;">
             <?php foreach($body as $key=>$value): ?>
             <div style="position: relative; width: 100%">
-                <p style="margin: 5px; left:12px;">TOTAL PERIODO: <?php echo $value['billing_period'] ?> </p>
-                <p style="position: absolute; right: 260px; display: block; top: 5px;"><?php echo $value['total_honorary_period'] + $value['total_expenses_period']?> </p>
+                <p style="margin: 5px; left:12px;"><?php echo $value['total_benefit'] ?><span style="position: absolute; top:5px; left: 50px;">TOTAL PERIODO: <?php echo $value['billing_period'] ?></span></p>
+                <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $value['total_honorary_period'] + $value['total_expenses_period']?> </p>
             </div>
             <?php endforeach; ?>
             <div style="width: 100%; position: relative">
-                <p style="margin: 5px 5px 5px 36px">SUBTOTAL.....</p>
-                <p style="position: absolute; right: 260px; display: block; top: 5px;"><?php
-                 echo $generalInformation['total'] ?></p>
+                <p style="margin: 5px 5px 5px 80px">SUBTOTAL.....</p>
+                <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $generalInformation['total'] ?></p>
             </div>
             <div style="width: 100%; margin-top: 24px; position: relative">
-                <p style="margin: 5px 5px 5px 30px">****TOTAL GENERAL</p>
-                <p style="position: absolute; right:260px; display: block; top: 5px;"><?php echo $generalInformation['total'] ?></p>
+                <p style="margin: 5px"><?php echo $generalInformation['total_bill_benefits'] ?> <span style="position: absolute; top:5px; left: 50px;">****TOTAL GENERAL</span></p>
+                <p style="position: absolute; right:260px; display: block; top: 2px;"><?php echo $generalInformation['total'] ?></p>
             </div>
             <div style="width: 100%; text-align: justify; ">
                 <p style="margin: 5px" >SON PESOS: QUINIENTOS CUARENTA Y SIETE MIL SEISCIENTOS NOVENTA Y DOS CON 55/100</p>
