@@ -490,8 +490,8 @@ class Bill extends CI_Model{
 
         }else{
 
-            $this->db->select('sum(total_honorary_period) as total_honorary,
-	                           sum(total_expenses_period) as total_expenses,
+            $this->db->select('sum(total_honorary_period) as total_honorary_period,
+	                           sum(total_expenses_period) as total_expenses_period,
                                sum(total_benefit) as total_benefit,
                                billing_period');
             $this->db->from('bill_details_grouped BB');

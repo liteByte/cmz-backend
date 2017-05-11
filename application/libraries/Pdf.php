@@ -50,5 +50,21 @@ class Pdf extends Dompdf{
 
     }
 
+    function pdf_create2($html)
+    {
+
+        $this->load_html($html);
+
+        // (Optional) Setup the paper size and orientation
+        $this->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $this->render();
+
+        // Output the generated PDF to Browser
+        return $this->stream('my.pdf',array('Attachment'=>0));
+
+    }
+
 }
 ?>
