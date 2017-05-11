@@ -13,7 +13,7 @@
                 <p style="position: absolute; top: 30px; left: 451px; font-size: 24px; margin: 0;"><?php echo $generalInformation['number_bill'] ?></p>
             <?php } else { ?>
                 <p style="position: absolute; top: 30px; left: 20px; font-size: 16px; margin: 0;">DOC. INTERNO LIQUIDACION</p>
-                <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">NUMERO REMITO INTERNO:&#09;<?php echo $generalInformation['number_bill'] ?></p>
+                <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">NUMERO REMITO INTERNO:&#09;<?php echo $generalInformation['receipt_number'] ?></p>
             <?php } ?>
             <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['billing_date'] ?> </p>
             <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
