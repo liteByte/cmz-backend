@@ -508,6 +508,9 @@ class Bill extends CI_Model{
 
         }
 
+        //Create the receipt number (bill number with no zeros)
+        $billData['generalInformation']['receipt_number'] = $billData['generalInformation']['number_bill'];
+
         //Convert the total number into letters
         $billData['generalInformation']['letter_total'] = $this->numbertoletter->to_word($billData['generalInformation']['total'],'ARS');
 
