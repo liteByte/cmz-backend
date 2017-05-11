@@ -56,7 +56,7 @@ class Pdf extends Dompdf{
         $this->load_html($html);
 
         // (Optional) Setup the paper size and orientation
-        $this->setPaper('A4', 'landscape');
+        $this->setPaper('A4', 'portrait');
 
         // Render the HTML as PDF
         $this->render();
