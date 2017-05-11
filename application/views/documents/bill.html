@@ -8,7 +8,7 @@
     <!-- width 100px y height 150px mas de lo medido con la imagen sacada del scanner. Sumar eso a cada elmento de html si se ve mal-->
     <div style="width: 2480px; height: 3508px; margin: 0;">
         <div style="position: relative">
-            <p style="position: absolute; top: 125px; left: 1624px; font-size: 100px; margin: 0;"><?php echo $generalInformation['branch_office']?></p>
+            <p style="position: absolute; top: (<?php echo $pixel ?>+125)px; left: 1624px; font-size: 100px; margin: 0;"><?php echo $generalInformation['branch_office']?></p>
             <p style="position: absolute; top: 125px; left: 1880px; font-size: 100px; margin: 0; "><?php echo $generalInformation['number_bill'] ?></p>
             <p style="position: absolute; top: 280px; left: 1500px; font-size: 50px; margin: 0;"><?php echo $header['billing_date'] ?> </p>
             <p style="position: absolute; top: 585px; left: 288px; font-size: 50px; margin: 0;"><?php echo $header['settlement_name']?></p>

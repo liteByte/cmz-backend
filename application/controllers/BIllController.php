@@ -67,20 +67,18 @@ class BillController extends AuthController{
 
     public function billPrint_get(){
 
-        $result = $this->bill->getPrintData('1');
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->getPrintData($id);
 
         if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
 
-        //print_r($result['msg']);die();
         $html = $this->load->view('documents/bill.html',$result['msg'],TRUE);
 
         return $this->pdf->pdf_create2($html);
 
-        //return $this->pdf->pdf_create('documents/factura.html',$result['msg']);
-
-        $this->pdf->load_view($html);
-        $this->pdf->render();
-        $this->pdf->stream('my.pdf',array('Attachment'=>0));
 
 
     }
