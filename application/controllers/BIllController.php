@@ -74,7 +74,7 @@ class BillController extends AuthController{
         //print_r($result['msg']);die();
         $html = $this->load->view('documents/bill.html',$result['msg'],TRUE);
 
-        //return $this->pdf->pdf_create2($html);
+        return $this->pdf->pdf_create2($html);
 
         //return $this->pdf->pdf_create('documents/factura.html',$result['msg']);
 
