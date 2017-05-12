@@ -65,6 +65,13 @@ class BillController extends AuthController{
 
     }
 
+    public function bill_get(){
+
+        $bills = $this->bill->getBills();
+        return $this->response($bills, RC::HTTP_OK);
+
+    }
+
     public function billPrint_get(){
 
         $id = $this->get('id');
