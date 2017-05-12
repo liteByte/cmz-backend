@@ -25,7 +25,7 @@
         <div style="position: relative; top: 252px; left: 12px; font-size: 12px; margin: 12px; width: 100%;">
             <?php foreach($body as $key=>$value): ?>
             <div style="position: relative; width: 100%">
-                <p style="margin: 5px; left:12px;"><?php echo $value['total_benefit'] ?><span style="position: absolute; top:5px; left: 50px;">TOTAL PERIODO: <?php echo $value['billing_period'] ?></span></p>
+                <p style="margin: 5px; left:12px;"><?php echo $value['total_benefit'] ?><span style="position: absolute; top:5px; left: 50px;">TOTAL PERIODO: <?php echo substr(str_replace('-','/',$value['billing_period']),0,-3) ?></span></p>
                 <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $value['total_honorary_period'] + $value['total_expenses_period']?> </p>
             </div>
             <?php endforeach; ?>
