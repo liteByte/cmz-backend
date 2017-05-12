@@ -196,4 +196,10 @@ $route['professionals/like']          = 'ProfessionalsController/professionalsDa
 //Test validator
 $route['benefits/test']             = 'BenefitController/validar';
 
+////////////////////////Billing Process////////////////////////
+$route['bills']                        = 'BillController/bill';             //Post -> Bills benefits & get -> get bills
+$route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Generates bill
+
+
+
 
