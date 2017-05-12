@@ -198,7 +198,10 @@ $route['benefits/test']             = 'BenefitController/validar';
 
 ////////////////////////Billing Process////////////////////////
 $route['bill']                        = 'BillController/bill';             //Bills benefits
-$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill
+$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill in pdf
+
+////////////////////////Receipt Process////////////////////////
+$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
 
 
 
