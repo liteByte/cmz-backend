@@ -20,6 +20,7 @@ class BillController extends AuthController{
         $this->token_valid = $this->validateToken();
     }
 
+    //Bill process
     public function bill_post()    {
         $data = json_decode(file_get_contents('php://input'), TRUE);
         
@@ -65,6 +66,7 @@ class BillController extends AuthController{
 
     }
 
+    //Get all bills from bill's table
     public function bill_get(){
 
         $bills = $this->bill->getBills();
@@ -72,6 +74,7 @@ class BillController extends AuthController{
 
     }
 
+    //Generate PDF of specified bill
     public function billPrint_get(){
 
         $id = $this->get('id');
@@ -89,5 +92,23 @@ class BillController extends AuthController{
 
 
     }
+
+    //Cancel bill
+    public function bill_delete(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->cancelBill($id);
+
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }
 

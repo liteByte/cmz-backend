@@ -83,7 +83,7 @@ class Bill extends CI_Model{
 
                 //Update benefits of the medical insurance only if document type is not L
                 if($this->document_type != 'L') {
-                    if (!$this->updateBenefitsWithOneBillNumber($this->number_bill, $id_medical_insurance)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
+                    if (!$this->updateBenefitsWithOneBillNumber($this->number_bill, $id_medical_insurance, $id_Bill)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
                 }
 
             //Close transaction
@@ -248,7 +248,7 @@ class Bill extends CI_Model{
 
             //Update benefits of the medical insurance only if document type is not L
             if($this->document_type != 'L') {
-                if (!$this->updateBenefitsWithManyBillNumber($numberOfBill, $id_medical_insurance, $p[0]['plan_id'])) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
+                if (!$this->updateBenefitsWithManyBillNumber($numberOfBill, $id_medical_insurance, $p[0]['plan_id'],$id_bill)) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
             }
 
             $numberOfBill++;
@@ -387,11 +387,12 @@ class Bill extends CI_Model{
     }
 
     //Update all benefits of a certain medical insurance with the same bill number
-    private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id){
+    private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id, $billID){
 
         $data = array(
             'state'       => 2,
-            'bill_number' => $bill_number
+            'bill_number' => $bill_number,
+            'id_bill'     => $billID
         );
 
         $this->db->where('medical_insurance_id', $medical_insurance_id);
@@ -404,11 +405,12 @@ class Bill extends CI_Model{
     }
 
     //Update a benefit of a certain medical insurance and plan
-    private function updateBenefitsWithManyBillNumber($bill_number,$medical_insurance_id,$plan_id){
+    private function updateBenefitsWithManyBillNumber($bill_number,$medical_insurance_id,$plan_id,$billID){
 
         $data = array(
             'state'       => 2,
-            'bill_number' => $bill_number
+            'bill_number' => $bill_number,
+            'id_bill'     => $billID
         );
 
         $this->db->where('medical_insurance_id', $medical_insurance_id);
@@ -540,11 +542,10 @@ class Bill extends CI_Model{
     //Get bills
     public function getBills(){
 
-        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid,P.description as plan_description');
+        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid');
         $this->db->from('bill B');
         $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
-        $this->db->join('bill_details_grouped BDG','BDG.id_bill = B.id_bill');
-        $this->db->join('plans P','BDG.plan_id = P.plan_id');
+        $this->db->where('B.annulled', 0);
         $this->db->order_by("B.branch_office", "asc");
         $this->db->order_by("B.type_document", "asc");
         $this->db->order_by("B.type_form", "asc");
@@ -555,6 +556,24 @@ class Bill extends CI_Model{
         if ($query->num_rows() == 0) return [];
         
         $bills = $query->result_array();
+
+        //Get every bill's plan description
+        foreach ($bills as &$bill){
+
+            $this->db->select('P.description as plan_description');
+            $this->db->from('bill_details_grouped BDG');
+            $this->db->join('plans P','BDG.plan_id = P.plan_id');
+            $this->db->where('BDG.id_bill', $bill['id_bill']);
+            $this->db->limit(1);
+            $query = $this->db->get();
+
+            if (!$query)                 return [];
+            if ($query->num_rows() == 0) return [];
+
+            $bill['plan_description'] = $query->row()->plan_description;
+
+        }
+
 
         foreach ($bills as &$bill) {
 
@@ -591,6 +610,54 @@ class Bill extends CI_Model{
         }
 
         return $bills;
+
+    }
+
+    //Cancel bill
+    public function cancelBill($billID){
+
+        //Start transaction
+        $this->db->trans_start();
+
+            //Return bill's benefits to "valorized" (1)
+            $data = array(
+                'state'       => 1,
+                'bill_number' => null,
+                'id_bill'     => null
+            );
+
+            $this->db->where('id_bill', $billID);
+            $this->db->where('state', 2);
+            $query = $this->db->update('benefits', $data);
+
+            if (!$query)                            return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
+            if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
+
+            //Get the bill and check it's state (1-Cargada/Generada o 2-Cobrada)
+            $this->db->select('B.*');
+            $this->db->from('bill B');
+            $this->db->where('B.id_bill',$billID);
+            $query = $this->db->get();
+
+            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
+            if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
+
+            $bill = $query->row();
+
+            if($bill->state_billing == 2){
+                //TODO: anular el remito de la factura
+            }
+
+            //Cancel the bill
+            $this->db->where('id_bill', $billID);
+            $this->db->update('bill', ['annulled' => 1]);
+
+            if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo anular la factura'];
+
+        //Close transaction
+        $this->db->trans_complete();
+
+        return ['status' => 'ok', 'msg' => 'Factura anulada con éxito'];
 
     }
 
