@@ -9,6 +9,7 @@ class Bill extends CI_Model{
     private $header;
     private $number_bill;
     private $type_of_print;
+    private $date_billing;
     private $benefits;
     private $document_type;
 
@@ -27,6 +28,7 @@ class Bill extends CI_Model{
 
         //Load the document type
         $this->document_type = $document_type;
+        $this->date_billing  = $date_billing;
 
         /**
          * Generate bill number based on branch office, document form (A,B,C) and document type (generally F -> factura)
@@ -310,6 +312,7 @@ class Bill extends CI_Model{
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
         $this->db->where('state', ($this->document_type == 'L')? 2:1);
+        $this->db->where('period <=', $this->date_billing);
         $this->db->order_by("period", "asc");
         $this->db->order_by("plan_id", "asc");
         $this->db->group_by(array("period", "plan_id"));
@@ -333,6 +336,7 @@ class Bill extends CI_Model{
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
         $this->db->where('state', ($this->document_type == 'L')? 2:1);
+        $this->db->where('period <=', $this->date_billing);
         $this->db->order_by("plan_id", "asc");
         $this->db->order_by("period", "asc");
         $this->db->group_by(array("plan_id", "period"));
@@ -355,6 +359,7 @@ class Bill extends CI_Model{
         $this->db->select('SUM(value_honorary) +  SUM(value_expenses) as total_benefit', FALSE);
         $this->db->from('benefits');
         $this->db->where('medical_insurance_id', $id_medical);
+        $this->db->where('period <=', $this->date_billing);
         $this->db->where('state', ($this->document_type == 'L')? 2:1);
         $query = $this->db->get();
         foreach ($query->row() as $total){
@@ -397,6 +402,7 @@ class Bill extends CI_Model{
 
         $this->db->where('medical_insurance_id', $medical_insurance_id);
         $this->db->where('state', 1);
+        $this->db->where('period <=', $this->date_billing);
         $this->db->update('benefits', $data);
 
         if ($this->db->affected_rows() == 0) return false;
@@ -416,6 +422,7 @@ class Bill extends CI_Model{
         $this->db->where('medical_insurance_id', $medical_insurance_id);
         $this->db->where('plan_id', $plan_id);
         $this->db->where('state', 1);
+        $this->db->where('period <=', $this->date_billing);
         $query = $this->db->update('benefits', $data);
 
         if (!$query)                            return false;

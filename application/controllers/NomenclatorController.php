@@ -142,10 +142,10 @@ class NomenclatorController extends AuthController{
         $id = (int)$this->get('id');
         $result = $this->Nomenclator->delete($id);
 
-        if ($result != 1) {
-            if (strcmp($result, 1) != 0) return $this->response(array('error' => $result), REST_Controller::HTTP_BAD_REQUEST);
-            return $this->response(array('msg' => $this->msgRemove), REST_Controller::HTTP_OK);
-        }
+        if (strcmp($result, 1) != 0) return $this->response(array('error' => $result), REST_Controller::HTTP_BAD_REQUEST);
+
+        return $this->response(array('msg' => "Nomenclador eliminado correctamente"), REST_Controller::HTTP_OK);
+
     }
 
     public function nomenclatorData_get(){
