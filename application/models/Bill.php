@@ -661,6 +661,11 @@ class Bill extends CI_Model{
 
     }
 
+    //Pay bill
+    public function payBill($amount_paid,$pay_date){
+
+    }
+
     /**
      * Help to group by array for any key
      * @param $arr

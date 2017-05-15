@@ -17,6 +17,7 @@ class BillController extends AuthController{
         $this->load->library('Response_msg');
         $this->load->library('pdf');
         $this->load->model('bill');
+        $this->load->library('validator');
         $this->token_valid = $this->validateToken();
     }
 
@@ -107,6 +108,26 @@ class BillController extends AuthController{
         }else{
             return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+    }
+
+    //Pay bill
+    public function payBill_post(){
+
+        $post = json_decode(file_get_contents('php://input'));
+
+        $pay_date    = $post->pay_date        ?? "";
+        $amount_paid = $post->amount_paid     ?? "";
+
+        if(empty($pay_date))        return $this->response(array('error'=>'No se ha ingresado fecha de pago'), REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))     return $this->response(array('error'=>'No se ha ingresado una cantidad a abonar'), REST_Controller::HTTP_BAD_REQUEST);
+
+        //Validations
+        if(!$this->validator->validateDate($pay_date)) return $this->response(['error'=>'Fecha de pago inválida'], REST_Controller::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->payBill($amount_paid,$pay_date);
+
+
 
     }
 
