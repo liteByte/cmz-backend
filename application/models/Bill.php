@@ -654,6 +654,12 @@ class Bill extends CI_Model{
 
             if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo anular la factura'];
 
+            //Cancel the L bill (if the bill has one)
+            $this->db->where('number_bill', $bill->number_bill);
+            $this->db->where('type_form', $bill->type_form);
+            $this->db->where('branch_office', $bill->branch_office);
+            $this->db->update('bill', ['annulled' => 1]);
+
         //Close transaction
         $this->db->trans_complete();
 
