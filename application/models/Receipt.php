@@ -18,7 +18,6 @@ class Receipt extends CI_Model{
         //To print the receipt, we need the bill's print and we have to add the professional information
         $receiptData = $this->Bill->getPrintData($billID)['msg'];
 
-
         $this->db->select('B.period,B.quantity,B.value_honorary,B.value_expenses,B.value_unit,PL.description,PR.registration_number,PR.name,FD.cuit,FD.iibb,N.code,N.class');
         $this->db->from('benefits B');
         $this->db->join('plans PL',             'PL.plan_id = B.plan_id');
@@ -42,6 +41,17 @@ class Receipt extends CI_Model{
             $periodArray = $this->array_group_by($periodArray, 'registration_number');
         }
 
+        //Declare variables to show at the end of the receipt
+        $totalReceiptData = [];
+        $totalReceiptData['visitQuantity']        = 0;
+        $totalReceiptData['surgeryQuantity']      = 0;
+        $totalReceiptData['practiceQuantity']     = 0;
+        $totalReceiptData['quantityTotalReceipt'] = 0;
+        $totalReceiptData['honoraryTotalReceipt'] = 0;
+        $totalReceiptData['expensesTotalReceipt'] = 0;
+        $totalReceiptData['visitTotalReceipt']    = 0;
+        $totalReceiptData['generalTotalReceipt']  = 0;
+
         //Calculate necessary fields
         foreach ($result as &$periodArray){
 
@@ -53,8 +63,13 @@ class Receipt extends CI_Model{
                     if ($benefitArray['value_unit'] == 'V'){
                         $benefitArray['value_visit'] = $benefitArray['value_honorary'];
                         $benefitArray['value_honorary'] = 0;
+                        $totalReceiptData['visitQuantity'] = $totalReceiptData['visitQuantity'] + $benefitArray['quantity'];
+                    }else if ($benefitArray['value_unit'] == 'Q'){
+                        $benefitArray['value_visit'] = 0;
+                        $totalReceiptData['surgeryQuantity'] = $totalReceiptData['surgeryQuantity'] + $benefitArray['quantity'];
                     }else{
                         $benefitArray['value_visit'] = 0;
+                        $totalReceiptData['practiceQuantity'] = $totalReceiptData['practiceQuantity'] + $benefitArray['quantity'];
                     }
 
                     //Calculate total for visits, honoraries and expenses
@@ -104,30 +119,40 @@ class Receipt extends CI_Model{
             }
 
             $periodTotal = [];
-            $periodTotal['period_visit_total']    = 0;
-            $periodTotal['period_honorary_total'] = 0;
-            $periodTotal['period_expenses_total'] = 0;
-            $periodTotal['period_total']          = 0;
+            $periodTotal['period_benefit_quantity'] = 0;
+            $periodTotal['period_visit_total']      = 0;
+            $periodTotal['period_honorary_total']   = 0;
+            $periodTotal['period_expenses_total']   = 0;
+            $periodTotal['period_total']            = 0;
 
             //For each professional, get it's totals (first benefit of the professional has the total value for that professional)
             foreach ($periodArray as &$professionalArray) {
-                $periodTotal['period_visit_total']    = $periodTotal['period_visit_total']    + $professionalArray[0]['professional_visit_total'];
-                $periodTotal['period_honorary_total'] = $periodTotal['period_honorary_total'] + $professionalArray[0]['professional_honorary_total'];
-                $periodTotal['period_expenses_total'] = $periodTotal['period_expenses_total'] + $professionalArray[0]['professional_expenses_total'];
-                $periodTotal['period_total']          = $periodTotal['period_total']          + $professionalArray[0]['professional_total'];
+                $periodTotal['period_benefit_quantity'] = $periodTotal['period_benefit_quantity'] + $professionalArray[0]['professional_quantity_total'];
+                $periodTotal['period_visit_total']      = $periodTotal['period_visit_total']      + $professionalArray[0]['professional_visit_total'];
+                $periodTotal['period_honorary_total']   = $periodTotal['period_honorary_total']   + $professionalArray[0]['professional_honorary_total'];
+                $periodTotal['period_expenses_total']   = $periodTotal['period_expenses_total']   + $professionalArray[0]['professional_expenses_total'];
+                $periodTotal['period_total']            = $periodTotal['period_total']            + $professionalArray[0]['professional_total'];
             }
+
+            $totalReceiptData['quantityTotalReceipt'] = $totalReceiptData['quantityTotalReceipt'] + $periodTotal['period_benefit_quantity'];
+            $totalReceiptData['generalTotalReceipt']  = $totalReceiptData['generalTotalReceipt']  + $periodTotal['period_total'];
+            $totalReceiptData['honoraryTotalReceipt'] = $totalReceiptData['honoraryTotalReceipt'] + $periodTotal['period_honorary_total'];
+            $totalReceiptData['expensesTotalReceipt'] = $totalReceiptData['expensesTotalReceipt'] + $periodTotal['period_expenses_total'];
+            $totalReceiptData['visitTotalReceipt']    = $totalReceiptData['visitTotalReceipt']    + $periodTotal['period_visit_total'];
 
             $periodArray [] = $periodTotal;
 
         }
 
+        $returnArray = [];
+        $returnArray [] = $result;
+        $returnArray [] = $totalReceiptData;
 
 
-        print_r($result);die();
+        print_r($returnArray);die();
 
         //print_r($this->db->error());die();
 
-        $result = $this->array_group_by($result, 'plan_id');
 
 
 
