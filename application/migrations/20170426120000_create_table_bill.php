@@ -66,14 +66,14 @@ class Migration_Create_table_bill extends CI_Migration{
                 'null'           =>  FALSE,
                 'comment'        => '1 -> Cargada, 2-> Cobrada y 3 -> Facturada'
             ],
-            'percentage_paid'   => [
-                'type'           => 'INT',
-                'constraint'     =>  3,
-                'null'          =>  TRUE,
+            'amount_paid'   => [
+                'type'           => 'DECIMAL',
+                'constraint'     => '20,2',
+                'null'           =>  TRUE,
             ],
             'annulled'   => [
                 'type'           => 'BOOLEAN',
-                'null'          =>  TRUE,
+                'null'           =>  TRUE,
             ],
         ]);
 

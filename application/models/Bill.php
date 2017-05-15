@@ -130,7 +130,7 @@ class Bill extends CI_Model{
             'id_medical_insurance'  => $id_medical_insurance,
             'total'                 => $totalGeneral,
             'state_billing'         => 1,
-            'percentage_paid'       => 0,
+            'amount_paid'           => 0,
             'annulled'              => 0
         ];
 
@@ -213,7 +213,7 @@ class Bill extends CI_Model{
                 'id_medical_insurance'  => $id_medical_insurance,
                 'total'                 => $planTotal,
                 'state_billing'         => 1,
-                'percentage_paid'       => 0,
+                'amount_paid'           => 0,
                 'annulled'              => 0
             ];
 
@@ -534,6 +534,63 @@ class Bill extends CI_Model{
 
 
         return ['status' => 'ok', 'msg' => $billData];
+
+    }
+
+    //Get bills
+    public function getBills(){
+
+        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid,P.description as plan_description');
+        $this->db->from('bill B');
+        $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
+        $this->db->join('bill_details_grouped BDG','BDG.id_bill = B.id_bill');
+        $this->db->join('plans P','BDG.plan_id = P.plan_id');
+        $this->db->order_by("B.branch_office", "asc");
+        $this->db->order_by("B.type_document", "asc");
+        $this->db->order_by("B.type_form", "asc");
+        $this->db->order_by("B.number_bill", "desc");
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+        
+        $bills = $query->result_array();
+
+        foreach ($bills as &$bill) {
+
+            //Don't show plans if the bill was billed by medical insurance
+            if($bill['type_bill'] == 1) $bill['plan_description'] = "";
+
+            //Change state
+            switch ($bill['state_billing']) {
+                case 1:
+                    $bill['state_billing'] = 'Cargada';
+                    break;
+                case 2:
+                    $bill['state_billing'] = 'Cobrada';
+                    break;
+                case 3:
+                    $bill['state_billing'] = 'Facturada';
+                    break;
+                default:
+                    $bill['state_billing'] = 'Desconocida';
+            }
+
+            //Change document type
+            switch ($bill['type_document']) {
+                case 'F':
+                    $bill['type_document'] = 'Factura';
+                    break;
+                case 'L':
+                    $bill['type_document']= 'Factura Ficticia';
+                    break;
+                default:
+                    $bill['type_document'] = 'Desconocida';
+            }
+
+        }
+
+        return $bills;
 
     }
 

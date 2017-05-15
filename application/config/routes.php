@@ -197,8 +197,8 @@ $route['professionals/like']          = 'ProfessionalsController/professionalsDa
 $route['benefits/test']             = 'BenefitController/validar';
 
 ////////////////////////Billing Process////////////////////////
-$route['bill']                        = 'BillController/bill';             //Bills benefits
-$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill in pdf
+$route['bills']                        = 'BillController/bill';             //Post -> Bills benefits & get -> get bills
+$route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Generates bill
 
 ////////////////////////Receipt Process////////////////////////
 $route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
