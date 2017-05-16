@@ -549,7 +549,7 @@ class Bill extends CI_Model{
     //Get bills
     public function getBills(){
 
-        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid');
+        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,B.id_medical_insurance,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid');
         $this->db->from('bill B');
         $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
         $this->db->where('B.annulled', 0);
