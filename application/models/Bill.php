@@ -626,21 +626,7 @@ class Bill extends CI_Model{
         //Start transaction
         $this->db->trans_start();
 
-            //Return bill's benefits to "valorized" (1)
-            $data = array(
-                'state'       => 1,
-                'bill_number' => null,
-                'id_bill'     => null
-            );
-
-            $this->db->where('id_bill', $billID);
-            $this->db->where('state', 2);
-            $query = $this->db->update('benefits', $data);
-
-            if (!$query)                            return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
-            if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
-
-            //Get the bill and check it's state (1-Cargada/Generada o 2-Cobrada)
+            //Obtain the bill data
             $this->db->select('B.*');
             $this->db->from('bill B');
             $this->db->where('B.id_bill',$billID);
@@ -651,21 +637,33 @@ class Bill extends CI_Model{
 
             $bill = $query->row();
 
-            if($bill->state_billing == 2){
+
+            //Return bill's benefits to "valorized" (state = 1)
+            $data = array(
+                'state' => 1,
+                'bill_number' => null,
+                'id_bill' => null
+            );
+
+            $this->db->where('id_bill', $billID);
+            $this->db->where('state', 2);
+            $query = $this->db->update('benefits', $data);
+
+            if (!$query) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
+
+
+            //Check bill's state. If state = 2 it was billed, so we have to delete it's pay receipt (1-Cargada/Generada o 2-Cobrada)
+            if ($bill->state_billing == 2) {
                 //TODO: anular el remito de la factura
             }
 
+        
             //Cancel the bill
             $this->db->where('id_bill', $billID);
             $this->db->update('bill', ['annulled' => 1]);
 
             if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo anular la factura'];
-
-            //Cancel the L bill (if the bill has one)
-            $this->db->where('number_bill', $bill->number_bill);
-            $this->db->where('type_form', $bill->type_form);
-            $this->db->where('branch_office', $bill->branch_office);
-            $this->db->update('bill', ['annulled' => 1]);
 
         //Close transaction
         $this->db->trans_complete();
