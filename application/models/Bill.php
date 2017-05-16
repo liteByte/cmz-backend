@@ -372,17 +372,27 @@ class Bill extends CI_Model{
      */
     private function getTotalGeneral($id_medical){
 
-        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
-        //with state = 2 (billed state)
-        $this->db->select('SUM(value_honorary) +  SUM(value_expenses) as total_benefit', FALSE);
-        $this->db->from('benefits');
-        $this->db->where('medical_insurance_id', $id_medical);
-        $this->db->where('period <=', $this->date_billing);
-        $this->db->where('state', ($this->document_type == 'L')? 2:1);
+        $this->db->select('SUM(B.value_honorary) +  SUM(B.value_expenses) as total_benefit', FALSE);
+        $this->db->from('benefits B');
+        $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
+        $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
+        $this->db->where('B.medical_insurance_id', $id_medical);
+        $this->db->where('B.period <=', $this->date_billing);
+        $this->db->where('B.state', 1);
+
+        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
+        if($id_medical == 17 && $this->document_type == "F"){
+            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
+        }else{
+            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        }
+
         $query = $this->db->get();
+
         foreach ($query->row() as $total){
             $result = $total;
         }
+
         return $result;
     }
 
