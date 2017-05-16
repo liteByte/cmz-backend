@@ -15,7 +15,18 @@ class Receipt extends CI_Model{
 
     public function generateReceipt($billID){
 
-        //To print the receipt, we need the bill's print and we have to add the professional information
+        //First, check the bill is not annuled
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill', $billID);
+        $query = $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura de la que se desea realizar el remito'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de la factura de la que se desea imprimir el remito'];
+
+        if($query->row()->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede imprimir el remito de esta factura ya que ha sido anulada'];
+
+        //To print the receipt, we need the bill's print data and we have to add the professional information
         $receiptData = $this->Bill->getPrintData($billID)['msg'];
 
         $this->db->select('B.period,B.quantity,B.value_honorary,B.value_expenses,B.value_unit,PL.description,PR.registration_number,PR.name,FD.cuit,FD.iibb,N.code,N.class');
@@ -30,6 +41,9 @@ class Receipt extends CI_Model{
         $this->db->order_by("PR.registration_number", "asc");
         $this->db->order_by("N.code", "asc");
         $query = $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener datos de la factura para realizar el remito'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron datos de la factura para realizar el remito'];
 
         $result = $query->result_array();
 
