@@ -90,8 +90,6 @@ class BillController extends AuthController{
 
         return $this->pdf->pdf_create2($html);
 
-
-
     }
 
     //Cancel bill

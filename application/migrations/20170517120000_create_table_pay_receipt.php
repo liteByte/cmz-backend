@@ -46,10 +46,6 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
                 'type'           => 'DATE',
                 'null'           => FALSE,
             ],
-            'date_due'   => [
-                'type'           => 'DATE',
-                'null'           => FALSE,
-            ],
             'id_medical_insurance'   => [
                 'type'           => 'INT',
                 'unsigned'       =>  TRUE,
@@ -59,12 +55,6 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
                 'type'           => 'DECIMAL',
                 'constraint'     => '20,2',
                 'null'           =>  FALSE
-            ],
-            'state_billing'   => [
-                'type'           => 'INT',
-                'constraint'     =>  1,
-                'null'           =>  FALSE,
-                'comment'        => '1 -> Cargada, 2-> Cobrada parcial, 3->Cobrada y 4 -> Facturada'
             ],
             'amount_paid'   => [
                 'type'           => 'DECIMAL',
