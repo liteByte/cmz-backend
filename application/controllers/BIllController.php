@@ -116,14 +116,17 @@ class BillController extends AuthController{
 
         $pay_date    = $post->pay_date        ?? "";
         $amount_paid = $post->amount_paid     ?? "";
+        $bill_id     = $post->bill_id         ?? "";
 
         if(empty($pay_date))        return $this->response(array('error'=>'No se ha ingresado fecha de pago'), REST_Controller::HTTP_BAD_REQUEST);
         if(empty($amount_paid))     return $this->response(array('error'=>'No se ha ingresado una cantidad a abonar'), REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))     return $this->response(array('error'=>'No se ha indicado la facturar que se va a cobrar'), REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
-        if(!$this->validator->validateDate($pay_date)) return $this->response(['error'=>'Fecha de pago inválida'], REST_Controller::HTTP_BAD_REQUEST);
+        if(!$this->validator->validateDate($pay_date))  return $this->response(['error'=>'Fecha de pago inválida'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))                         return $this->response(['error'=>'No se ha ingresado un monto a pagar'], REST_Controller::HTTP_BAD_REQUEST);
 
-        $result = $this->bill->payBill($amount_paid,$pay_date);
+        $result = $this->bill->payBill($amount_paid,$pay_date,$bill_id);
 
 
 

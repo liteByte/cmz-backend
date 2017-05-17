@@ -735,7 +735,41 @@ class Bill extends CI_Model{
     }
 
     //Pay bill
-    public function payBill($amount_paid,$pay_date){
+    public function payBill($amount_paid,$pay_date,$bill_id){
+
+        $dataToUpdateBill = [
+            'amount_paid' => $amount_paid,
+            'state'       => 0
+        ];
+
+        //Obtain the bill data
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill',$bill_id);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
+
+        $bill = $query->row();
+
+        //Check the amount payed isn't more than the total to pay
+        if ($bill->total > $amount_paid){
+            return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al total de la factura'];
+        }
+
+        //Check if the total of the bill was payed or only a part of it
+        if ($bill->total == $amount_paid){
+            $dataToUpdateBill['state'] = 3; //Cobrada
+        }else{
+            $dataToUpdateBill['state'] = 2; //Cobrada parcial
+        }
+
+        //Update the bill
+        $this->db->where('id_bill', $bill_id);
+        $this->db->update('bill', $dataToUpdateBill);
+
+
 
     }
 

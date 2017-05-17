@@ -51,7 +51,7 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
                 'unsigned'       =>  TRUE,
                 'null'           =>  FALSE
             ],
-            'total'   => [
+            'id_bill'   => [
                 'type'           => 'DECIMAL',
                 'constraint'     => '20,2',
                 'null'           =>  FALSE
@@ -59,7 +59,12 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
             'amount_paid'   => [
                 'type'           => 'DECIMAL',
                 'constraint'     => '20,2',
-                'null'           =>  TRUE,
+                'null'           =>  FALSE
+            ],
+            'letter_amount_paid'   => [
+                'type'           => 'VARCHAR',
+                'constraint'     => '300',
+                'null'           =>  FALSE
             ],
             'annulled'   => [
                 'type'           => 'BOOLEAN',
@@ -68,13 +73,14 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
         ]);
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_insurance)    REFERENCES medical_insurance(medical_insurance_id)');
-        $this->dbforge->add_key('id_bill', TRUE);
-        $this->dbforge->add_field('UNIQUE KEY bill_number_key (number_bill,type_document,type_form,branch_office)');
-        $this->dbforge->create_table('bill');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)                 REFERENCES bill(id_bill)');
+        $this->dbforge->add_key('pay_receipt_id', TRUE);
+        $this->dbforge->add_field('UNIQUE KEY pay_receipt_number_key (pay_receipt_number,type_document,type_form,branch_office)');
+        $this->dbforge->create_table('pay_receipt');
 
     }
 
     public function down(){
-        $this->dbforge->drop_table('bill');
+        $this->dbforge->drop_table('pay_receipt');
     }
 }
