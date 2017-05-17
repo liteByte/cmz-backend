@@ -652,9 +652,12 @@ class Bill extends CI_Model{
                     $bill['state_billing'] = 'Cargada';
                     break;
                 case 2:
-                    $bill['state_billing'] = 'Cobrada';
+                    $bill['state_billing'] = 'Cobrada parcial';
                     break;
                 case 3:
+                    $bill['state_billing'] = 'Cobrada';
+                    break;
+                case 4:
                     $bill['state_billing'] = 'Facturada';
                     break;
                 default:
@@ -713,8 +716,8 @@ class Bill extends CI_Model{
 
 
             //Check bill's state. If state = 2 it was billed, so we have to delete it's pay receipt (1-Cargada/Generada o 2-Cobrada)
-            if ($bill->state_billing == 2) {
-                //TODO: anular el remito de la factura
+            if ($bill->state_billing == 2 || $bill->state_billing == 3) {
+                //TODO: anular el/los remito de la factura
             }
 
 
