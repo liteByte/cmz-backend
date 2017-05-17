@@ -34,7 +34,7 @@ class ReceiptController extends AuthController{
         $html = $this->load->view('documents/receipt.html',$result['msg'],TRUE);
 
         return $this->pdf->pdf_create2($html);
-        
+
     }
 }
 
