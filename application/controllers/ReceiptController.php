@@ -31,12 +31,10 @@ class ReceiptController extends AuthController{
 
         if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
 
-        //$html = $this->load->view('documents/bill.html',$result['msg'],TRUE);
+        $html = $this->load->view('documents/receipt.html',$result['msg'],TRUE);
 
-        //return $this->pdf->pdf_create2($html);
-
-
-
+        return $this->pdf->pdf_create2($html);
+        
     }
 }
 
