@@ -159,16 +159,15 @@ class Receipt extends CI_Model{
         }
 
         $returnArray = [];
-        $returnArray [] = $result;
-        $returnArray [] = $totalReceiptData;
+        $returnArray ['body'] = $result;
+        $returnArray ['endData'] = $totalReceiptData;
 
+        //Get receipt first page data (same page as bill)
+        $billHeadData = $this->Bill->getPrintData($billID);
+        if($billHeadData['status'] == 'error') return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la cabecera del remito'];
+        $returnArray ['firstPage'] = $billHeadData['msg'];
 
-        print_r($returnArray);die();
-
-        //print_r($this->db->error());die();
-
-
-
+        return ['status' => 'ok', 'msg' => $returnArray];
 
     }
 
