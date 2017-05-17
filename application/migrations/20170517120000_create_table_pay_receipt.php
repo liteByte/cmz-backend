@@ -14,7 +14,7 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
             ],
             'pay_receipt_number'   => [
                 'type'           => 'INT',
-                'constraint'     => '8',
+                'constraint'     => '10',
                 'unsigned'       => TRUE,
                 'null'           => FALSE
             ],

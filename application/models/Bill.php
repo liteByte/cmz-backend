@@ -737,39 +737,110 @@ class Bill extends CI_Model{
     //Pay bill
     public function payBill($amount_paid,$pay_date,$bill_id){
 
-        $dataToUpdateBill = [
-            'amount_paid' => $amount_paid,
-            'state'       => 0
-        ];
+        //Start transaction
+        $this->db->trans_start();
 
-        //Obtain the bill data
-        $this->db->select('B.*');
-        $this->db->from('bill B');
-        $this->db->where('B.id_bill',$bill_id);
+            $dataToUpdateBill = [
+                'amount_paid' => $amount_paid,
+                'state'       => 0
+            ];
+
+            //Obtain the bill data
+            $this->db->select('B.*');
+            $this->db->from('bill B');
+            $this->db->where('B.id_bill',$bill_id);
+            $query = $this->db->get();
+
+            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
+            if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
+
+            $bill = $query->row();
+
+            //Check the amount payed isn't more than the total to pay
+            if ($bill->total > $amount_paid){
+                return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al total de la factura'];
+            }
+
+            //Check if the total of the bill was payed or only a part of it
+            if ($bill->total == $amount_paid){
+                $dataToUpdateBill['state'] = 3; //Cobrada
+            }else{
+                $dataToUpdateBill['state'] = 2; //Cobrada parcial
+            }
+
+            // 1)Update the bill
+            $this->db->where('id_bill', $bill_id);
+            $this->db->update('bill', $dataToUpdateBill);
+
+
+            //Get all the benefits of the fee
+            $this->db->select('B.*');
+            $this->db->from('benefits B');
+            $this->db->where('B.id_bill',$bill_id);
+            $query = $this->db->get();
+
+            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar las prestaciones de la factura a cobrar'];
+            if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones de la factura que se quiere cobrar'];
+
+            $benefits = $query->result_array();
+
+
+            // 2) For each benefit, update it's professional (pending liquidation) and itself (benefit state -> Cobrada)
+            foreach ($benefits as $benefit) {
+
+                $this->db->where('id_professional_data', $benefit['id_professional_data']);
+                $this->db->update('professionals', ['liquidation_pending' => 1]);
+                if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado del profesional de la prestacion '.$benefit['benefit_id']];
+
+                $this->db->where('benefit_id', $benefit['benefit_id']);
+                $this->db->update('benefits', ['state' => 3]);
+                if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de la prestacion '.$benefit['benefit_id']];
+
+            }
+
+
+            //Get the next receipt number
+            $payReceiptNumber = $this->generatePayReceiptNumber($bill->branch_office,$bill->form_type,$bill->document_type);
+
+            // 3) Generate the pay_receipt for the bill
+            $payReceiptData = [
+                'pay_receipt_number' => $payReceiptNumber,
+                'type_bill'       => 0,
+                'branch_office' => $amount_paid,
+                'type_document'       => 0,
+                'type_form' => $amount_paid,
+                'pay_date'       => 0,
+                'date_created' => $amount_paid,
+                'id_medical_insurance'       => 0,
+                'id_bill'       => 0,
+                'amount_paid'       => 0,
+                'letter_amount_paid'       => 0,
+                'annulled'       => 0
+            ];
+
+        //Close transaction
+        $this->db->trans_complete();
+
+    }
+
+    //Generate the correct pay receipt number based on Branch Office + Document Type + Document Form
+    private function generatePayReceiptNumber ($branch_office,$form_type,$document_type ){
+
+        $this->db->select_max('pay_receipt_number');
+        $this->db->where('branch_office', $branch_office);
+        $this->db->where('type_document', $document_type);
+        $this->db->where('type_form', $form_type);
+        $this->db->from('pay_receipt');
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
-        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
+        $result = $query->row();
 
-        $bill = $query->row();
+        if (empty($result)) $result = 0;
 
-        //Check the amount payed isn't more than the total to pay
-        if ($bill->total > $amount_paid){
-            return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al total de la factura'];
-        }
+        // Add 1 to the number obtained so we get the next pay receipt number
+        $result ++;
 
-        //Check if the total of the bill was payed or only a part of it
-        if ($bill->total == $amount_paid){
-            $dataToUpdateBill['state'] = 3; //Cobrada
-        }else{
-            $dataToUpdateBill['state'] = 2; //Cobrada parcial
-        }
-
-        //Update the bill
-        $this->db->where('id_bill', $bill_id);
-        $this->db->update('bill', $dataToUpdateBill);
-
-
+        return $result;
 
     }
 

@@ -126,6 +126,10 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
+            'liquidation_pending' => array(
+                'type'           => 'BOOLEAN',
+                'null'           =>  TRUE
+            ),
             'active'        => array(
                 'type'          => 'VARCHAR',
                 'constraint'    =>  150,
@@ -143,8 +147,6 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
         ));
 
-//        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_legal_locality)       REFERENCES locality(id_locality)');
-//        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_office_locality)       REFERENCES locality(id_locality)');
         $this->dbforge->add_field("date_created  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_fiscal_data)          REFERENCES fiscal_data(id_fiscal_data)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (speciality_id)           REFERENCES specialities(speciality_id)');
