@@ -71,7 +71,7 @@ class Bill extends CI_Model{
 
                 //Generate an array of every valued benefit that is going to be billed
                 $totalOfPlansByPeriod = $this->getTotalForMedical($id_medical_insurance);
-                if(empty($totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones valorizadas para realizar la factura '.$this->document_type.' de la obra social ingresada'];
+                if(empty($totalOfPlansByPeriod)) return ['status' => 'ok', 'msg' => 'No se encontraron prestaciones valorizadas para realizar la factura '.$this->document_type.' de la obra social ingresada']; //Se sale por OK ya que puede que no haya prestaciones de monotributistas
 
                 //Generate the bill's total number
                 $totalGeneral = $this->getTotalGeneral($id_medical_insurance);
@@ -99,7 +99,7 @@ class Bill extends CI_Model{
 
                 //Generate an array of every valued benefit that is going to be billed, group by plan
                 $totalOfPlansByPeriod = $this->getTotalForPlans($id_medical_insurance);
-                if(empty($totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones valorizadas para realizar la factura '.$this->document_type.' de la obra social ingresada'];
+                if(empty($totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se encontraron prestaciones valorizadas para realizar la factura '.$this->document_type.' de la obra social ingresada']; //Se sale por OK ya que puede que no haya prestaciones de monotributistas
 
                 //Save the bill, bill's detail and bill's header for each plan. Update the benefits
                 $result = $this->saveDataForPlans($id_medical_insurance, $branch_office, $totalOfPlansByPeriod,$form_type);
@@ -302,8 +302,6 @@ class Bill extends CI_Model{
      */
     private function getTotalForMedical($id_medical){
 
-        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
-        //with state = 2 (billed state)
         $this->db->select('B.benefit_id,B.medical_insurance_id, B.plan_id, B.period, 
                            SUM(B.value_honorary) AS total_honorary, SUM(B.value_expenses) AS total_expenses, count(B.benefit_id) as total_benefit', FALSE);
         $this->db->from('benefits B');
@@ -314,10 +312,12 @@ class Bill extends CI_Model{
         $this->db->where('B.period <=', $this->date_billing);
 
         //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17 && $this->document_type == "F"){
-            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
-        }else{
-            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        if($id_medical == 17) {
+            if ($this->document_type == "F") {
+                $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
+            } else {
+                $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+            }
         }
 
         $this->db->order_by("B.period", "asc");
@@ -337,28 +337,29 @@ class Bill extends CI_Model{
      */
     private function getTotalForPlans($id_medical){
 
-        //If document type is L, the medical insurance is OSDE and it was billed before, so we select the benefits
-        //with state = 2 (billed state)
         $this->db->select('B.benefit_id, B.plan_id, B.period, B.value_honorary, B.value_expenses, B.value_unit,
            SUM(B.value_honorary) AS total_honorary, SUM(B.value_expenses) AS total_expenses, count(B.benefit_id) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
         $this->db->where('B.medical_insurance_id', $id_medical);
-        $this->db->where('B.state', ($this->document_type == 'L')? 2:1);
+        $this->db->where('B.state', 1);
         $this->db->where('B.period <=', $this->date_billing);
 
         //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17 && $this->document_type == "F"){
-            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
-        }else{
-            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        if($id_medical == 17) {
+            if ($this->document_type == "F") {
+                $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
+            } else {
+                $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+            }
         }
 
         $this->db->order_by("B.plan_id", "asc");
         $this->db->order_by("B.period", "asc");
         $this->db->group_by(array("B.plan_id", "B.period"));
         $query = $this->db->get();
+
         $result = $query->result_array();
         $result = $this->array_group_by($result, 'plan_id');
 
@@ -381,10 +382,12 @@ class Bill extends CI_Model{
         $this->db->where('B.state', 1);
 
         //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17 && $this->document_type == "F"){
-            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
-        }else{
-            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        if($id_medical == 17) {
+            if ($this->document_type == "F") {
+                $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
+            } else {
+                $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+            }
         }
 
         $query = $this->db->get();
@@ -423,24 +426,30 @@ class Bill extends CI_Model{
     private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id, $billID){
 
         $data = array(
-            'B.state'       => 2,
-            'B.bill_number' => $bill_number,
-            'B.id_bill'     => $billID
+            'state'       => 2,
+            'bill_number' => $bill_number,
+            'id_bill'     => $billID
         );
 
-        $this->db->where('B.medical_insurance_id', $medical_insurance_id);
-        $this->db->where('B.state', 1);
-        $this->db->where('B.period <=', $this->date_billing);
+        $sql =
+            "UPDATE benefits B " .
+            "JOIN professionals PF ON B.id_professional_data = PF.id_professional_data " .
+            "JOIN fiscal_data PFD ON PF.id_fiscal_data = PFD.id_fiscal_data " .
+            "SET B.state = 2, B.bill_number = ".$data['bill_number'].", B.id_bill = ".$data['id_bill'] .
+            " WHERE B.medical_insurance_id = " . $medical_insurance_id .
+            " AND B.state = " . 1 .
+            " AND B.period <= '" . $this->date_billing ."' ";
 
         //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($medical_insurance_id == 17 && $this->document_type == "F"){
-            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
-        }else{
-            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        if($medical_insurance_id == 17) {
+            if ($this->document_type == "F") {
+                $sql = $sql . " AND PFD.iva_id = 6";   //Iva monotributista
+            } else {
+                $sql = $sql . " AND PFD.iva_id <> 6";  //Otros tipos de iva
+            }
         }
 
-        $this->db->update('benefits B join professionals PF on B.id_professional_data = PF.id_professional_data join fiscal_data PFD on PFD.id_fiscal_data = PF.id_fiscal_data', $data);
-
+        $this->db->query($sql);
         if ($this->db->affected_rows() == 0) return false;
 
         return true;
@@ -450,26 +459,32 @@ class Bill extends CI_Model{
     private function updateBenefitsWithManyBillNumber($bill_number,$medical_insurance_id,$plan_id,$billID){
 
         $data = array(
-            'B.state'       => 2,
-            'B.bill_number' => $bill_number,
-            'B.id_bill'     => $billID
+            'state'       => 2,
+            'bill_number' => $bill_number,
+            'id_bill'     => $billID
         );
 
-        $this->db->where('B.medical_insurance_id', $medical_insurance_id);
-        $this->db->where('B.plan_id', $plan_id);
-        $this->db->where('B.state', 1);
-        $this->db->where('B.period <=', $this->date_billing);
+        $sql =
+            "UPDATE benefits B " .
+            "JOIN professionals PF ON B.id_professional_data = PF.id_professional_data " .
+            "JOIN fiscal_data PFD ON PF.id_fiscal_data = PFD.id_fiscal_data " .
+            "SET B.state = 2, B.bill_number = ".$data['bill_number'].", B.id_bill = ".$data['id_bill'] .
+            " WHERE B.medical_insurance_id = " . $medical_insurance_id .
+            " AND B.state = " . 1 .
+            " AND B.plan_id = " . $plan_id .
+            " AND B.period <= '" . $this->date_billing ."' ";
 
         //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($medical_insurance_id == 17 && $this->document_type == "F"){
-            $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
-        }else{
-            $this->db->where('PFD.iva_id <>', 6);  //Otros tipos de iva
+        if($medical_insurance_id == 17) {
+            if ($this->document_type == "F") {
+                $sql = $sql . " AND PFD.iva_id = 6";   //Iva monotributista
+            } else {
+                $sql = $sql . " AND PFD.iva_id <> 6";  //Otros tipos de iva
+            }
         }
 
-        $this->db->update('benefits B join professionals PF on B.id_professional_data = PF.id_professional_data join fiscal_data PFD on PFD.id_fiscal_data = PF.id_fiscal_data', $data);
-
-        if ($this->db->affected_rows() == 0)    return false;
+        $this->db->query($sql);
+        if ($this->db->affected_rows() == 0) return false;
 
         return true;
 
