@@ -126,10 +126,6 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
-            'liquidation_pending' => array(
-                'type'           => 'BOOLEAN',
-                'null'           =>  TRUE
-            ),
             'active'        => array(
                 'type'          => 'VARCHAR',
                 'constraint'    =>  150,

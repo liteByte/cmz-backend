@@ -587,7 +587,7 @@ class Bill extends CI_Model{
         $billData['generalInformation']['receipt_number'] = $billData['generalInformation']['number_bill'];
 
         //Convert the total number into letters
-        $billData['generalInformation']['letter_total'] = $this->numbertoletter->to_word($billData['generalInformation']['total'],'ARS');
+        $billData['generalInformation']['letter_total'] = $this->numbertoletter->to_word(floor($billData['generalInformation']['total']),'ARS');
 
         //Complete bill number with zeros (8 zeros)
         $billData['generalInformation']['number_bill'] = str_pad($billData['generalInformation']['number_bill'], 8, '0', STR_PAD_LEFT);
@@ -608,10 +608,9 @@ class Bill extends CI_Model{
     //Get bills
     public function getBills(){
 
-        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,B.id_medical_insurance,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid');
+        $this->db->select('B.id_bill,B.branch_office,B.type_document,B.type_form,B.number_bill,B.id_medical_insurance,MI.denomination as medical_insurance_denomination,B.type_bill,B.date_billing,B.date_due,B.total,B.state_billing,B.amount_paid,B.annulled');
         $this->db->from('bill B');
         $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
-        $this->db->where('B.annulled', 0);
         $this->db->order_by("B.branch_office", "asc");
         $this->db->order_by("B.type_document", "asc");
         $this->db->order_by("B.type_form", "asc");
@@ -685,6 +684,25 @@ class Bill extends CI_Model{
     //Cancel bill
     public function cancelBill($billID){
 
+        //Validate if the bill can be annulled or not. If it has receipts, and any of it's receipts was liquidated, bill cannot be annulled
+        $this->db->select('PR.pay_receipt_id,PR.liquidated');
+        $this->db->from('pay_receipt PR');
+        $this->db->where('PR.id_bill',$billID);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error: no se pudo verificar si la factura puede ser anulada o no'];
+
+        if ($query->num_rows() > 0) {
+
+            $pay_receipts = $query->result_array();
+
+            //If any pay_receipt was liquidated, bill cannot be nulled
+            foreach ($pay_receipts as $pay_receipt){
+                if($pay_receipt['liquidated'] == 1) return ['status' => 'error', 'msg' => 'Error: no se pudo verificar si la factura puede ser anulada o no'];
+            }
+
+        }
+
         //Start transaction
         $this->db->trans_start();
 
@@ -715,10 +733,19 @@ class Bill extends CI_Model{
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
 
 
-            //Check bill's state. If state = 2 it was billed, so we have to delete it's pay receipt (1-Cargada/Generada o 2-Cobrada)
+            //Check bill's state. If state = 2 or 3 it was billed, so we have to delete it's pay receipts (1-Cargada/Generada o 2-Cobrada parcial o 3-Cobrada)
             if ($bill->state_billing == 2 || $bill->state_billing == 3) {
-                //TODO: anular el/los remito de la factura
+
+                //The pay receipts where obtained in the receipt validation
+                foreach ($pay_receipts as $pay_receipt){
+                    $this->db->where('pay_receipt_id', $pay_receipt['pay_receipt_id']);
+                    $this->db->update('pay_receipt', ['annulled' => 1]);
+                }
+
             }
+
+
+            //TODO: anular las notas de credito y debito de la factura
 
 
             //Cancel the bill
@@ -740,11 +767,6 @@ class Bill extends CI_Model{
         //Start transaction
         $this->db->trans_start();
 
-            $dataToUpdateBill = [
-                'amount_paid' => $amount_paid,
-                'state'       => 0
-            ];
-
             //Obtain the bill data
             $this->db->select('B.*');
             $this->db->from('bill B');
@@ -756,21 +778,43 @@ class Bill extends CI_Model{
 
             $bill = $query->row();
 
-            //Check the amount payed isn't more than the total to pay
-            if ($bill->total > $amount_paid){
-                return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al total de la factura'];
+
+            //If the bill is annulled, it can't be payed
+            if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
+
+
+            //Create the array that will update the bill
+            $dataToUpdateBill = [
+                'amount_paid'   => $bill->amount_paid,
+                'state_billing' => 0
+            ];
+
+
+            //Calculate the current debt (Bill total - amount payed - debit notes + credit notes)
+            //TODO: Buscar valores de notas de cred y deb de esta factura y sumarlos/restarlos al total.
+            $totalDebt = $bill->total; //-notas debito + notas credito
+            $currentDebt = $totalDebt - - $bill->amount_paid;
+
+            //Check the amount payed is more than the pending total
+            if ($amount_paid > $currentDebt){
+                return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al monto pendiente de pago'];
             }
 
+
             //Check if the total of the bill was payed or only a part of it
-            if ($bill->total == $amount_paid){
-                $dataToUpdateBill['state'] = 3; //Cobrada
+            if ($currentDebt == $amount_paid){
+                $dataToUpdateBill['state_billing'] = 3; //Cobrada
             }else{
-                $dataToUpdateBill['state'] = 2; //Cobrada parcial
+                $dataToUpdateBill['state_billing'] = 2; //Cobrada parcial
             }
+            $dataToUpdateBill['amount_paid'] = $dataToUpdateBill['amount_paid'] + $amount_paid;
+
 
             // 1)Update the bill
             $this->db->where('id_bill', $bill_id);
             $this->db->update('bill', $dataToUpdateBill);
+
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el monto pagado en la factura'];
 
 
             //Get all the benefits of the fee
@@ -785,22 +829,18 @@ class Bill extends CI_Model{
             $benefits = $query->result_array();
 
 
-            // 2) For each benefit, update it's professional (pending liquidation) and itself (benefit state -> Cobrada)
+            // 2) Update each benefit (benefit state -> Cobrada)
             foreach ($benefits as $benefit) {
-
-                $this->db->where('id_professional_data', $benefit['id_professional_data']);
-                $this->db->update('professionals', ['liquidation_pending' => 1]);
-                if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado del profesional de la prestacion '.$benefit['benefit_id']];
 
                 $this->db->where('benefit_id', $benefit['benefit_id']);
                 $this->db->update('benefits', ['state' => 3]);
-                if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de la prestacion '.$benefit['benefit_id']];
 
             }
 
 
             //Get the next receipt number
-            $payReceiptNumber = $this->generatePayReceiptNumber($bill->branch_office,$bill->form_type,$bill->document_type);
+            $payReceiptNumber = $this->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
+
 
             // 3) Generate the pay_receipt for the bill
             $payReceiptData = [
@@ -814,8 +854,9 @@ class Bill extends CI_Model{
                 'id_medical_insurance' => $bill->id_medical_insurance,
                 'id_bill'              => $bill->id_bill,
                 'amount_paid'          => $amount_paid,
-                'letter_amount_paid'   => $this->numbertoletter->to_word($amount_paid,'ARS'),
-                'annulled'             => 0
+                'letter_amount_paid'   => $this->numbertoletter->to_word(floor($amount_paid),'ARS'),
+                'annulled'             => 0,
+                'liquidated'           => 0
             ];
 
             $this->db->insert('pay_receipt', $payReceiptData);
@@ -838,7 +879,7 @@ class Bill extends CI_Model{
         $this->db->from('pay_receipt');
         $query = $this->db->get();
 
-        $result = $query->row();
+        $result = $query->row()->pay_receipt_number;
 
         if (empty($result)) $result = 0;
 

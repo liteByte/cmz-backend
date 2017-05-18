@@ -26,35 +26,37 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
             'branch_office'   => [
                 'type'           => 'INT',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'type_document'   => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'type_form'   => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'pay_date'   => [
                 'type'           => 'DATE',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'date_created'   => [
                 'type'           => 'DATE',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'id_medical_insurance'   => [
                 'type'           => 'INT',
+                'constraint'     =>  5,
                 'unsigned'       =>  TRUE,
                 'null'           =>  FALSE
             ],
             'id_bill'   => [
-                'type'           => 'DECIMAL',
-                'constraint'     => '20,2',
-                'null'           =>  FALSE
+                'type'           => 'INT',
+                'constraint'     =>  10,
+                'unsigned'       => TRUE,
+                'null'           => FALSE
             ],
             'amount_paid'   => [
                 'type'           => 'DECIMAL',
@@ -68,7 +70,11 @@ class Migration_Create_table_pay_receipt extends CI_Migration{
             ],
             'annulled'   => [
                 'type'           => 'BOOLEAN',
-                'null'           =>  TRUE,
+                'null'           =>  TRUE
+            ],
+            'liquidated'   => [
+                'type'           => 'BOOLEAN',
+                'null'           =>  TRUE
             ],
         ]);
 
