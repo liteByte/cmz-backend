@@ -20,13 +20,13 @@ class Migration_Create_table_special_conditions_details extends CI_Migration{
             ],
             'honorary'          => [
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '9,2',
                 'unsigned'      =>  TRUE,
                 'null'          =>  TRUE,
             ],
             'expenses'          => [
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '9,2',
                 'unsigned'      =>  TRUE,
                 'null'          =>  TRUE,
             ],
