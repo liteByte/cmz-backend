@@ -89,7 +89,7 @@
 <div style="position: relative;">
     <div style="position: relative">
         <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">REMITO:&#09;<?php echo $firstPage['generalInformation']['receipt_number'] ?></p>
-        <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['billing_date'] ?></p>
+        <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo date_format(date_create_from_format('Y-m-d', $firstPage['header']['billing_date']), 'd/m/Y') ?></p>
         <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['settlement_name'] ?></p>
         <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['iva_description'] ?></p>
         <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['address'] ?></p>
@@ -116,7 +116,7 @@
         </div>
         <div style="width: 100%; margin-top: 24px; display: block; position: relative">
             <p style="margin: auto; text-align: justify; width: 70%" >
-                LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo $firstPage['generalInformation']['date_due'] ?>*** CASO CONTRARIO Y
+                LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo date_format(date_create_from_format('Y-m-d', $firstPage['generalInformation']['date_due']), 'd/m/Y') ?>*** CASO CONTRARIO Y
                 -SIN OTRA COMUNICACION- DEVENGARA LOS INTERESES PACTADOS CONTRACTUALMENTE O LOS QUE DISPONGAN LA LEGISLACION VIGENTE
             </p>
         </div>
@@ -172,14 +172,14 @@
     <table style="width:100%;">
         <tbody>
             <tr><td colspan="5">***PRESTACIONES CORRESPONDIENTES AL PERIODO:
-                <?php echo substr(str_replace('-','/', array_values(array_values($period)[0])[0]['period']),0,-3) ?>***
+                <?php echo date_format(date_create_from_format('Y-m-d', array_values(array_values($period)[0])[0]['period']), 'm/Y') ?>***
             </td></tr>
             <?php $count = count($period) ?>
             <?php foreach($period as $key=>$prof) :?>
                 <?php if (--$count <= 0) { ?>
                 <tr>
                     <td><?php echo $prof['period_benefit_quantity'] ?></td>
-                    <td class="nowrap">TOTAL PERIODO: <?php echo substr(str_replace('-','/', array_values(array_values($period)[0])[0]['period']),0,-3) ?></td>
+                    <td class="nowrap">TOTAL PERIODO: <?php echo date_format(date_create_from_format('Y-m-d', array_values(array_values($period)[0])[0]['period']), 'm/Y') ?></td>
                     <td class="right"><?php echo $prof['period_visit_total'] ?></td>
                     <td class="right"><?php echo $prof['period_honorary_total'] ?></td>
                     <td class="right"><?php echo $prof['period_expenses_total'] ?></td>
@@ -195,7 +195,7 @@
                 <?php foreach($prof as $key=>$benefit) :?>
                     <tr>
                         <td><?php echo $benefit['quantity'] ?></td>
-                        <td class="center"><?php echo $benefit['code'] ?></td>
+                        <td class="right"><?php echo $benefit['code'] ?></td>
                         <td class="right"><?php echo $benefit['value_visit'] ?></td>
                         <td class="right"><?php echo $benefit['honorary_benefit_total'] ?></td>
                         <td class="right"><?php echo $benefit['expenses_benefit_total'] ?></td>
