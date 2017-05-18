@@ -128,6 +128,13 @@ class BillController extends AuthController{
 
         $result = $this->bill->payBill($amount_paid,$pay_date,$bill_id);
 
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
 
 
     }

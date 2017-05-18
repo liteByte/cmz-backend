@@ -804,22 +804,27 @@ class Bill extends CI_Model{
 
             // 3) Generate the pay_receipt for the bill
             $payReceiptData = [
-                'pay_receipt_number' => $payReceiptNumber,
-                'type_bill'       => 0,
-                'branch_office' => $amount_paid,
-                'type_document'       => 0,
-                'type_form' => $amount_paid,
-                'pay_date'       => 0,
-                'date_created' => $amount_paid,
-                'id_medical_insurance'       => 0,
-                'id_bill'       => 0,
-                'amount_paid'       => 0,
-                'letter_amount_paid'       => 0,
-                'annulled'       => 0
+                'pay_receipt_number'   => $payReceiptNumber,
+                'type_bill'            => $bill->type_bill,
+                'branch_office'        => $bill->branch_office,
+                'type_document'        => $bill->type_document,
+                'type_form'            => $bill->type_form,
+                'pay_date'             => $pay_date,
+                'date_created'         => date('Y-m-d H:i:s'),
+                'id_medical_insurance' => $bill->id_medical_insurance,
+                'id_bill'              => $bill->id_bill,
+                'amount_paid'          => $amount_paid,
+                'letter_amount_paid'   => $this->numbertoletter->to_word($amount_paid,'ARS'),
+                'annulled'             => 0
             ];
+
+            $this->db->insert('pay_receipt', $payReceiptData);
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo crear el recibo del pago realizado'];
 
         //Close transaction
         $this->db->trans_complete();
+
+        return ['status' => 'ok', 'msg' => 'La factura ha sido cobrada'];
 
     }
 
