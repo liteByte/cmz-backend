@@ -726,11 +726,10 @@ class Bill extends CI_Model{
             );
 
             $this->db->where('id_bill', $billID);
-            $this->db->where('state', 2);
             $query = $this->db->update('benefits', $data);
 
             if (!$query) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
-            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura'];
 
 
             //Check bill's state. If state = 2 or 3 it was billed, so we have to delete it's pay receipts (1-Cargada/Generada o 2-Cobrada parcial o 3-Cobrada)
