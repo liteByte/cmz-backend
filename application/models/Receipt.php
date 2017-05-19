@@ -35,7 +35,7 @@ class Receipt extends CI_Model{
         $this->db->join('professionals PR',     'PR.id_professional_data = B.id_professional_data');
         $this->db->join('fiscal_data FD',       'FD.id_fiscal_data = PR.id_fiscal_data');
         $this->db->join('nomenclators N',       'N.nomenclator_id = B.nomenclator_id');
-        $this->db->where('B.bill_number', $receiptData['generalInformation']['receipt_number']);   //Receipt number = bill number without zeros
+        $this->db->where('B.id_bill', $billID);
         $this->db->where('B.state', 2);
         $this->db->order_by("B.period", "asc");
         $this->db->order_by("PR.registration_number", "asc");

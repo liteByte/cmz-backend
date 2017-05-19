@@ -120,22 +120,22 @@ class Migration_Create_table_benefits extends CI_Migration{
             ),
             'new_honorary' => array(
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '8,2',
                 'null'          =>  TRUE
             ),
             'new_expenses' => array(
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '8,2',
                 'null'          =>  TRUE
             ),
             'value_honorary' => array(
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '8,2',
                 'null'          =>  TRUE
             ),
             'value_expenses' => array(
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '8,2',
                 'null'          =>  TRUE
             ),
             'value_unit'   => array(

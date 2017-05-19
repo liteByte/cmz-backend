@@ -197,8 +197,8 @@ class Bill extends CI_Model{
 
             //For each plan, obtain the sum of every honorary + expense for all periods
             $planTotal = 0;
-            foreach ($p as $specificPlan){
-                $planTotal += $specificPlan['total_honorary'] + $specificPlan['total_expenses'];
+            foreach ($p as $specificPlanPeriod){
+                $planTotal += $specificPlanPeriod['total_honorary'] + $specificPlanPeriod['total_expenses'];
             }
 
             $dataOfBill = [
@@ -303,7 +303,7 @@ class Bill extends CI_Model{
     private function getTotalForMedical($id_medical){
 
         $this->db->select('B.benefit_id,B.medical_insurance_id, B.plan_id, B.period, 
-                           SUM(B.value_honorary) AS total_honorary, SUM(B.value_expenses) AS total_expenses, count(B.benefit_id) as total_benefit', FALSE);
+                           SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
@@ -321,8 +321,7 @@ class Bill extends CI_Model{
         }
 
         $this->db->order_by("B.period", "asc");
-        $this->db->order_by("B.plan_id", "asc");
-        $this->db->group_by(array("B.period", "B.plan_id"));
+        $this->db->group_by(array("B.period"));
         $query = $this->db->get();
 
         $result = $query->result_array();
@@ -338,7 +337,7 @@ class Bill extends CI_Model{
     private function getTotalForPlans($id_medical){
 
         $this->db->select('B.benefit_id, B.plan_id, B.period, B.value_honorary, B.value_expenses, B.value_unit,
-           SUM(B.value_honorary) AS total_honorary, SUM(B.value_expenses) AS total_expenses, count(B.benefit_id) as total_benefit', FALSE);
+           SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
@@ -373,7 +372,7 @@ class Bill extends CI_Model{
      */
     private function getTotalGeneral($id_medical){
 
-        $this->db->select('SUM(B.value_honorary) +  SUM(B.value_expenses) as total_benefit', FALSE);
+        $this->db->select('SUM(B.value_honorary * B.quantity) +  SUM(B.value_expenses * B.quantity) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
