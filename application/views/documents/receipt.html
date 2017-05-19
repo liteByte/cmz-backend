@@ -91,7 +91,7 @@
         <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">REMITO:&#09;<?php echo $firstPage['generalInformation']['receipt_number'] ?></p>
         <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo date_format(date_create_from_format('Y-m-d', $firstPage['header']['billing_date']), 'd/m/Y') ?></p>
         <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['settlement_name'] ?>
-            <?php if(!empty($firstPage['general_information']['plan_description'])) echo $firstPage['general_information']['plan_description'] ?>
+            <?php if(!empty($firstPage['generalInformation']['plan_description'])) echo $firstPage['generalInformation']['plan_description'] ?>
         </p>
         <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['iva_description'] ?></p>
         <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['address'] ?></p>
@@ -143,7 +143,7 @@
         <tr><td><br></td></tr>
         <tr>
             <td colspan="2" class="nowrap"><?php echo $firstPage['header']['settlement_name'] ?>
-                <?php if(!empty($firstPage['general_information']['plan_description'])) echo $firstPage['general_information']['plan_description'] ?>
+                <?php if(!empty($firstPage['generalInformation']['plan_description'])) echo $firstPage['generalInformation']['plan_description'] ?>
             </td>
             <td colspan="2" style="text-align: center"><?php echo $firstPage['header']['address'] ?></td>
             <td colspan="2" style="text-align: center; text-overflow: ellipsis">BUENOS AIRES</td>
