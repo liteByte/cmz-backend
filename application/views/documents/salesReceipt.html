@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recibo</title>
+</head>
+<style type="text/css">
+
+    @page {
+        margin: 2cm;
+    }
+
+    body {
+        font-family: sans-serif;
+        margin: 20px 0;
+        text-align: justify;
+        counter-reset: page;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .nowrap {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .top {
+        margin-top: 20px;
+    }
+
+    .bottom {
+        margin-bottom: 20px;
+    }
+
+    .left {
+        margin-left: 20px;
+    }
+
+</style>
+<body style="margin: 0; width: 100vw; height: 100vh;">
+    <!-- width 100px y height 150px mas de lo medido con la imagen sacada del scanner. Sumar eso a cada elmento de html si se ve mal-->
+    <div>
+        <p>CIRCULO MEDICO DE ZARATE</p>
+        <p class="right">RECIBO Nro: (48515)</p>
+        <p class="right">FECHA: (04/04/2017)</p>
+        <p>ITUZAINGO 543 ZARATE C.P 2800-TE:03487-420709</p>
+        <hr class="bottom">
+        <p>Recibi de : (LUIS PASTEUR P.4069)</p>
+        <p>La cantidad de PESOS: (CIENTO CUARENTA Y CINCO MIL NOVECIENTOS TREINTA CON 87/100)</p>
+        <p>En concepto de:</p>
+        <p>(PAGO DOCUMENTO: F C0002) <span class="left">(2809)</span></p>
+        <hr class="top">
+        <p>SON PESOS: <span class="left">(145930.87)</span></p>
+    </div>
+</body>
+</html>
+
