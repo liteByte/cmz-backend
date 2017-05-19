@@ -57,21 +57,47 @@
             page-break-after: always;
             border: 0;
         }
+
+        .receipt-body {
+            color: #aaa;
+            font-size: 0.9em;
+            display: block;
+        }
+
+        .receipt-body table {
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .receipt-body td {
+            padding: 0;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
     </style>
 </head>
 <body>
 <div style="position: relative;">
     <div style="position: relative">
-        <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">REMITO:&#09;<?php echo $generalInformation['receipt_number'] ?></p>
-        <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['billing_date'] ?> </p>
-        <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
-        <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['iva_description']?></p>
-        <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['address'] ?></p>
-        <p style="position: absolute; top: 151px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['cuit'] ?></p>
-        <p style="position: absolute; top: 180px; left: 113px; font-size: 12px; margin: 0;">PLAZO DE PAGO: <?php echo $header['payment_deadline'] ?> DIAS FECHA FACTURA </p>
+        <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">REMITO:&#09;<?php echo $firstPage['generalInformation']['receipt_number'] ?></p>
+        <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo date_format(date_create_from_format('Y-m-d', $firstPage['header']['billing_date']), 'd/m/Y') ?></p>
+        <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['settlement_name'] ?></p>
+        <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['iva_description'] ?></p>
+        <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['address'] ?></p>
+        <p style="position: absolute; top: 151px; left: 360px; font-size: 12px; margin: 0;"><?php echo $firstPage['header']['cuit'] ?></p>
+        <p style="position: absolute; top: 180px; left: 113px; font-size: 12px; margin: 0;">PLAZO DE PAGO: <?php echo $firstPage['header']['payment_deadline'] ?> DIAS FECHA FACTURA </p>
     </div>
     <div style="position: relative; top: 252px; left: 12px; font-size: 12px; margin: 12px; width: 100%;">
-        <?php foreach($body as $key=>$value): ?>
+        <?php foreach($firstPage['body'] as $key=>$value): ?>
         <div style="position: relative; width: 100%">
             <p style="margin: 5px; left:12px;"><?php echo $value['total_benefit'] ?><span style="position: absolute; top:5px; left: 50px;">TOTAL PERIODO: <?php echo substr(str_replace('-','/',$value['billing_period']),0,-3) ?></span></p>
             <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $value['total_honorary_period'] + $value['total_expenses_period']?> </p>
@@ -79,34 +105,32 @@
         <?php endforeach; ?>
         <div style="width: 100%; position: relative">
             <p style="margin: 5px 5px 5px 80px">SUBTOTAL.....</p>
-            <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $generalInformation['total'] ?></p>
+            <p style="position: absolute; right: 260px; display: block; top: 2px;"><?php echo $firstPage['generalInformation']['total'] ?></p>
         </div>
         <div style="width: 100%; margin-top: 24px; position: relative">
-            <p style="margin: 5px"><?php echo $generalInformation['total_bill_benefits'] ?> <span style="position: absolute; top:5px; left: 50px;">****TOTAL GENERAL</span></p>
-            <p style="position: absolute; right:260px; display: block; top: 2px;"><?php echo $generalInformation['total'] ?></p>
+            <p style="margin: 5px"><?php echo $firstPage['generalInformation']['total_bill_benefits'] ?> <span style="position: absolute; top:5px; left: 50px;">****TOTAL GENERAL</span></p>
+            <p style="position: absolute; right:260px; display: block; top: 2px;"><?php echo $firstPage['generalInformation']['total'] ?></p>
         </div>
         <div style="width: 100%; text-align: justify; ">
-            <p style="margin: 5px" >SON PESOS: QUINIENTOS CUARENTA Y SIETE MIL SEISCIENTOS NOVENTA Y DOS CON 55/100</p>
+            <p style="margin: 5px" >SON PESOS: <?php echo $firstPage['generalInformation']['letter_total'] ?></p>
         </div>
-        <?php if($generalInformation['type_document'] == 'F') { ?>
         <div style="width: 100%; margin-top: 24px; display: block; position: relative">
             <p style="margin: auto; text-align: justify; width: 70%" >
-                LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo $generalInformation['date_due'] ?>*** CASO CONTRARIO Y
+                LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo date_format(date_create_from_format('Y-m-d', $firstPage['generalInformation']['date_due']), 'd/m/Y') ?>*** CASO CONTRARIO Y
                 -SIN OTRA COMUNICACION- DEVENGARA LOS INTERESES PACTADOS CONTRACTUALMENTE O LOS QUE DISPONGAN LA LEGISLACION VIGENTE
             </p>
         </div>
-        <?php } ?>
     </div>
 </div>
 <hr class="jump-page reset-page">
 <div id="header">
-    <table>
+    <table style="width: 100%">
         <tbody>
         <tr></tr>
         <tr><td colspan="6" style="padding-top: 20px">CIRCULO MEDICO DE ZARATE</td></tr>
         <tr>
             <td colspan="3">ITUZAINGO 543/45</td>
-            <td colspan="3" style="text-align: right;">REMITO: <?php echo $generalInformation['receipt_number'] ?></td>
+            <td colspan="3" style="text-align: right;">REMITO:&#09;<?php echo $firstPage['generalInformation']['receipt_number'] ?></td>
         </tr>
         <tr>
             <td colspan="3">CUIT : 33-56306138-9</td>
@@ -116,13 +140,13 @@
         <tr><td colspan="6">I.V.A EXENTO</td></tr>
         <tr><td><br></td></tr>
         <tr>
-            <td colspan="2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><?php echo $header['settlement_name']?></td>
-            <td colspan="2" style="text-align: center"><?php echo $header['address'] ?></td>
+            <td colspan="2" class="nowrap"><?php echo $firstPage['header']['settlement_name'] ?></td>
+            <td colspan="2" style="text-align: center"><?php echo $firstPage['header']['address'] ?></td>
             <td colspan="2" style="text-align: center; text-overflow: ellipsis">BUENOS AIRES</td>
         </tr>
         <tr>
-            <td colspan="2">C.U.I.T : <?php echo $header['cuit'] ?></td>
-            <td colspan="4" style="text-align: center">I.V.A : <?php echo $header['iva_description']?></td>
+            <td colspan="2">C.U.I.T : <?php echo $firstPage['header']['cuit'] ?></td>
+            <td colspan="4" style="text-align: center">I.V.A : <?php echo $firstPage['header']['iva_description'] ?></td>
         </tr>
         <tr><td colspan="6"><hr></td></tr>
         <tr>
@@ -134,148 +158,100 @@
         <tr>
             <td style="width: 10%">CANTI</td>
             <td>C.NOMEN</td>
-            <td>VISITAS</td>
-            <td>HONOR</td>
-            <td>GASTOS</td>
-            <td>IMPORTE</td>
+            <td class="right">VISITAS</td>
+            <td class="right">HONOR</td>
+            <td class="right">GASTOS</td>
+            <td class="right">IMPORTE</td>
         </tr>
         <tr><td colspan="6"><hr></td></tr>
     </table>
 </div>
-<div>
-    <h2>Section 1</h2>
-
-    <p>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non
-        risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec,
-        ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula
-        massa, varius a, semper congue, euismod non, mi. Proin porttitor, orci
-        nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit
-        amet erat. Duis semper. Duis arcu massa, scelerisque vitae, consequat
-        in, pretium a, enim. Pellentesque congue. Ut in risus volutpat libero
-        pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo
-        in pede. Praesent blandit odio eu enim. Pellentesque sed dui ut augue
-        blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus
-        et ultrices posuere cubilia Curae; Aliquam nibh. Mauris ac mauris sed
-        pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales
-        hendrerit.</p>
-
-    <hr class="jump-page">
-
-    <h2>Section 2</h2>
-
-    <p>
-        <img src="images/goldengate.jpg" style="float: left; padding: 0.5em;" width="180">
-        Ut velit mauris, egestas sed, gravida nec, ornare ut, mi. Aenean ut
-        orci vel massa suscipit pulvinar. Nulla sollicitudin. Fusce varius,
-        ligula non tempus aliquam, nunc turpis ullamcorper nibh, in tempus
-        sapien eros vitae ligula. Pellentesque rhoncus nunc et augue. Integer
-        id felis. Curabitur aliquet pellentesque diam. Integer quis metus vitae
-        elit lobortis egestas. Lorem ipsum dolor sit amet, consectetuer
-        adipiscing elit. Morbi vel erat non mauris convallis vehicula. Nulla et
-        sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue
-        eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non
-        elementum posuere, metus purus iaculis lectus, et tristique ligula
-        justo vitae magna. Morbi vel erat non mauris convallis vehicula. Nulla et
-        sapien. Integer tortor tellus, aliquam faucibus, convallis id, congue
-        eu, quam. Mauris ullamcorper felis vitae erat. Proin feugiat, augue non
-        elementum posuere, metus purus iaculis lectus, et tristique ligula
-        justo vitae magna.</p>
-
-    <hr>
-
-    <h2>Section 3</h2>
-
-    <!-- yeah, we'll have to do better for inline floating elements -->
-    <p><span style="float: left; font-size: 4em; width: 0.7em; height: 0.9em; line-height: 1;">A</span>liquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
-
-    <p>Aliquam convallis sollicitudin purus. Praesent aliquam, enim at
-        fermentum mollis, ligula massa adipiscing nisl, ac euismod nibh nisl eu
-        lectus. Fusce vulputate sem at sapien. Vivamus leo. Aliquam euismod
-        libero eu enim. Nulla nec felis sed leo placerat imperdiet. Aenean
-        suscipit nulla in justo. Suspendisse cursus rutrum augue. Nulla
-        tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
-        felis magna fermentum augue, et ultricies lacus lorem varius purus.
-        Curabitur eu amet.</p>
+<div class="receipt-body">
+    <?php $periodCount = count($body) ?>
+    <?php foreach($body as $key=>$period): ?>
+    <table style="width:100%;">
+        <tbody>
+            <tr><td colspan="5">***PRESTACIONES CORRESPONDIENTES AL PERIODO:
+                <?php echo date_format(date_create_from_format('Y-m-d', array_values(array_values($period)[0])[0]['period']), 'm/Y') ?>***
+            </td></tr>
+            <?php $count = count($period) ?>
+            <?php foreach($period as $key=>$prof) :?>
+                <?php if (--$count <= 0) { ?>
+                <tr>
+                    <td><?php echo $prof['period_benefit_quantity'] ?></td>
+                    <td class="nowrap">TOTAL PERIODO: <?php echo date_format(date_create_from_format('Y-m-d', array_values(array_values($period)[0])[0]['period']), 'm/Y') ?></td>
+                    <td class="right"><?php echo $prof['period_visit_total'] ?></td>
+                    <td class="right"><?php echo $prof['period_honorary_total'] ?></td>
+                    <td class="right"><?php echo $prof['period_expenses_total'] ?></td>
+                    <td class="right"><?php echo $prof['period_total'] ?></td>
+                </tr>
+                <?php break; } ?>
+                <tr>
+                    <td><?php echo array_values($prof)[0]['registration_number'] ?></td>
+                    <td colspan="3"><?php echo array_values($prof)[0]['name'] ?></td>
+                    <td class="nowrap" style="text-align: right"><?php echo array_values($prof)[0]['cuit'] ?></td>
+                    <td class="nowrap" style="text-align: right"><?php echo array_values($prof)[0]['iibb'] ?></td>
+                </tr>
+                <?php foreach($prof as $key=>$benefit) :?>
+                    <tr>
+                        <td><?php echo $benefit['quantity'] ?></td>
+                        <td class="right"><?php echo $benefit['code'] ?></td>
+                        <td class="right"><?php echo $benefit['value_visit'] ?></td>
+                        <td class="right"><?php echo $benefit['honorary_benefit_total'] ?></td>
+                        <td class="right"><?php echo $benefit['expenses_benefit_total'] ?></td>
+                        <td class="right"><?php echo $benefit['benefit_total'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <td><?php echo array_values($prof)[0]['professional_quantity_total'] ?></td>
+                    <td>TOTAL <?php echo array_values($prof)[0]['registration_number'] ?></td>
+                    <td class="right"><?php echo array_values($prof)[0]['professional_visit_total'] ?></td>
+                    <td class="right"><?php echo array_values($prof)[0]['professional_honorary_total'] ?></td>
+                    <td class="right"><?php echo array_values($prof)[0]['professional_expenses_total'] ?></td>
+                    <td class="right"><?php echo array_values($prof)[0]['professional_total'] ?></td>
+                </tr>
+                <tr><td colspan="6"><hr></td></tr>
+            <?php endforeach; ?>
+            <?php if (--$periodCount <= 0) { ?>
+                <tr><td colspan="6" style="height: 20px"></td></tr>
+                <tr>
+                    <td><?php echo $endData['quantityTotalReceipt'] ?></td>
+                    <td>TOTAL:</td>
+                    <td class="right"><?php echo $endData['visitTotalReceipt'] ?></td>
+                    <td class="right"><?php echo $endData['honoraryTotalReceipt'] ?></td>
+                    <td class="right"><?php echo $endData['expensesTotalReceipt'] ?></td>
+                    <td class="right"><?php echo $endData['generalTotalReceipt'] ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <?php if ($periodCount > 0) { ?>
+        <hr class="jump-page">
+    <?php } ?>
+    <?php endforeach; ?>
+    <table style="width: 50%; margin-top: 20px">
+        <tbody>
+            <tr>
+                <td>***TOTAL GENERAL</td>
+                <td class="right"><?php echo $endData['generalTotalReceipt'] ?></td>
+            </tr>
+            <tr>
+                <td>CANTIDAD DE:</td>
+            </tr>
+            <tr>
+                <td>VISITAS</td>
+                <td class="right"><?php echo $endData['visitQuantity'] ?></td>
+            </tr>
+            <tr>
+                <td>CIRUGIAS</td>
+                <td class="right"><?php echo $endData['surgeryQuantity'] ?></td>
+            </tr>
+            <tr>
+                <td>PRACTICAS</td>
+                <td class="right"><?php echo $endData['practiceQuantity'] ?></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

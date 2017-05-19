@@ -15,7 +15,7 @@
                 <p style="position: absolute; top: 30px; left: 20px; font-size: 16px; margin: 0;">DOC. INTERNO LIQUIDACION</p>
                 <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">NUMERO REMITO INTERNO:&#09;<?php echo $generalInformation['receipt_number'] ?></p>
             <?php } ?>
-            <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['billing_date'] ?> </p>
+            <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo date_format(date_create_from_format('Y-m-d', $header['billing_date']), 'd/m/Y') ?> </p>
             <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
             <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['iva_description']?></p>
             <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['address'] ?></p>
@@ -38,12 +38,12 @@
                 <p style="position: absolute; right:260px; display: block; top: 2px;"><?php echo $generalInformation['total'] ?></p>
             </div>
             <div style="width: 100%; text-align: justify; ">
-                <p style="margin: 5px" >SON PESOS: QUINIENTOS CUARENTA Y SIETE MIL SEISCIENTOS NOVENTA Y DOS CON 55/100</p>
+                <p style="margin: 5px" >SON PESOS: <?php echo $generalInformation['letter_total'] ?></p>
             </div>
             <?php if($generalInformation['type_document'] == 'F') { ?>
                 <div style="width: 100%; margin-top: 24px; display: block; position: relative">
                     <p style="margin: auto; text-align: justify; width: 70%" >
-                        LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo $generalInformation['date_due'] ?>*** CASO CONTRARIO Y
+                        LA PRESENTA FACTURA DEBERA SER CANCELADA DENTRO DEL TERMINO ESTABLECIDO, O SEA EL DIA: ***<?php echo date_format(date_create_from_format('Y-m-d', $generalInformation['date_due']), 'd/m/Y') ?>*** CASO CONTRARIO Y
                         -SIN OTRA COMUNICACION- DEVENGARA LOS INTERESES PACTADOS CONTRACTUALMENTE O LOS QUE DISPONGAN LA LEGISLACION VIGENTE
                     </p>
                 </div>
