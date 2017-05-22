@@ -166,14 +166,14 @@ class Valuator extends CI_Model{
                 } else { //type of value 0 = %
 
                     if($valueBenefit->billing_code_value == 1){
-                        $honorary_calculated_value = (($specialCondition['especiales'][0]['honorary']/100)*$UH) * $valueBenefit->quantity;
+                        $honorary_calculated_value = ($specialCondition['especiales'][0]['honorary']*$UH) * $valueBenefit->quantity;
                         $expenses_calculated_value = 0;
                     }elseif($valueBenefit->billing_code_value == 2){
                         $honorary_calculated_value = 0;
-                        $expenses_calculated_value = (($specialCondition['especiales'][0]['expenses']/100)*$nomenclator->spending_unity) * $valueBenefit->quantity;
+                        $expenses_calculated_value = ($specialCondition['especiales'][0]['expenses']*$nomenclator->spending_unity) * $valueBenefit->quantity;
                     }else{
-                        $honorary_calculated_value = (($specialCondition['especiales'][0]['honorary']/100)*$UH) * $valueBenefit->quantity;
-                        $expenses_calculated_value = (($specialCondition['especiales'][0]['expenses']/100)*$nomenclator->spending_unity) * $valueBenefit->quantity;
+                        $honorary_calculated_value = ($specialCondition['especiales'][0]['honorary']*$UH) * $valueBenefit->quantity;
+                        $expenses_calculated_value = ($specialCondition['especiales'][0]['expenses']*$nomenclator->spending_unity) * $valueBenefit->quantity;
                     }
 
                     return ['status'=>'ok','msg' =>['honoraryValue' => $honorary_calculated_value, 'expensesValue' => $expenses_calculated_value]];
@@ -200,14 +200,14 @@ class Valuator extends CI_Model{
                 } else { //type of value 0 = %
 
                     if($valueBenefit->billing_code_value == 1){
-                        $honorary_calculated_value = (($specialCondition['especiales'][1]['honorary']/100)*$UH) * $valueBenefit->quantity;
+                        $honorary_calculated_value = ($specialCondition['especiales'][1]['honorary']*$UH) * $valueBenefit->quantity;
                         $expenses_calculated_value = 0;
                     }elseif($valueBenefit->billing_code_value == 2){
                         $honorary_calculated_value = 0;
-                        $expenses_calculated_value = (($specialCondition['especiales'][1]['expenses']/100)*$nomenclator->spending_unity) * $valueBenefit->quantity;
+                        $expenses_calculated_value = ($specialCondition['especiales'][1]['expenses']*$nomenclator->spending_unity) * $valueBenefit->quantity;
                     }else{
-                        $honorary_calculated_value = (($specialCondition['especiales'][1]['honorary']/100)*$UH) * $valueBenefit->quantity;
-                        $expenses_calculated_value = (($specialCondition['especiales'][1]['expenses']/100)*$nomenclator->spending_unity) * $valueBenefit->quantity;
+                        $honorary_calculated_value = ($specialCondition['especiales'][1]['honorary']*$UH) * $valueBenefit->quantity;
+                        $expenses_calculated_value = ($specialCondition['especiales'][1]['expenses']*$nomenclator->spending_unity) * $valueBenefit->quantity;
                     }
 
                     return ['status'=>'ok','msg' =>['honoraryValue' => $honorary_calculated_value, 'expensesValue' => $expenses_calculated_value]];
@@ -253,8 +253,8 @@ class Valuator extends CI_Model{
 
                 if ($honorary['movement'] == 'F') { //$$
                     $honorary_calculated_value = $honorary['value'] * $valueBenefit->quantity;
-                } else { // %%
-                    $honorary_calculated_value = (($honorary['value'] / 100) * $specialCondition['quantity_units']) * $valueBenefit->quantity;
+                } else {
+                    $honorary_calculated_value = ($honorary['value'] * $specialCondition['quantity_units']) * $valueBenefit->quantity;
                 }
 
             } else { //Arancel FEMEBA
@@ -308,8 +308,8 @@ class Valuator extends CI_Model{
         //Calculate expenses depending on the unit's movement
         if($unit['movement'] == 'F'){ // $$
             $expenses_calculated_value = $unit['expenses'] * $valueBenefit->quantity;
-        }else{ // %%
-            $expenses_calculated_value = ($nomenclator->spending_unity * ($unit['expenses'] / 100)) * $valueBenefit->quantity;
+        }else{
+            $expenses_calculated_value = ($nomenclator->spending_unity * $unit['expenses']) * $valueBenefit->quantity;
         }
 
         //Obtain the professional
@@ -324,7 +324,7 @@ class Valuator extends CI_Model{
             if ($honorary['movement'] == 'F') { //$$
                 $honorary_calculated_value = $honorary['value'] * $valueBenefit->quantity;
             } else { // %%
-                $honorary_calculated_value = (($honorary['value'] / 100) * $UH) * $valueBenefit->quantity;
+                $honorary_calculated_value = ($honorary['value'] * $UH) * $valueBenefit->quantity;
             }
 
         } else { //Arancel FEMEBA
@@ -336,7 +336,7 @@ class Valuator extends CI_Model{
             if ($honorary['movement'] == 'F') { // $$
                 $honorary_calculated_value = $honorary['value'] * $valueBenefit->quantity;
             } else {
-                $honorary_calculated_value = (($honorary['value'] / 100) * $UH) * $valueBenefit->quantity;
+                $honorary_calculated_value = ($honorary['value'] * $UH) * $valueBenefit->quantity;
             }
 
         }
