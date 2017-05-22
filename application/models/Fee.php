@@ -242,7 +242,10 @@ class Fee extends CI_Model{
               //Get the previous fee (the one that was in-forge before the one being deleted)
               $this->db->select('F.*');
               $this->db->from('fees F');
+              $this->db->where('F.medical_insurance_id',$feeToDelete->medical_insurance_id );
+              $this->db->where('F.plan_id',$feeToDelete->plan_id );
               $this->db->where('F.period_until <>', null);
+              $this->db->where('F.active', 'active');
               $this->db->order_by("F.period_until", "desc");
               $this->db->limit(1);
               $query = $this->db->get();
