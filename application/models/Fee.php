@@ -242,7 +242,10 @@ class Fee extends CI_Model{
               //Get the previous fee (the one that was in-forge before the one being deleted)
               $this->db->select('F.*');
               $this->db->from('fees F');
+              $this->db->where('F.medical_insurance_id',$feeToDelete->medical_insurance_id );
+              $this->db->where('F.plan_id',$feeToDelete->plan_id );
               $this->db->where('F.period_until <>', null);
+              $this->db->where('F.active', 'active');
               $this->db->order_by("F.period_until", "desc");
               $this->db->limit(1);
               $query = $this->db->get();
@@ -285,11 +288,9 @@ class Fee extends CI_Model{
 
       $feeToClose = $query->row();
 
-      //Close the old fee a month before the new period.
-      // If the close period is < than the since period, dont't substract a month to the close period and add a month to the new period
+      //Close the old fee a month before the new period
       $close_period_date = date('Y-m-d',(strtotime('-1 month', strtotime($new_period_since))));
-      if($close_period_date < $new_period_since) $close_period_date=$new_period_since;
-      $new_period_since  = date('Y-m-d',(strtotime('+1 month', strtotime($new_period_since))));
+
 
       $feeToClose->period_until = $close_period_date;
       $this->db->where('fee_id', $feeToClose->fee_id);
@@ -315,7 +316,7 @@ class Fee extends CI_Model{
       $result = $this->save($feeToClose->medical_insurance_id, [$feeToClose->plan_id], $feeToClose->fee_type_id, $feeToClose->upload_date, $new_period_since,$newUnits);
       if($result['status'] == "error") return ['status' => 'error','message' => 'No se pudo incrementar los valores de los aranceles'];
 
-      return true;
+      return ['status' => 'ok','message' => ''];
 
   }
 
@@ -392,7 +393,7 @@ class Fee extends CI_Model{
       $this->db->where('medical_insurance_id', $medical_insurance_id);
       $this->db->where('active', 'active');
       $this->db->where('period_until', null);
-      $this->db->where('period_since >', $new_period_since);
+      $this->db->where('period_since >=', $new_period_since);
       $this->db->where_in('plan_id', $plans);
       $query = $this->db->get();
 
@@ -429,6 +430,7 @@ class Fee extends CI_Model{
         $this->db->where('F.medical_insurance_id',$medical_insurance_id);
         $this->db->where('F.fee_type_id',$fee_type_id);
         $this->db->where('F.plan_id',$plan_id);
+        $this->db->where('F.active','active');
         $this->db->where('F.period_until',null);
         $query = $this->db->get();
 
