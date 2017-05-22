@@ -315,7 +315,7 @@ class Fee extends CI_Model{
       $result = $this->save($feeToClose->medical_insurance_id, [$feeToClose->plan_id], $feeToClose->fee_type_id, $feeToClose->upload_date, $new_period_since,$newUnits);
       if($result['status'] == "error") return ['status' => 'error','message' => 'No se pudo incrementar los valores de los aranceles'];
 
-      return true;
+      return ['status' => 'ok','message' => ''];
 
   }
 
@@ -429,6 +429,7 @@ class Fee extends CI_Model{
         $this->db->where('F.medical_insurance_id',$medical_insurance_id);
         $this->db->where('F.fee_type_id',$fee_type_id);
         $this->db->where('F.plan_id',$plan_id);
+        $this->db->where('F.active','active');
         $this->db->where('F.period_until',null);
         $query = $this->db->get();
 
