@@ -285,11 +285,9 @@ class Fee extends CI_Model{
 
       $feeToClose = $query->row();
 
-      //Close the old fee a month before the new period.
-      // If the close period is < than the since period, dont't substract a month to the close period and add a month to the new period
+      //Close the old fee a month before the new period
       $close_period_date = date('Y-m-d',(strtotime('-1 month', strtotime($new_period_since))));
-      if($close_period_date < $new_period_since) $close_period_date=$new_period_since;
-      $new_period_since  = date('Y-m-d',(strtotime('+1 month', strtotime($new_period_since))));
+
 
       $feeToClose->period_until = $close_period_date;
       $this->db->where('fee_id', $feeToClose->fee_id);
@@ -392,7 +390,7 @@ class Fee extends CI_Model{
       $this->db->where('medical_insurance_id', $medical_insurance_id);
       $this->db->where('active', 'active');
       $this->db->where('period_until', null);
-      $this->db->where('period_since >', $new_period_since);
+      $this->db->where('period_since >=', $new_period_since);
       $this->db->where_in('plan_id', $plans);
       $query = $this->db->get();
 
