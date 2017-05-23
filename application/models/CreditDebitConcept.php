@@ -118,6 +118,29 @@ class CreditDebitConcept extends CI_Model{
     return true;
   }
 
+    public function getByDescriptionLike($word){
+
+        $result = [];
+
+        $this->db->select('CDC.concept_description,CDC.concept_id');
+        $this->db->from ('credit_debit_concepts CDC');
+        $this->db->where('CDC.active',"active");
+        $this->db->like('CDC.concept_description', $word);
+        $this->db->order_by("CDC.concept_description", "asc");
+        $this->db->limit(15);
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        foreach ($query->result_array() as $row){
+            $result[] = $row;
+        }
+
+        return $result;
+
+    }
+
   public function validateData($code, $concept_group_id,$concept_type_id,$concept_movement_id){
 
     //Repeated code validation
