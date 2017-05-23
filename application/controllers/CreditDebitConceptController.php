@@ -119,4 +119,15 @@ class CreditDebitConceptController extends AuthController{
         if (strcmp($result, 1) != 0) return $this->response(['error'=>$result], REST_Controller::HTTP_BAD_REQUEST);
         return $this->response(['msg'=>'Concepto eliminado satisfactoriamente'], REST_Controller::HTTP_OK);
     }
+
+    //Autocomplete service for cdconcepts
+    public function cdconceptData_get(){
+
+        $word = $this->get('word');
+
+        $cdConceptData = $this->CreditDebitConcept->getByDescriptionLike($word);
+        return $this->response($cdConceptData, REST_Controller::HTTP_OK);
+
+    }
+
 }
