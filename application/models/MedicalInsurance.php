@@ -149,17 +149,27 @@ class MedicalInsurance extends CI_Model{
     //TODO:El sistema valida que la Obra Social al ser eliminada no esté relacionada a liquidaciónes actuales o históricas de prestaciones a profesionales.
     public function delete($insuranceID,$userID){
 
+        //Busco la obra social indicada siempre y cuando su estado judicial sea 0 (es decir, no esta en juidicial)
         $query = $this->db->get_where($this->table, ["medical_insurance_id" => $insuranceID, "judicial" => 0]);
 
         if($query->num_rows()){
             //Delete insurance
             $now = date('Y-m-d H:i:s');
             $this->db->where("medical_insurance_id", $insuranceID);
-            $this->db->update($this->table, array('active' => 'inactive','modify_user_id' => $userID, 'update_date' => $now));
+            $result = $this->db->delete($this->table);
+            $errors = $this->db->error();
+
+            //The medical insurance id is being referenced in another table
+            if($errors['code'] == '1451')   return ['status' => 'error', 'msg' => 'No se pudo eliminar la Obra Social ya que actualmente esta siendo utilizada'];
+            if(!$result)                    return ['status' => 'error', 'msg' => 'No se pudo eliminar la Obra Social'];
+
         }else{
-            return false;
+
+            return ['status' => 'error', 'msg' => 'No se pudo eliminar la Obra Social ya que no fue encontrada o esta en estado judicial'];
+
         }
-        return true;
+
+        return ['status' => 'ok', 'msg' => 'Obra social eliminada satisfactoriamente'];
     }
 
 
