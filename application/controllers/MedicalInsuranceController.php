@@ -231,7 +231,7 @@ class MedicalInsuranceController extends AuthController{
         if($result['status'] == 'ok'){
             return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         } else {
-            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->response(['err'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }
