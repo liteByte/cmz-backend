@@ -63,7 +63,7 @@ class Migration_Create_table_special_conditions extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)    REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (type)                    REFERENCES special_conditions_type(id_special_conditions_type)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (provision)               REFERENCES nomenclators(nomenclator_id)');
-        $this->dbforge->add_field('UNIQUE KEY coverage_key (medical_insurance_id, plan_id, provision, period_since)');
+        $this->dbforge->add_field('UNIQUE KEY coverage_key (medical_insurance_id, plan_id, provision, period_since,type)');
         $this->dbforge->add_key('id_special_conditions', TRUE);
         $this->dbforge->create_table('special_conditions');
 
