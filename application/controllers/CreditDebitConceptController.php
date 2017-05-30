@@ -123,9 +123,10 @@ class CreditDebitConceptController extends AuthController{
     //Autocomplete service for cdconcepts
     public function cdconceptData_get(){
 
-        $word = $this->get('word');
+        $description = $this->get('description') ?? "";
+        $type        = $this->get('type')        ?? "";    //1-Credito , 2-Debito
 
-        $cdConceptData = $this->CreditDebitConcept->getByDescriptionLike($word);
+        $cdConceptData = $this->CreditDebitConcept->getByDescriptionLike($description,$type);
         return $this->response($cdConceptData, REST_Controller::HTTP_OK);
 
     }

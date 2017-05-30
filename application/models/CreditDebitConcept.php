@@ -118,14 +118,15 @@ class CreditDebitConcept extends CI_Model{
     return true;
   }
 
-    public function getByDescriptionLike($word){
+    public function getByDescriptionLike($description,$type){
 
         $result = [];
 
         $this->db->select('CDC.concept_description,CDC.concept_id');
         $this->db->from ('credit_debit_concepts CDC');
         $this->db->where('CDC.active',"active");
-        $this->db->like('CDC.concept_description', $word);
+        $this->db->where('CDC.concept_type_id',$type);
+        $this->db->like('CDC.concept_description', $description);
         $this->db->order_by("CDC.concept_description", "asc");
         $this->db->limit(15);
         $query = $this->db->get();
