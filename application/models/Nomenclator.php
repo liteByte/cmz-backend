@@ -105,10 +105,6 @@ class Nomenclator extends CI_Model{
 
         $now = date('Y-m-d H:i:s');
 
-//        //Delete contact
-//        $this->db->where('nomenclator_id', $nomenclatorID);
-//        $this->db->update('nomenclators', array('active' => 'inactive','modify_user_id' => $userID,'update_date' =>$now));
-
         $query = $this->db->get_where($this->table, array("nomenclator_id" => $nomenclatorID));
 
         if($query->num_rows()){
@@ -116,9 +112,9 @@ class Nomenclator extends CI_Model{
             $result = $this->db->delete($this->table);
             $errors = $this->db->error();
             if($errors['code'] == '1451') return  "No se puede eliminar el nomenclador, ya que posee información relacionada";
-            if(!$result) return "Error al intentar Nomenclador";
+            if(!$result) return "Error al intentar eliminar nomenclador";
         }else{
-            return "El Id del Nomenclador no existe en la base de datos";
+            return "El Id del nomenclador no existe en la base de datos";
         }
         return true;
     }
