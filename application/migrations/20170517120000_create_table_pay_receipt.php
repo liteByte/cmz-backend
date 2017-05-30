@@ -2,19 +2,19 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_Create_table_bill extends CI_Migration{
+class Migration_Create_table_pay_receipt extends CI_Migration{
 
     public function up(){
         $this->dbforge->add_field([
-            'id_bill'   => [
+            'pay_receipt_id'   => [
                 'type'           => 'INT',
                 'constraint'    =>  10,
                 'unsigned'       => TRUE,
                 'auto_increment' => TRUE
             ],
-            'number_bill'   => [
+            'pay_receipt_number'   => [
                 'type'           => 'INT',
-                'constraint'     => '8',
+                'constraint'     => '10',
                 'unsigned'       => TRUE,
                 'null'           => FALSE
             ],
@@ -26,65 +26,67 @@ class Migration_Create_table_bill extends CI_Migration{
             'branch_office'   => [
                 'type'           => 'INT',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'type_document'   => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'type_form'   => [
                 'type'           => 'VARCHAR',
                 'constraint'     => '4',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
-            'date_billing'   => [
+            'pay_date'   => [
                 'type'           => 'DATE',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'date_created'   => [
                 'type'           => 'DATE',
-                'null'           => FALSE,
-            ],
-            'date_due'   => [
-                'type'           => 'DATE',
-                'null'           => FALSE,
+                'null'           => FALSE
             ],
             'id_medical_insurance'   => [
                 'type'           => 'INT',
+                'constraint'     =>  5,
                 'unsigned'       =>  TRUE,
                 'null'           =>  FALSE
             ],
-            'total'   => [
-                'type'           => 'DECIMAL',
-                'constraint'     => '20,2',
-                'null'           =>  FALSE
-            ],
-            'state_billing'   => [
+            'id_bill'   => [
                 'type'           => 'INT',
-                'constraint'     =>  1,
-                'null'           =>  FALSE,
-                'comment'        => '1 -> Cargada, 2-> Cobrada parcial, 3->Cobrada y 4 -> Facturada'
+                'constraint'     =>  10,
+                'unsigned'       => TRUE,
+                'null'           => FALSE
             ],
             'amount_paid'   => [
                 'type'           => 'DECIMAL',
                 'constraint'     => '20,2',
-                'null'           =>  TRUE,
+                'null'           =>  FALSE
+            ],
+            'letter_amount_paid'   => [
+                'type'           => 'VARCHAR',
+                'constraint'     => '300',
+                'null'           =>  FALSE
             ],
             'annulled'   => [
                 'type'           => 'BOOLEAN',
-                'null'           =>  TRUE,
+                'null'           =>  TRUE
+            ],
+            'liquidated'   => [
+                'type'           => 'BOOLEAN',
+                'null'           =>  TRUE
             ],
         ]);
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_medical_insurance)    REFERENCES medical_insurance(medical_insurance_id)');
-        $this->dbforge->add_key('id_bill', TRUE);
-        $this->dbforge->add_field('UNIQUE KEY bill_number_key (number_bill,type_document,type_form,branch_office)');
-        $this->dbforge->create_table('bill');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)                 REFERENCES bill(id_bill)');
+        $this->dbforge->add_key('pay_receipt_id', TRUE);
+        $this->dbforge->add_field('UNIQUE KEY pay_receipt_number_key (pay_receipt_number,type_document,type_form,branch_office)');
+        $this->dbforge->create_table('pay_receipt');
 
     }
 
     public function down(){
-        $this->dbforge->drop_table('bill');
+        $this->dbforge->drop_table('pay_receipt');
     }
 }

@@ -106,6 +106,12 @@ class Migration_Create_table_benefits extends CI_Migration{
                 'constraint'    =>  20,
                 'null'          =>  TRUE
             ),
+            'id_bill'   => array(
+                'type'          => 'INT',
+                'constraint'    => 10,
+                'unsigned'      => TRUE,
+                'null'          => TRUE
+            ),
             'modify_coverage' => array(
                 'type'          =>  'TINYINT',
                 'constraint'    =>  1,
@@ -161,6 +167,7 @@ class Migration_Create_table_benefits extends CI_Migration{
             )
         ));
 
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)                             REFERENCES bill(id_bill)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (medical_insurance_id)                REFERENCES medical_insurance(medical_insurance_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (plan_id)                             REFERENCES plans(plan_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_professional_data)                REFERENCES professionals(id_professional_data)');

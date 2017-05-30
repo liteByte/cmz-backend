@@ -17,9 +17,11 @@ class BillController extends AuthController{
         $this->load->library('Response_msg');
         $this->load->library('pdf');
         $this->load->model('bill');
+        $this->load->library('validator');
         $this->token_valid = $this->validateToken();
     }
 
+    //Bill process
     public function bill_post()    {
         $data = json_decode(file_get_contents('php://input'), TRUE);
         
@@ -65,6 +67,7 @@ class BillController extends AuthController{
 
     }
 
+    //Get all bills from bill's table
     public function bill_get(){
 
         $bills = $this->bill->getBills();
@@ -72,6 +75,7 @@ class BillController extends AuthController{
 
     }
 
+    //Generate PDF of specified bill
     public function billPrint_get(){
 
         $id = $this->get('id');
@@ -86,8 +90,54 @@ class BillController extends AuthController{
 
         return $this->pdf->pdf_create2($html);
 
+    }
+
+    //Cancel bill
+    public function bill_delete(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->cancelBill($id);
+
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    //Pay bill
+    public function payBill_post(){
+
+        $post = json_decode(file_get_contents('php://input'));
+
+        $pay_date    = $post->pay_date        ?? "";
+        $amount_paid = $post->amount_paid     ?? "";
+        $bill_id     = $post->bill_id         ?? "";
+
+        if(empty($pay_date))        return $this->response(array('error'=>'No se ha ingresado fecha de pago'), REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))     return $this->response(array('error'=>'No se ha ingresado una cantidad a abonar'), REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))     return $this->response(array('error'=>'No se ha indicado la facturar que se va a cobrar'), REST_Controller::HTTP_BAD_REQUEST);
+
+        //Validations
+        if(!$this->validator->validateDate($pay_date))  return $this->response(['error'=>'Fecha de pago inválida'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($amount_paid))                         return $this->response(['error'=>'No se ha ingresado un monto a pagar'], REST_Controller::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->payBill($amount_paid,$pay_date,$bill_id);
+
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
 
 
     }
+
 }
 

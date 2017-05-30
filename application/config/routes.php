@@ -194,8 +194,13 @@ $route['professionals/like']          = 'ProfessionalsController/professionalsDa
 $route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
 
 ////////////////////////Billing Process////////////////////////
-$route['bills']                        = 'BillController/bill';             //Post -> Bills benefits & get -> get bills
+$route['bills']                        = 'BillController/bill';
+$route['bills/(:num)']                 = 'BillController/bill/id/$1';
+$route['bill/pay']                     = 'BillController/payBill';
 $route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Generates bill
+
+////////////////////////Receipt Process////////////////////////
+$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
 
 
 
