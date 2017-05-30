@@ -177,7 +177,7 @@ class FeeController extends AuthController{
         if($oldFee['period_until'] != null) return $this->response(['error'=>'No se puede incrementar el porcentaje de este arancel ya que no es un arancel vigente'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validate that new period_since is valid and bigger than all plan's period_since
-        if (!$this->fee->validateNewPeriodForPlans($oldFee["medical_insurance_id"],$plans,$period_since)) return $this->response(array('error'=>'La fecha del nuevo período es anterior al período de alguno de los planes seleccionados'), REST_Controller::HTTP_BAD_REQUEST);
+        if (!$this->fee->validateNewPeriodForPlans($oldFee["medical_insurance_id"],$plans,$period_since)) return $this->response(array('error'=>'La fecha del nuevo período es anterior o igual al período de alguno de los planes seleccionados'), REST_Controller::HTTP_BAD_REQUEST);
 
 
         //For each plan:

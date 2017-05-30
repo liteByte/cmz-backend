@@ -226,10 +226,12 @@ class MedicalInsuranceController extends AuthController{
 
         $id = (int) $this->get('id');
 
-        if($this->MedicalInsurance->delete($id,$this->token_valid->user_id)){
-            return $this->response(['msg'=>'Obra social eliminada satisfactoriamente'], REST_Controller::HTTP_OK);
+        $result = $this->MedicalInsurance->delete($id,$this->token_valid->user_id);
+
+        if($result['status'] == 'ok'){
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         } else {
-            return $this->response(['error'=>'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->response(['err'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
 
     }

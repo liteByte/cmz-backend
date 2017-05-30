@@ -184,7 +184,6 @@ $route['specialconditions/remove/(:num)']   = 'SpecialConditionsController/speci
 $route['specialconditions/(:num)']          = 'SpecialConditionsController/specialconditions_by_id/id/$1';
 
 //////////////////////// Manage Earnings  ////////////////////////
-
 $route['earnings']                    = 'EarningsController/earnings';
 $route['earnings/(:num)']             = 'EarningsController/earnings/id/$1';
 
@@ -192,9 +191,7 @@ $route['earnings/(:num)']             = 'EarningsController/earnings/id/$1';
 $route['insurances/like']             = 'MedicalInsuranceController/insuranceData';
 $route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']          = 'ProfessionalsController/professionalsData';
-
-//Test validator
-$route['benefits/test']             = 'BenefitController/validar';
+$route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
 
 ////////////////////////Billing Process////////////////////////
 $route['bills']                        = 'BillController/bill';

@@ -44,6 +44,7 @@ class Valuator extends CI_Model{
         $this->db->where('SC.medical_insurance_id',$valueBenefit->medical_insurance_id);
         $this->db->where('SC.plan_id',$valueBenefit->plan_id);
         $this->db->where('SC.provision',$valueBenefit->nomenclator_id);
+        $this->db->where('SC.type',$valueBenefit->additional);
         $this->db->where('period_since <=', $valueBenefit->period);
         $this->db->group_start();
         $this->db->where('period_until >=', $valueBenefit->period);
