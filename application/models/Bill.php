@@ -889,12 +889,18 @@ class Bill extends CI_Model{
     }
 
     //Obtain the bills of a certain medical insurance
-    public function getByMedicalInsuranceLike ($medical_insurance_id ){
+    public function getByMedicalInsuranceLike ($medical_insurance_id,$word){
 
-        $this->db->select('B.id_bill, concat(type_document,\'-\',type_form,\'-\',lpad(convert(branch_office,char),3,\'0\'),\'-\',lpad(convert(number_bill,char),8,\'0\')) as bill_number');
+        $this->db->select('B.id_bill, concat(B.type_document,\'-\',B.type_form,\'-\',lpad(convert(B.branch_office,char),3,\'0\'),\'-\',lpad(convert(B.number_bill,char),8,\'0\')) as bill_number');
         $this->db->from('bill B');
-        $this->db->where('B.id_medical_insurance', $medical_insurance_id);
+
+        if ($medical_insurance_id != "") {
+            $this->db->where('B.id_medical_insurance', $medical_insurance_id);
+        }
+
+        $this->db->like('concat(B.type_document,B.type_form,lpad(convert(B.branch_office,char),3,\'0\'),lpad(convert(B.number_bill,char),8,\'0\'))', $word);
         $this->db->where('B.annulled', 0);
+        $this->db->limit(15);
 
         $query = $this->db->get();
 

@@ -24,6 +24,12 @@ class CreditDebitController extends AuthController{
         $id_bill = $this->get('bill_id')   ?? "";
         $type    = $this->get('note_type') ?? "";
 
+        //Validate if any obligatory field is missing
+        if(empty($id_bill)) return $this->response(['error'=>'No se ha ingresado una factura'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($type))    return $this->response(['error'=>'No se ha ingresado el tipo de nota a realizar'], REST_Controller::HTTP_BAD_REQUEST);
+
+        $creditsOrDebits = $this->CreditDebit->getCreditDebits($id_bill,$type);
+        return $this->response($creditsOrDebits, REST_Controller::HTTP_OK);
 
     }
 

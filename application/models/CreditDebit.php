@@ -98,6 +98,24 @@ class CreditDebit extends CI_Model{
 
     }
 
+    public function getCreditDebits($id_bill,$type){
+
+        /*$this->db->select('');
+        $this->db->from('credit_debit CD');
+        $this->db->join('nomenclators N','CD.nomenclator_id = N.nomenclator_id');
+        $this->db->where('B.id_professional_data',$id_professional_data);
+        $this->db->where('B.period',$period);
+        $this->db->where('B.nomenclator_id',$nomenclator_id);
+        $this->db->where('B.id_bill',$id_bill);
+        $this->db->where('B.active',"active");
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        return $query->result_array();*/
+    }
+
 
 
 

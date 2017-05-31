@@ -140,10 +140,9 @@ class BillController extends AuthController{
     public function billData_get(){
 
         $medical_insurance_id = $this->get('medical_insurance_id') ?? "";
+        $word                 = $this->get('word')                 ?? "";
 
-        if(empty($medical_insurance_id)) return $this->response(array('error'=>'No se ha la obra social para el filtro de facturas'), REST_Controller::HTTP_BAD_REQUEST);
-
-        $billData = $this->bill->getByMedicalInsuranceLike($medical_insurance_id);
+        $billData = $this->bill->getByMedicalInsuranceLike($medical_insurance_id,$word);
         return $this->response($billData, RC::HTTP_OK);
 
     }
