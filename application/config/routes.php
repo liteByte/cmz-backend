@@ -192,12 +192,18 @@ $route['insurances/like']             = 'MedicalInsuranceController/insuranceDat
 $route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']          = 'ProfessionalsController/professionalsData';
 $route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
+$route['bill/like']                   = 'BillController/billData';
 
 ////////////////////////Billing Process////////////////////////
-$route['bills']                        = 'BillController/bill';
-$route['bills/(:num)']                 = 'BillController/bill/id/$1';
-$route['bill/pay']                     = 'BillController/payBill';
-$route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Generates bill
+$route['bills']                       = 'BillController/bill';
+$route['bills/(:num)']                = 'BillController/bill/id/$1';
+$route['bill/pay']                    = 'BillController/payBill';
+$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill
+
+////////////////////////Credit-debit routes////////////////////////
+$route['creditdebit']                 = 'CreditDebitController/creditDebit';                      //post -> create credit/debit
+$route['creditdebit/(:num)']          = 'CreditDebitController/creditDebit/id/$1';                //Put -> update credit/debit , Delete -> delete credit/debit
+$route['creditdebit/validateCD']      = 'CreditDebitController/validateCreditDebitExistence';     //post -> validate if the credit/debit exists in the bill
 
 ////////////////////////Receipt Process////////////////////////
 $route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
