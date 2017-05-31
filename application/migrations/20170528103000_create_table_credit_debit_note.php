@@ -19,6 +19,12 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
                 'unsigned'      =>  TRUE,
                 'null'          =>  FALSE
             ),
+            'medical_insurance_id' => array(
+                'type'          =>  'INT',
+                'constraint'    =>  5,
+                'unsigned'      =>  TRUE,
+                'null'          =>  FALSE
+            ),
             'document_type' => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  1,
@@ -29,11 +35,36 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
                 'type'          => 'DATE',
                 'null'          => FALSE
             ),
+            'expiration_date'  => array(
+                'type'          => 'DATE',
+                'null'          => FALSE
+            ),
             'credit_debit_note_number'   => array(
                 'type'           => 'INT',
                 'constraint'     => 8,
                 'unsigned'       => TRUE,
                 'null'           => FALSE
+            ),
+            'state'   => array(
+                'type'           => 'INT',
+                'constraint'     =>  1,
+                'null'           =>  FALSE,
+                'comment'        => '1 -> Generada'
+            ),
+            'total_expenses' => array(
+                'type'          =>  'DECIMAL',
+                'constraint'    =>  '8,2',
+                'null'          =>  FALSE
+            ),
+            'total_honoraries' => array(
+                'type'          =>  'DECIMAL',
+                'constraint'    =>  '20,2',
+                'null'          =>  FALSE
+            ),
+            'total_note' => array(
+                'type'          =>  'DECIMAL',
+                'constraint'    =>  '20,2',
+                'null'          =>  FALSE
             ),
             'annulled'   => array(
                 'type'           => 'BOOLEAN',
@@ -41,7 +72,7 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
             )
         ));
 
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)                             REFERENCES bill(id_bill)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill) REFERENCES bill(id_bill)');
         $this->dbforge->add_key('credit_debit_note_id', TRUE);
         $this->dbforge->create_table('credit_debit_note');
 

@@ -110,7 +110,7 @@ class CreditDebit extends CI_Model{
         $this->db->where('CD.type',$type);
         $query = $this->db->get();
 
-        if (!$query)                 return [];
+        if (!$query) return [];
 
         $creditDebitData = $query->result_array();
 
@@ -125,15 +125,14 @@ class CreditDebit extends CI_Model{
         $this->db->order_by("B.number_bill", "desc");
         $query = $this->db->get();
 
-        if (!$query)                 return [];
-        if ($query->num_rows() == 0) return [];
+        if (!$query) return [];
 
         $billData = $query->result_array();
 
         //Create the result array and return it
         $result = [];
-        $result [] = $billData;
-        $result [] = $creditDebitData;
+        $result ['billData']        = $billData;
+        $result ['creditDebitData'] = $creditDebitData;
 
         return $result;
 
