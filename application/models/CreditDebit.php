@@ -98,22 +98,45 @@ class CreditDebit extends CI_Model{
 
     }
 
-    public function getCreditDebits($id_bill,$type){
+    public function getCreditDebitsWithBillData($id_bill,$type){
 
-        /*$this->db->select('');
+        //Get the credit or debits of certain bill
+        $this->db->select('N.description as nomenclator,PF.registration_number,CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,CDC.concept_description');
         $this->db->from('credit_debit CD');
         $this->db->join('nomenclators N','CD.nomenclator_id = N.nomenclator_id');
-        $this->db->where('B.id_professional_data',$id_professional_data);
-        $this->db->where('B.period',$period);
-        $this->db->where('B.nomenclator_id',$nomenclator_id);
+        $this->db->join('professionals PF','PF.id_professional_data = CD.id_professional_data');
+        $this->db->join('credit_debit_concepts CDC','CDC.concept_id = CD.concept_id');
+        $this->db->where('CD.id_bill',$id_bill);
+        $this->db->where('CD.type',$type);
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+
+        $creditDebitData = $query->result_array();
+
+        //Get the bill data
+        $this->db->select('MI.denomination as medical_insurance_denomination,B.branch_office,B.type_document,B.type_form');
+        $this->db->from('bill B');
+        $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
         $this->db->where('B.id_bill',$id_bill);
-        $this->db->where('B.active',"active");
+        $this->db->order_by("B.branch_office", "asc");
+        $this->db->order_by("B.type_document", "asc");
+        $this->db->order_by("B.type_form", "asc");
+        $this->db->order_by("B.number_bill", "desc");
         $query = $this->db->get();
 
         if (!$query)                 return [];
         if ($query->num_rows() == 0) return [];
 
-        return $query->result_array();*/
+        $billData = $query->result_array();
+
+        //Create the result array and return it
+        $result = [];
+        $result [] = $billData;
+        $result [] = $creditDebitData;
+
+        return $result;
+
     }
 
 
