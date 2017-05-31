@@ -18,6 +18,15 @@ class CreditDebitController extends AuthController{
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
+    //Get credits or debits of a certain bill
+    public function creditDebit_get(){
+
+        $id_bill = $this->get('bill_id')   ?? "";
+        $type    = $this->get('note_type') ?? "";
+
+
+    }
+
     //Create credit or debit
     public function creditDebit_post(){
 
@@ -97,6 +106,26 @@ class CreditDebitController extends AuthController{
 
         //If everything is valid, delete the credit/debit
         $result = $this->CreditDebit->delete($credit_debit_id);
+        if ($result['status'] == 'error'){
+            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }else{
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
+        }
+
+    }
+
+    //Delete all credit/debits of a bill
+    public function deleteAll_delete(){
+
+        $id_bill  = (int) $this->get('bill_id') ?? "";
+        $type     = $this->get('type')          ?? "";
+
+        //Validate if any obligatory field is missing
+        if(empty($id_bill)) return $this->response(['error'=>'No se ha informado la factura cuyos créditos/debitos se quieren eliminar'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($type))    return $this->response(['error'=>'No se ha informado que elementos se quieren eliminar (créditos o débitos)'], REST_Controller::HTTP_BAD_REQUEST);
+
+        //If everything is valid, delete the credit/debit
+        $result = $this->CreditDebit->deleteAll($id_bill,$type);
         if ($result['status'] == 'error'){
             return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }else{

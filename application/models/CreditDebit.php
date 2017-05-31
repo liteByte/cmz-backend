@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-class CreditDebitConcept extends CI_Model{
+class CreditDebit extends CI_Model{
 
     public function __construct(){
         parent::__construct();
@@ -12,7 +12,7 @@ class CreditDebitConcept extends CI_Model{
 
     //Creates the credit/debit in 'credit_debit'
     public function save($medical_insurance_id, $id_bill, $type, $id_professional_data, $period, $nomenclator_id, $value_honorary, $value_expenses, $quantity, $concept_id){
-        
+
         $data = array(
             'medical_insurance_id'  => $medical_insurance_id,
             'id_bill'               => $id_bill,
