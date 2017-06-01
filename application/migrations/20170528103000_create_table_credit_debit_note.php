@@ -31,6 +31,16 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
                 'null'          =>  FALSE,
                 'comments'      => 'C-> nota credito y D-> nota debito'
             ),
+            'branch_office'   => array(
+                'type'           => 'INT',
+                'constraint'     => '4',
+                'null'           => FALSE
+            ),
+            'type_form'   => array(
+                'type'           => 'VARCHAR',
+                'constraint'     => '4',
+                'null'           => FALSE
+            ),
             'creation_date'  => array(
                 'type'          => 'DATE',
                 'null'          => FALSE
