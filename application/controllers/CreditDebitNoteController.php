@@ -14,7 +14,6 @@ class CreditDebitNoteController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->model('CreditDebitNote');
-        $this->load->library('validator');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
@@ -44,9 +43,11 @@ class CreditDebitNoteController extends AuthController{
 
     }
 
-    //
-    public function creditDebit_put(){
+    //Get note's data
+    public function creditDebitNote_get(){
 
+        $creditDebitNotes = $this->CreditDebitNote->getNotes();
+        return $this->response($creditDebitNotes, REST_Controller::HTTP_OK);
 
     }
 

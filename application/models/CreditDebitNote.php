@@ -33,39 +33,26 @@ class CreditDebitNote extends CI_Model{
             $totalNote       = $totalNote       + (($creditDebit['value_honorary'] + $creditDebit['value_expenses']) * $creditDebit['quantity']);
         }
 
-        /*$data = [
-            'id_bill'        => $value_honorary,
-            'medical_insurance_id'        => $value_expenses,
-            'document_type'              => $quantity,
-            'branch_office'            => $concept_id
-            'type_form'        => $value_honorary,
-            'creation_date'        => $value_expenses,
-            'expiration_date'              => $quantity,
-            'credit_debit_note_number'            => $concept_id,
-            'state'        => $value_honorary,
-            'total_expenses'        => $value_expenses,
-            'total_honoraries'              => $quantity,
-            'total_note'            => $concept_id
-        ];*/
+        $data = [
+            'id_bill'                   => $id_bill,
+            'medical_insurance_id'      => $medical_insurance_id,
+            'document_type'             => $document_type,
+            'branch_office'             => $branch_office,
+            'type_form'                 => $form_type,
+            'creation_date'             => date('Y-m-d H:i:s'),
+            'expiration_date'           => date('Y-m-d H:i:s'),
+            'credit_debit_note_number'  => $noteNumber,
+            'state'                     => 1,
+            'total_expenses'            => $totalExpenses,
+            'total_honoraries'          => $totalHonoraries,
+            'total_note'                => $totalNote
+        ];
 
+        $this->db->insert($this->table, $data);
 
+        if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        $now = date('Y-m-d H:i:s');
-
-
+        return ['status' => 'ok', 'msg' => 'Nota de crédito/débito creada satisfactoriamente'];
 
     }
 
@@ -119,8 +106,26 @@ class CreditDebitNote extends CI_Model{
 
         return $query->result_array();
 
+    }
+
+    public function getNotes(){
+
+        $this->db->select('');
+        $this->db->from('bill B');
+        $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
+        $this->db->order_by("B.branch_office", "asc");
+        $this->db->order_by("B.type_document", "asc");
+        $this->db->order_by("B.type_form", "asc");
+        $this->db->order_by("B.number_bill", "desc");
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        $bills = $query->result_array();
 
     }
+
 
 
 

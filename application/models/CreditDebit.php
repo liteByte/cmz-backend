@@ -101,7 +101,7 @@ class CreditDebit extends CI_Model{
     public function getCreditDebitsWithBillData($id_bill,$type){
 
         //Get the credit or debits of certain bill
-        $this->db->select('CD.credit_debit_id,CD.medical_insurance_id,CD.id_professional_data,CD.nomenclator_id,N.description as nomenclator,PF.registration_number,CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,CDC.concept_description');
+        $this->db->select('CD.credit_debit_id,CD.id_professional_data,CD.nomenclator_id,N.description as nomenclator,PF.registration_number,CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,CDC.concept_description');
         $this->db->from('credit_debit CD');
         $this->db->join('nomenclators N','CD.nomenclator_id = N.nomenclator_id');
         $this->db->join('professionals PF','PF.id_professional_data = CD.id_professional_data');
@@ -115,7 +115,7 @@ class CreditDebit extends CI_Model{
         $creditDebitData = $query->result_array();
 
         //Get the bill data
-        $this->db->select('MI.denomination as medical_insurance_denomination,B.branch_office,B.type_document,B.type_form');
+        $this->db->select('MI.denomination as medical_insurance_denomination,MI.medical_insurance_id,B.branch_office,B.type_document,B.type_form');
         $this->db->from('bill B');
         $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
         $this->db->where('B.id_bill',$id_bill);
