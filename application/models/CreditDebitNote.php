@@ -7,6 +7,7 @@ class CreditDebitNote extends CI_Model{
 
     public function __construct(){
         parent::__construct();
+        $this->load->library('numbertoletter');
     }
 
     private $table = "credit_debit_note";
@@ -162,6 +163,27 @@ class CreditDebitNote extends CI_Model{
         if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error al eliminar la nota y/o sus débitos/créditos'];
 
         return ['status' => 'ok', 'msg' => 'Nota eliminada satisfactoriamente'];
+    }
+
+    public function getPrintData($credit_debit_note_id){
+
+        $this->db->select('CDN.*,MI.settlement_name, MI.address, MI.location, MI.postal_code, MI.iva_id , MI.cuit, ides.description as iva_description,B.type_document as bill_document_type');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->join('medical_insurance MI', 'CDN.medical_insurance_id = MI.medical_insurance_id');
+        $this->db->join('iva ides','MI.iva_id = ides.iva_id');
+        $this->db->join('bill B','B.id_bill = CDN.id_bill');
+        $this->db->where("CDN.credit_debit_note_id",$credit_debit_note_id);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al obtener los datos de la nota de crédito/débito'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudieron obtener datos de la nota elegida'];
+
+        $notePrintData = $query->result_array();
+
+        $notePrintData['letterTotal'] = $this->numbertoletter->to_word(floor($notePrintData['total_note']),'ARS');
+
+        return ['status' => 'ok', 'msg' => $notePrintData];
+
     }
 
 

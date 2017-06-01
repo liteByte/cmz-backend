@@ -14,6 +14,7 @@ class CreditDebitNoteController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->model('CreditDebitNote');
+        $this->load->library('pdf');
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
 
@@ -67,6 +68,23 @@ class CreditDebitNoteController extends AuthController{
             return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
         }
 
+
+    }
+
+    public function printNote_get(){
+
+        $credit_debit_note_id  = (int) $this->get('id');
+
+        if(empty($credit_debit_note_id)) return $this->response(['error' => 'No se ha informado el ID de la nota que se desea imprimir'], REST_Controller::HTTP_BAD_REQUEST);
+
+        $result = $this->CreditDebitNote->getPrintData($credit_debit_note_id);
+
+        if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
+        print_r($result['msg']);die();
+        //$html = $this->load->view('documents/creditDebitNote.html',$result['msg'],TRUE);
+
+        //return $this->pdf->pdf_create2($html);
 
     }
 
