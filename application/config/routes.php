@@ -207,10 +207,11 @@ $route['creditdebit/validateCD']      = 'CreditDebitController/validateCreditDeb
 $route['creditdebit/all']             = 'CreditDebitController/deleteAll';                        //Delete -> delete all credit/debit associated to a bill
 
 ////////////////////////Credit-debit notes routes////////////////////////
-$route['creditdebitNote']             = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit
+$route['creditdebitNote']             = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit, Get -> get credit-debits
+$route['creditdebitNote/(:num)']      = 'CreditDebitNoteController/creditDebitNote';              //Delete -> Delete note and associated credit/debits
 
 ////////////////////////Receipt Process////////////////////////
-$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
+$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
 
 
 

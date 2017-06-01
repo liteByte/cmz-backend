@@ -52,7 +52,7 @@ class CreditDebitNoteController extends AuthController{
     }
 
     //Annulate a note and delete all it's credits and debits
-    public function creditDebit_delete(){
+    public function creditDebitNote_delete(){
 
         $credit_debit_note_id  = (int) $this->get('id');
 
