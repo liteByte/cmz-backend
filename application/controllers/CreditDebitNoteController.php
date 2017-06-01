@@ -26,6 +26,8 @@ class CreditDebitNoteController extends AuthController{
         $medical_insurance_id = $post->medical_insurance_id ?? "";
         $id_bill              = $post->id_bill              ?? "";
         $document_type        = $post->document_type        ?? "";
+        $branch_office        = $post->branch_office        ?? "";
+        $form_type            = $post->form_type            ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($medical_insurance_id))    return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
@@ -33,7 +35,7 @@ class CreditDebitNoteController extends AuthController{
         if(empty($document_type))           return $this->response(['error'=>'No se han ingresado el tipo (crédito/débito)'], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, save the credit/debit
-        $result = $this->CreditDebit->createNote($medical_insurance_id, $id_bill, $document_type);
+        $result = $this->CreditDebit->createNote($medical_insurance_id, $id_bill, $document_type,$branch_office,$form_type);
         if ($result['status'] == 'error'){
             return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }else{
