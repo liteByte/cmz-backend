@@ -48,9 +48,24 @@ class CreditDebitNote extends CI_Model{
             'total_note'                => $totalNote
         ];
 
-        $this->db->insert($this->table, $data);
+        //Start transaction
+        $this->db->trans_start();
 
-        if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
+            //Save the note
+            $this->db->insert($this->table, $data);
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito: error al guardar la nota'];
+
+            $noteID = $this->db->insert_id();
+
+            //Update each of the note's credit or debit
+            $this->db->where(['id_bill' => $id_bill, 'type' =>$document_type]);
+            $this->db->update('credit_debit', ['credit_debit_note_id' =>$noteID ]);
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito: error al asociar créditos/débitos a la nota'];
+
+        //End transaction and check everything is ok
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error al eliminar la nota y/o sus débitos/créditos'];
+
 
         return ['status' => 'ok', 'msg' => 'Nota de crédito/débito creada satisfactoriamente'];
 
@@ -110,20 +125,43 @@ class CreditDebitNote extends CI_Model{
 
     public function getNotes(){
 
-        $this->db->select('');
-        $this->db->from('bill B');
-        $this->db->join('medical_insurance MI','B.id_medical_insurance = MI.medical_insurance_id');
-        $this->db->order_by("B.branch_office", "asc");
-        $this->db->order_by("B.type_document", "asc");
-        $this->db->order_by("B.type_form", "asc");
-        $this->db->order_by("B.number_bill", "desc");
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->order_by("CDN.branch_office", "asc");
+        $this->db->order_by("CDN.type_form", "asc");
+        $this->db->order_by("CDN.credit_debit_note_number", "desc");
         $query = $this->db->get();
 
         if (!$query)                 return [];
         if ($query->num_rows() == 0) return [];
 
-        $bills = $query->result_array();
+        return $query->result_array();
 
+    }
+    
+    public function annulate($credit_debit_note_id){
+
+        //Start transaction
+        $this->db->trans_start();
+
+            //Annulate the note
+            $this->db->where('credit_debit_note_id', $credit_debit_note_id);
+            $this->db->update('$credit_debit_note', ['annulled'=>1]);
+
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
+
+
+            //Delete all it's credit's or debits
+            $this->db->delete('credit_debit', ['credit_debit_note_id' =>$credit_debit_note_id]);
+
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
+
+
+        //End transaction and check everything is ok
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error al eliminar la nota y/o sus débitos/créditos'];
+
+        return ['status' => 'ok', 'msg' => 'Nota eliminada satisfactoriamente'];
     }
 
 

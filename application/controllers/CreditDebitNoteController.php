@@ -51,8 +51,21 @@ class CreditDebitNoteController extends AuthController{
 
     }
 
-    //
+    //Annulate a note and delete all it's credits and debits
     public function creditDebit_delete(){
+
+        $credit_debit_note_id  = (int) $this->get('id');
+
+        //Validate if any obligatory field is missing
+        if(empty($credit_debit_note_id)) return $this->response(['error'=>'No se ha informado el crédito/débito que se quiere modificar'], REST_Controller::HTTP_BAD_REQUEST);
+
+        //If everything is valid, delete the credit/debit
+        $result = $this->CreditDebitNote->annulate($credit_debit_note_id);
+        if ($result['status'] == 'error'){
+            return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }else{
+            return $this->response(['msg'=>$result['msg']], REST_Controller::HTTP_OK);
+        }
 
 
     }
