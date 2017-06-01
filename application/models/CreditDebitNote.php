@@ -33,7 +33,20 @@ class CreditDebitNote extends CI_Model{
             $totalNote       = $totalNote       + (($creditDebit['value_honorary'] + $creditDebit['value_expenses']) * $creditDebit['quantity']);
         }
 
-
+        /*$data = [
+            'id_bill'        => $value_honorary,
+            'medical_insurance_id'        => $value_expenses,
+            'document_type'              => $quantity,
+            'branch_office'            => $concept_id
+            'type_form'        => $value_honorary,
+            'creation_date'        => $value_expenses,
+            'expiration_date'              => $quantity,
+            'credit_debit_note_number'            => $concept_id,
+            'state'        => $value_honorary,
+            'total_expenses'        => $value_expenses,
+            'total_honoraries'              => $quantity,
+            'total_note'            => $concept_id
+        ];*/
 
 
 
