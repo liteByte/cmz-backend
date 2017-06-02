@@ -30,7 +30,7 @@ class Migration_Create_table_nomenclators extends CI_Migration{
                 ),
                 'description' => array(
                     'type'          =>  'VARCHAR',
-                    'constraint'    =>  30,
+                    'constraint'    =>  200,
                     'null'          =>  FALSE
                 ),
                 'unity' => array(

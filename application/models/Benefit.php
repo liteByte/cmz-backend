@@ -21,7 +21,7 @@ class Benefit extends CI_Model{
             'plan_id'                          => $plan_id,
             'id_professional_data'             => $id_professional_data,
             'period'                           => $period,
-            'remesa'                           => (empty($remesa)                                       ? null : $remesa),
+            'remesa'                           => (empty($remesa) && $remesa !== '0'                    ? null : $remesa),
             'additional'                       => (empty($additional)                                   ? null : $additional),
             'nomenclator_id'                   => $nomenclator_id,
             'quantity'                         => $quantity,
@@ -40,7 +40,7 @@ class Benefit extends CI_Model{
             'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
             'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
             'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-            'state'                            => (empty($bill_number)                                  ? 5    : 2),
+            'state'                            => (empty($bill_number)                                  ? 5    : 1),
             'active'                           => 'active'
         );
 
@@ -93,7 +93,7 @@ class Benefit extends CI_Model{
 
             $now = date('Y-m-d H:i:s');
             $data = array(
-                'remesa'                           => (empty($remesa)                                       ? null : $remesa),
+                'remesa'                           => (empty($remesa) && $remesa !== '0'                    ? null : $remesa),
                 'additional'                       => (empty($additional)                                   ? null : $additional),
                 'quantity'                         => $quantity,
                 'billing_code_id'                  => $billing_code_id,
@@ -111,7 +111,7 @@ class Benefit extends CI_Model{
                 'value_honorary'                   => ((empty($value_honorary) && $value_honorary !== 0)    ? null : $value_honorary),
                 'value_expenses'                   => ((empty($value_expenses) && $value_expenses !== 0)    ? null : $value_expenses),
                 'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
-                'state'                            => (empty($bill_number)                                  ? 5    : 2),
+                'state'                            => (empty($bill_number)                                  ? 5    : 1),
                 'active'                           => 'active',
                 'update_date'                      => $now,
                 'modify_user_id'                   => $userID

@@ -88,7 +88,7 @@ class Migration_Create_table_benefits extends CI_Migration{
             ),
             'unit_price' => array(
                 'type'          =>  'DECIMAL',
-                'constraint'    =>  '5,2',
+                'constraint'    =>  '8,2',
                 'null'          =>  TRUE
             ),
             'benefit_date'  => array(

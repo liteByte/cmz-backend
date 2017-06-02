@@ -21,17 +21,17 @@ class Migration_Create_table_banks extends CI_Migration{
                 ),
                 'corporate_name' => array(
                     'type'          => 'VARCHAR',
-                    'constraint'    =>  35,
+                    'constraint'    =>  100,
                     'null'          =>  FALSE
                 ),
                 'address' => array(
                     'type'          => 'VARCHAR',
-                    'constraint'    => 40,
+                    'constraint'    => 100,
                     'null'          => TRUE
                 ),
                 'location' => array(
                     'type'          => 'VARCHAR',
-                    'constraint'    => 30,
+                    'constraint'    => 100,
                     'null'          => TRUE
                 ),
                 'phone_number' => array(

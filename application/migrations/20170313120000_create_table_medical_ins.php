@@ -40,7 +40,7 @@ class Migration_Create_table_medical_ins extends CI_Migration{
             ),
             'website' => array(
                 'type'          =>  'VARCHAR',
-                'constraint'    =>  34,
+                'constraint'    =>  100,
                 'null'          =>  TRUE
             ),
             'cuit' => array(

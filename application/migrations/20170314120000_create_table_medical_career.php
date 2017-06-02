@@ -13,7 +13,7 @@ class Migration_Create_table_medical_career extends CI_Migration{
             ),
             'description_medical_career'   => array(
                 'type'          =>  'VARCHAR',
-                'constraint'    =>  50,
+                'constraint'    =>  100,
                 'null'          =>  FALSE
             )
         ));

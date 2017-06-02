@@ -15,7 +15,7 @@ class Migration_Create_table_plans extends CI_Migration{
                 ),
                 'description' => array(
                     'type'          =>  'VARCHAR',
-                    'constraint'    =>  50,
+                    'constraint'    =>  100,
                     'null'          =>  FALSE
                 ),
                 'medical_insurance_id' => array(
