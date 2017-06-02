@@ -36,7 +36,7 @@ class CreditDebitConceptController extends AuthController{
         if (empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
         if (empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
         if (empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
-        if (empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($value) && $value !== '0')       return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
         if (strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
@@ -92,7 +92,7 @@ class CreditDebitConceptController extends AuthController{
         if (empty($concept_group_id))              return $this->response(['error'=>'No se ha ingresado grupo'], REST_Controller::HTTP_BAD_REQUEST);
         if (empty($concept_type_id))               return $this->response(['error'=>'No se ha ingresado tipo de concepto'], REST_Controller::HTTP_BAD_REQUEST);
         if (empty($concept_movement_id))           return $this->response(['error'=>'No se ha ingresado tipo de movimiento'], REST_Controller::HTTP_BAD_REQUEST);
-        if (empty($value))                         return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
+        if (empty($value) && $value !== '0')       return $this->response(['error'=>'No se ha ingresado valor'], REST_Controller::HTTP_BAD_REQUEST);
         if (strlen($applies_liquidation) <> 1)     return $this->response(['error'=>'No se ha informado si aplica en liquidación'], REST_Controller::HTTP_BAD_REQUEST);
 
         //Validations
