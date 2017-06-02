@@ -84,7 +84,7 @@ class Bill extends CI_Model{
                 if(!$this->saveDetails($id_Bill, $totalOfPlansByPeriod)) return ['status' => 'error', 'msg' => 'No se pudo generar el detalle de la factura'];
 
                 //Update benefits of the medical insurance
-                if (!$this->updateBenefitsWithOneBillNumber($this->number_bill, $id_medical_insurance, $id_Bill)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
+                if (!$this->updateBenefitsWithOneBillNumber($id_medical_insurance, $id_Bill)) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar'];
 
             //Close transaction
             $this->db->trans_complete();
@@ -247,7 +247,7 @@ class Bill extends CI_Model{
             }
 
             //Update benefits of the medical insurance only if document type is not L
-            if (!$this->updateBenefitsWithManyBillNumber($numberOfBill, $id_medical_insurance, $p[0]['plan_id'],$id_bill)) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
+            if (!$this->updateBenefitsWithManyBillNumber($id_medical_insurance, $p[0]['plan_id'],$id_bill)) return "No se pudo actualizar el estado de las prestaciones de la obra social que se trato de facturar";
 
 
             $numberOfBill++;
@@ -422,11 +422,10 @@ class Bill extends CI_Model{
     }
 
     //Update all benefits of a certain medical insurance with the same bill number
-    private function updateBenefitsWithOneBillNumber($bill_number,$medical_insurance_id, $billID){
+    private function updateBenefitsWithOneBillNumber($medical_insurance_id, $billID){
 
         $data = array(
             'state'       => 2,
-            'bill_number' => $bill_number,
             'id_bill'     => $billID
         );
 
@@ -434,7 +433,7 @@ class Bill extends CI_Model{
             "UPDATE benefits B " .
             "JOIN professionals PF ON B.id_professional_data = PF.id_professional_data " .
             "JOIN fiscal_data PFD ON PF.id_fiscal_data = PFD.id_fiscal_data " .
-            "SET B.state = 2, B.bill_number = ".$data['bill_number'].", B.id_bill = ".$data['id_bill'] .
+            "SET B.state = 2, B.id_bill = ".$data['id_bill'] .
             " WHERE B.medical_insurance_id = " . $medical_insurance_id .
             " AND B.state = " . 1 .
             " AND B.period <= '" . $this->date_billing ."' ";
@@ -455,11 +454,10 @@ class Bill extends CI_Model{
     }
 
     //Update a benefit of a certain medical insurance and plan
-    private function updateBenefitsWithManyBillNumber($bill_number,$medical_insurance_id,$plan_id,$billID){
+    private function updateBenefitsWithManyBillNumber($medical_insurance_id,$plan_id,$billID){
 
         $data = array(
             'state'       => 2,
-            'bill_number' => $bill_number,
             'id_bill'     => $billID
         );
 
@@ -467,7 +465,7 @@ class Bill extends CI_Model{
             "UPDATE benefits B " .
             "JOIN professionals PF ON B.id_professional_data = PF.id_professional_data " .
             "JOIN fiscal_data PFD ON PF.id_fiscal_data = PFD.id_fiscal_data " .
-            "SET B.state = 2, B.bill_number = ".$data['bill_number'].", B.id_bill = ".$data['id_bill'] .
+            "SET B.state = 2, B.id_bill = ".$data['id_bill'] .
             " WHERE B.medical_insurance_id = " . $medical_insurance_id .
             " AND B.state = " . 1 .
             " AND B.plan_id = " . $plan_id .

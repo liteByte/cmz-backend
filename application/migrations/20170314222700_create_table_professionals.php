@@ -59,7 +59,7 @@ class Migration_Create_table_professionals extends CI_Migration{
             ),
             'email' => array(
                 'type'          => 'VARCHAR',
-                'constraint'    => 35,
+                'constraint'    => 100,
                 'null'          => FALSE
             ),
             'office_address' => array(

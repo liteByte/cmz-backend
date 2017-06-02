@@ -31,7 +31,7 @@ class Migration_Create_table_contacts extends CI_Migration{
                 ),
                 'email' => array(
                     'type'          =>  'VARCHAR',
-                    'constraint'    =>  30,
+                    'constraint'    =>  100,
                     'null'          =>  TRUE
                 ),
                 'active' => array(

@@ -21,7 +21,7 @@ class Migration_Create_table_specialities extends CI_Migration{
                 ),
                 'description' => array(
                     'type'          => 'VARCHAR',
-                    'constraint'    =>  35,
+                    'constraint'    =>  100,
                     'null'          =>  FALSE
                 ),
                 'active'        => array(

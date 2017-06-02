@@ -19,7 +19,7 @@ class Migration_Create_table_special_conditions_types extends CI_Migration{
             ],
             'description'       => [
                 'type'          =>  'VARCHAR',
-                'constraint'    =>  40,
+                'constraint'    =>  100,
                 'null'          =>  FALSE
             ]
         ]);
