@@ -47,7 +47,9 @@ class CreditDebit extends CI_Model{
         $this->db->where('credit_debit_id', $credit_debit_id);
         $this->db->update($this->table, $data);
 
-        if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo modificar el crédito/débito'];
+        $errors = $this->db->error();
+
+        if($errors['code'] != 0) return ['status' => 'error', 'msg' => 'No se pudo modificar el crédito/débito'];
 
         return ['status' => 'ok', 'msg' => 'Crédito/débito modificado satisfactoriamente'];
 
