@@ -139,6 +139,13 @@ class CreditDebitController extends AuthController{
         if(empty($id_bill)) return $this->response(['error'=>'No se ha informado la factura cuyos créditos/debitos se quieren eliminar'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($type))    return $this->response(['error'=>'No se ha informado que elementos se quieren eliminar (créditos o débitos)'], REST_Controller::HTTP_BAD_REQUEST);
 
+        //If note type = C (credits), return debits. If note type = D (debits),return credits.
+        if($type == 'C'){
+          $type = 'D';
+        }else{
+          $type = 'C';
+        }
+
         //If everything is valid, delete the credit/debit
         $result = $this->CreditDebit->deleteAll($id_bill,$type);
         if ($result['status'] == 'error'){
