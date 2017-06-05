@@ -125,7 +125,7 @@ class CreditDebitController extends AuthController{
 
         $post = json_decode(file_get_contents('php://input'));
 
-        $id_bill  = $post->bill_id ?? "";
+        $id_bill  = $post->id_bill ?? "";
         $type     = $post->type    ?? "";
 
         //Validate if any obligatory field is missing
