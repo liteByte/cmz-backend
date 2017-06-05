@@ -35,7 +35,7 @@ class CreditDebitNoteController extends AuthController{
         if(empty($document_type))           return $this->response(['error'=>'No se han ingresado el tipo (crédito/débito)'], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, save the credit/debit
-        $result = $this->CreditDebit->createNote($medical_insurance_id, $id_bill, $document_type,$branch_office,$form_type);
+        $result = $this->CreditDebitNote->createNote($medical_insurance_id, $id_bill, $document_type,$branch_office,$form_type);
         if ($result['status'] == 'error'){
             return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }else{
