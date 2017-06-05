@@ -121,10 +121,12 @@ class CreditDebitController extends AuthController{
     }
 
     //Delete all credit/debits of a bill
-    public function deleteAll_delete(){
+    public function deleteAll_post(){
 
-        $id_bill  = (int) $this->get('bill_id') ?? "";
-        $type     = $this->get('type')          ?? "";
+        $post = json_decode(file_get_contents('php://input'));
+
+        $id_bill  = $post->bill_id ?? "";
+        $type     = $post->type    ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($id_bill)) return $this->response(['error'=>'No se ha informado la factura cuyos créditos/debitos se quieren eliminar'], REST_Controller::HTTP_BAD_REQUEST);

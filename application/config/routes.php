@@ -204,7 +204,7 @@ $route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Gen
 $route['creditdebit']                 = 'CreditDebitController/creditDebit';                      //Post -> create credit/debit , Get -> get credits/debits of a bill
 $route['creditdebit/(:num)']          = 'CreditDebitController/creditDebit/id/$1';                //Put -> update credit/debit , Delete -> delete credit/debit
 $route['creditdebit/validateCD']      = 'CreditDebitController/validateCreditDebitExistence';     //Post -> validate if the credit/debit exists in the bill
-$route['creditdebit/all']             = 'CreditDebitController/deleteAll';                        //Delete -> delete all credit/debit associated to a bill
+$route['creditdebit/empty']           = 'CreditDebitController/deleteAll';                        //Post -> delete all credit/debit associated to a bill
 
 ////////////////////////Credit-debit notes routes////////////////////////
 $route['creditdebitNote']             = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit, Get -> get credit-debits
@@ -213,7 +213,3 @@ $route['creditdebitNote/print/(:num)']= 'CreditDebitNoteController/printNote';  
 
 ////////////////////////Receipt Process////////////////////////
 $route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
-
-
-
-
