@@ -90,7 +90,7 @@ class CreditDebitNote extends CI_Model{
         $this->db->from('credit_debit_note CDN');
         $this->db->where('branch_office', $billData->branch_office);
         $this->db->where('type_document', $document_type);
-        $this->db->where('type_form', $billData->form_type);
+        $this->db->where('type_form', $billData->type_form);
         $query = $this->db->get();
 
         if(!$query)                 return 0;
@@ -139,7 +139,7 @@ class CreditDebitNote extends CI_Model{
         return $query->result_array();
 
     }
-    
+
     public function annulate($credit_debit_note_id){
 
         //Start transaction
