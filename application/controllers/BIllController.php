@@ -134,8 +134,16 @@ class BillController extends AuthController{
             return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+    }
 
+    //Autocomplete service for bill based on medical insurance
+    public function billData_get(){
 
+        $medical_insurance_id = $this->get('medical_insurance_id') ?? "";
+        $word                 = $this->get('word')                 ?? "";
+
+        $billData = $this->bill->getByMedicalInsuranceLike($medical_insurance_id,$word);
+        return $this->response($billData, RC::HTTP_OK);
 
     }
 

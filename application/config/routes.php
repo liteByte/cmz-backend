@@ -192,15 +192,27 @@ $route['insurances/like']             = 'MedicalInsuranceController/insuranceDat
 $route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']          = 'ProfessionalsController/professionalsData';
 $route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
+$route['bill/like']                   = 'BillController/billData';
 
 ////////////////////////Billing Process////////////////////////
-$route['bills']                        = 'BillController/bill';
-$route['bills/(:num)']                 = 'BillController/bill/id/$1';
-$route['bill/pay']                     = 'BillController/payBill';
-$route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Generates bill
+$route['bills']                       = 'BillController/bill';
+$route['bills/(:num)']                = 'BillController/bill/id/$1';
+$route['bill/pay']                    = 'BillController/payBill';
+$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill
+
+////////////////////////Credit-debit routes////////////////////////
+$route['creditdebit']                 = 'CreditDebitController/creditDebit';                      //Post -> create credit/debit , Get -> get credits/debits of a bill
+$route['creditdebit/(:num)']          = 'CreditDebitController/creditDebit/id/$1';                //Put -> update credit/debit , Delete -> delete credit/debit
+$route['creditdebit/validateCD']      = 'CreditDebitController/validateCreditDebitExistence';     //Post -> validate if the credit/debit exists in the bill
+$route['creditdebit/all']             = 'CreditDebitController/deleteAll';                        //Delete -> delete all credit/debit associated to a bill
+
+////////////////////////Credit-debit notes routes////////////////////////
+$route['creditdebitNote']             = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit, Get -> get credit-debits
+$route['creditdebitNote/(:num)']      = 'CreditDebitNoteController/creditDebitNote';              //Delete -> Delete note and associated credit/debits
+$route['creditdebitNote/print/(:num)']= 'CreditDebitNoteController/printNote';                    //Get -> Generate PDF of the note
 
 ////////////////////////Receipt Process////////////////////////
-$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
+$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
 
 
 
