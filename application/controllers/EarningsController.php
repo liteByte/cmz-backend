@@ -52,7 +52,7 @@ class EarningsController extends AuthController{
         if(!isset($id)){
             $result = $this->Earnings->getAll();
             if(empty($result)){
-                return $this->response(array('error'=>$this->msgEmpty), RC::HTTP_FORBIDDEN);
+                return $this->response($result, RC::HTTP_OK);
             }else{
                 return $this->response($result, RC::HTTP_OK);
             }
@@ -66,7 +66,7 @@ class EarningsController extends AuthController{
         }
 
     }
-    
+
     public function earnings_put(){
         $post = json_decode(file_get_contents('php://input'));
         $id = $this->get('id');
