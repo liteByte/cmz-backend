@@ -21,12 +21,19 @@ class CreditDebitController extends AuthController{
     //Get credits or debits of a certain bill
     public function creditDebit_get(){
 
-        $id_bill = $this->get('bill_id')   ?? "";
-        $type    = $this->get('note_type') ?? "";
+        $id_bill   = $this->get('bill_id')   ?? "";
+        $note_type = $this->get('note_type') ?? "";
 
         //Validate if any obligatory field is missing
         if(empty($id_bill)) return $this->response(['error'=>'No se ha ingresado una factura'], REST_Controller::HTTP_BAD_REQUEST);
         if(empty($type))    return $this->response(['error'=>'No se ha ingresado el tipo de nota a realizar'], REST_Controller::HTTP_BAD_REQUEST);
+
+        //If note type = C (credits), return debits. If note type = D (debits),return credits.
+        if($note_type == 'C'){
+          $note_type = 'D';
+        }else{
+          $note_type = 'C';
+        }
 
         $creditsOrDebits = $this->CreditDebit->getCreditDebitsWithBillData($id_bill,$type);
         return $this->response($creditsOrDebits, REST_Controller::HTTP_OK);
