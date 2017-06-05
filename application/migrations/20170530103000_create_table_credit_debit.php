@@ -81,7 +81,7 @@ class Migration_Create_table_credit_debit extends CI_Migration{
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill)                             REFERENCES bill(id_bill)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_professional_data)                REFERENCES professionals(id_professional_data)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (nomenclator_id)                      REFERENCES nomenclators(nomenclator_id)');
-        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (concept_id)                          REFERENCES credit_debit_concepts(concept_id)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (concept_id)                          REFERENCES concepts(concept_id)');
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (credit_debit_note_id)                REFERENCES credit_debit_note(credit_debit_note_id)');
         $this->dbforge->add_key('credit_debit_id', TRUE);
         $this->dbforge->create_table('credit_debit');

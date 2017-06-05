@@ -192,6 +192,7 @@ $route['insurances/like']             = 'MedicalInsuranceController/insuranceDat
 $route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
 $route['professionals/like']          = 'ProfessionalsController/professionalsData';
 $route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
+$route['concepts/like']               = 'ConceptController/conceptData';
 $route['bill/like']                   = 'BillController/billData';
 
 ////////////////////////Billing Process////////////////////////
