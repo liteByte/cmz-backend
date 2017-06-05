@@ -93,8 +93,7 @@ class CreditDebitNote extends CI_Model{
         $this->db->where('type_form', $billData->type_form);
         $query = $this->db->get();
 
-        if(!$query)                 return 0;
-        if($query->num_rows() <= 0) return 0;
+        if(!$query) return 0;
 
         $result = $query->row();
 
