@@ -81,10 +81,10 @@ class CreditDebitNoteController extends AuthController{
 
         if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
-        print_r($result['msg']);die();
-        //$html = $this->load->view('documents/creditDebitNote.html',$result['msg'],TRUE);
+        //print_r($result['msg']);die();
+        $html = $this->load->view('documents/creditDebitNote.html',$result['msg'],TRUE);
 
-        //return $this->pdf->pdf_create2($html);
+        return $this->pdf->pdf_create2($html);
 
     }
 

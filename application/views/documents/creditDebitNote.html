@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <title>Nota de</title>
+    <style type="text/css">
+
+        @page {
+            margin: 2cm;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 150px 0 0 0;
+            text-align: justify;
+            counter-reset: page;
+        }
+
+        #header {
+            display: block;
+            position: fixed;
+            left: 0;
+            right: 0;
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        #header {
+            top: 0;
+        }
+
+        #header table {
+            width: 100%;
+            border-collapse: collapse;
+            border: none;
+        }
+
+        #header td {
+            padding: 0;
+            width: 50%;
+        }
+
+        .page-number {
+            text-align: center;
+        }
+
+        .page-number:before {
+            content: "HOJA: " counter(page);
+        }
+
+        .reset-page {
+            counter-reset: page;
+        }
+
+        hr.jump-page {
+            page-break-after: always;
+            border: 0;
+        }
+
+        .receipt-body {
+            color: #aaa;
+            font-size: 0.9em;
+            display: block;
+        }
+
+        .receipt-body table {
+            border-collapse: collapse;
+            border: none;
+        }
+
+        .receipt-body td {
+            padding: 0;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    </style>
+</head>
+<body>
+<div style="position: relative;">
+    <div style="position: relative">
+        <p style="width: 100%; position: absolute; left: 200px; font-size: 12px; margin: 0; text-align: right; right: 100px;">
+            NOTA DE
+            &#09;<?php if($document_type == 'D') echo "DEBITO"; else echo "CREDITO";?> <?php echo $credit_debit_note_number ?></p>
+        <p style="width: 100%; position: absolute; top: 17px; left: 450px; font-size: 12px; margin: 0; text-align: right; right: 100px"><?php echo date_format(date_create_from_format('Y-m-d', $creation_date), 'd/m/Y') ?></p>
+        <p style="position: absolute; top: 90px; left: 69px; font-size: 12px; margin: 0;"><?php echo $settlement_name ?></p>
+        <p style="position: absolute; top: 100px; left: 69px; font-size: 12px; margin: 0;"><?php echo $iva_description ?></p>
+        <p style="width: 100%; position: absolute; top: 90px; left: 450px; font-size: 12px; margin: 0; text-align: right; right: 100px"><?php echo $address ?></p>
+        <p style="width: 100%; position: absolute; top: 100px; left: 450px; font-size: 12px; margin: 0; text-align: right; right: 100px"><?php echo $cuit ?></p>
+    </div>
+    <div style="position: relative; top: 252px; left: 12px; font-size: 12px; margin: 12px; width: 100%;">
+        <div style="position: relative; width: 100%">
+            <p style="margin: 5px; left:12px;">APLICA A
+                DOCUMENTO <?php echo $bill_document_type ?> <?php echo $type_form ?>-000<?php echo $branch_office ?>
+                -</p>
+        </div>
+        <div style="position: relative; width: 100%; margin-top: 20px;">
+            <p style="margin: 5px; left:12px;">HONORARIOS........</p>
+            <p style="position: absolute; right: 100px; display: block; top: 0;"><?php echo number_format($total_honoraries, 2) ?></p>
+        </div>
+        <div style="width: 100%; position: relative">
+            <p style="margin: 5px; left:12px;">GASTOS............</p>
+            <p style="position: absolute; right: 100px; display: block; top: 0;"><?php echo number_format($total_expenses, 2) ?></p>
+        </div>
+        <div style="width: 100%; position: relative">
+            <p style="margin: 5px 0 0 80px">SUBTOTAL.....</p>
+            <p style="position: absolute; right: 100px; display: block; top: 0;"><?php echo number_format($total_note, 2) ?></p>
+        </div>
+        <div style="width: 100%; position: relative">
+            <p style="margin: 5px 5px 5px 80px">****TOTAL GENERAL</p>
+            <p style="position: absolute; right: 100px; display: block; top: 0;"><?php echo number_format($total_note, 2) ?></p>
+        </div>
+        <div style="width: 100%; text-align: justify; ">
+            <p style="margin: 5px">SON PESOS: <?php echo $letterTotal ?></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
