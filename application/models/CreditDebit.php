@@ -103,13 +103,14 @@ class CreditDebit extends CI_Model{
     public function getCreditDebitsWithBillData($id_bill,$type){
 
         //Get the credit or debits of certain bill
-        $this->db->select('CD.credit_debit_id,CD.id_professional_data,CD.nomenclator_id,N.description as nomenclator,PF.registration_number,CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,CDC.concept_description,CDC.concept_id');
+        $this->db->select('CD.credit_debit_id,CD.id_professional_data,CD.nomenclator_id,N.description as nomenclator,PF.registration_number,CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,CONC.description as concept_description,CONC.concept_id');
         $this->db->from('credit_debit CD');
         $this->db->join('nomenclators N','CD.nomenclator_id = N.nomenclator_id');
         $this->db->join('professionals PF','PF.id_professional_data = CD.id_professional_data');
-        $this->db->join('credit_debit_concepts CDC','CDC.concept_id = CD.concept_id');
+        $this->db->join('concepts CONC','CONC.concept_id = CD.concept_id');
         $this->db->where('CD.id_bill',$id_bill);
         $this->db->where('CD.type',$type);
+        $this->db->where('CD.credit_debit_note_id',null);
         $query = $this->db->get();
 
         if (!$query) return [];

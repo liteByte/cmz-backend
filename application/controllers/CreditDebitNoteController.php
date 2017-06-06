@@ -58,7 +58,7 @@ class CreditDebitNoteController extends AuthController{
         $credit_debit_note_id  = (int) $this->get('id');
 
         //Validate if any obligatory field is missing
-        if(empty($credit_debit_note_id)) return $this->response(['error'=>'No se ha informado el crédito/débito que se quiere modificar'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($credit_debit_note_id)) return $this->response(['error'=>'No se ha informado el crédito/débito que se quiere anular'], REST_Controller::HTTP_BAD_REQUEST);
 
         //If everything is valid, delete the credit/debit
         $result = $this->CreditDebitNote->annulate($credit_debit_note_id);

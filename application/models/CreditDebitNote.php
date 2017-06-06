@@ -10,10 +10,12 @@ class CreditDebitNote extends CI_Model{
         $this->load->library('numbertoletter');
     }
 
-    private $table = "credit_debit_note";
-
+    private $credit_debit_type;
 
     public function createNote($medical_insurance_id, $id_bill, $document_type,$branch_office,$form_type){
+
+        //Obtain the credit-debit type. It's the opposite of the document type
+        $this->credit_debit_type = ($document_type == 'C') ? 'D' : 'C';
 
         //Obtain note number
         $noteNumber = $this->calculateNoteNumber($id_bill,$document_type);
@@ -34,39 +36,42 @@ class CreditDebitNote extends CI_Model{
             $totalNote       = $totalNote       + (($creditDebit['value_honorary'] + $creditDebit['value_expenses']) * $creditDebit['quantity']);
         }
 
-        $data = [
+        $now = date('Y-m-d H:i:s');
+
+        $data = array(
             'id_bill'                   => $id_bill,
             'medical_insurance_id'      => $medical_insurance_id,
             'document_type'             => $document_type,
             'branch_office'             => $branch_office,
             'type_form'                 => $form_type,
-            'creation_date'             => date('Y-m-d H:i:s'),
-            'expiration_date'           => date('Y-m-d H:i:s'),
+            'creation_date'             => $now,
+            'expiration_date'           => $now,
             'credit_debit_note_number'  => $noteNumber,
             'state'                     => 1,
             'total_expenses'            => $totalExpenses,
             'total_honoraries'          => $totalHonoraries,
-            'total_note'                => $totalNote
-        ];
+            'total_note'                => $totalNote,
+            'annulled'                  => 0
+        );
 
         //Start transaction
         $this->db->trans_start();
 
             //Save the note
-            $this->db->insert($this->table, $data);
-            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito: error al guardar la nota'];
+            $this->db->insert('credit_debit_note', $data);
+            if($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito: error al grabar la nota'];
 
+            //Obtain last inserted note id
             $noteID = $this->db->insert_id();
 
             //Update each of the note's credit or debit
-            $this->db->where(['id_bill' => $id_bill, 'type' =>$document_type]);
+            $this->db->where(['id_bill' => $id_bill, 'type' =>$this->credit_debit_type]);
             $this->db->update('credit_debit', ['credit_debit_note_id' =>$noteID ]);
             if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito: error al asociar créditos/débitos a la nota'];
 
         //End transaction and check everything is ok
         $this->db->trans_complete();
-        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error al eliminar la nota y/o sus débitos/créditos'];
-
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado al generar la nota de débito/crédito'];
 
         return ['status' => 'ok', 'msg' => 'Nota de crédito/débito creada satisfactoriamente'];
 
@@ -89,13 +94,13 @@ class CreditDebitNote extends CI_Model{
         $this->db->select_max('CDN.credit_debit_note_number');
         $this->db->from('credit_debit_note CDN');
         $this->db->where('branch_office', $billData->branch_office);
-        $this->db->where('type_document', $document_type);
+        $this->db->where('document_type', $this->credit_debit_type);
         $this->db->where('type_form', $billData->type_form);
         $query = $this->db->get();
 
         if(!$query) return 0;
 
-        $result = $query->row();
+        $result = $query->row()->credit_debit_note_number;
 
         if (empty($result)) $result = 0;
 
@@ -109,11 +114,14 @@ class CreditDebitNote extends CI_Model{
 
     private function getCreditDebitsOfNote($id_bill,$document_type){
 
+        //Change the document type to opposite (credit notes have debits, debit notes have credts)
+        $credit_debit_type = ($document_type == 'C') ? 'D' : 'C';
+
         //Get credits or debits of a note
         $this->db->select('CD.*');
         $this->db->from('credit_debit CD');
         $this->db->where('CD.id_bill', $id_bill);
-        $this->db->where('CD.type', $document_type);
+        $this->db->where('CD.type', $credit_debit_type);
         $query = $this->db->get();
 
         if(!$query)                 return 0;
@@ -146,20 +154,20 @@ class CreditDebitNote extends CI_Model{
 
             //Annulate the note
             $this->db->where('credit_debit_note_id', $credit_debit_note_id);
-            $this->db->update('$credit_debit_note', ['annulled'=>1]);
+            $this->db->update('credit_debit_note', ['annulled' => 1]);
 
-            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo anular la nota de crédito/débito'];
 
 
             //Delete all it's credit's or debits
             $this->db->delete('credit_debit', ['credit_debit_note_id' =>$credit_debit_note_id]);
 
-            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudo grabar la nota de crédito/débito'];
+            if($this->db->affected_rows() == 0) ['status' => 'error', 'msg' => 'No se pudieron eliminar los créditos/débitos asociados a la nota'];
 
 
         //End transaction and check everything is ok
         $this->db->trans_complete();
-        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error al eliminar la nota y/o sus débitos/créditos'];
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado al eliminar la nota y/o sus débitos/créditos'];
 
         return ['status' => 'ok', 'msg' => 'Nota eliminada satisfactoriamente'];
     }
