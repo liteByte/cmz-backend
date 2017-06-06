@@ -144,7 +144,22 @@ class CreditDebitNote extends CI_Model{
         if (!$query)                 return [];
         if ($query->num_rows() == 0) return [];
 
-        return $query->result_array();
+        $notes = $query->result_array();
+
+        foreach ($notes as &$note) {
+
+            //Change state
+            switch ($note['state']) {
+                case 1:
+                    $note['note_state'] = 'Generada';
+                    break;
+                default:
+                    $note['note_state'] = 'Desconocida';
+            }
+
+        }
+
+        return $notes;
 
     }
 
