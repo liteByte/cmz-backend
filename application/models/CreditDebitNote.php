@@ -185,7 +185,12 @@ class CreditDebitNote extends CI_Model{
         if (!$query)                 return ['status' => 'error', 'msg' => 'Error al obtener los datos de la nota de crédito/débito'];
         if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudieron obtener datos de la nota elegida'];
 
-        $notePrintData = $query->result_array();
+        $notePrintData = $query->result_array()[0];
+
+        //Format cuit
+        $notePrintData['cuit'] = str_pad($notePrintData['cuit'], 11, '0', STR_PAD_LEFT);
+        $notePrintData['cuit'] = substr($notePrintData['cuit'], 0, 2) . '-' . substr($notePrintData['cuit'], 2);
+        $notePrintData['cuit'] = substr($notePrintData['cuit'], 0, 11) . '-' . substr($notePrintData['cuit'], 11);
 
         $notePrintData['letterTotal'] = $this->numbertoletter->to_word(floor($notePrintData['total_note']),'ARS');
 
