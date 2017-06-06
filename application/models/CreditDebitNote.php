@@ -135,7 +135,7 @@ class CreditDebitNote extends CI_Model{
 
         $this->db->select('CDN.*,MI.denomination');
         $this->db->from('credit_debit_note CDN');
-        $this->db->join('medical_insurance MI on MI.medical_insurance_id=CDN.medical_insurance_id');
+        $this->db->join('medical_insurance MI', 'MI.medical_insurance_id=CDN.medical_insurance_id');
         $this->db->order_by("CDN.branch_office", "asc");
         $this->db->order_by("CDN.type_form", "asc");
         $this->db->order_by("CDN.credit_debit_note_number", "desc");
