@@ -190,7 +190,7 @@ class CreditDebitNote extends CI_Model{
 
     public function getPrintData($credit_debit_note_id){
 
-        $this->db->select('CDN.*,MI.settlement_name, MI.address, MI.location, MI.postal_code, MI.iva_id , MI.cuit, ides.description as iva_description,B.type_document as bill_document_type');
+        $this->db->select('CDN.*,MI.settlement_name, MI.address, MI.location, MI.postal_code, MI.iva_id , MI.cuit, ides.description as iva_description,B.type_document as bill_document_type,B.number_bill');
         $this->db->from('credit_debit_note CDN');
         $this->db->join('medical_insurance MI', 'CDN.medical_insurance_id = MI.medical_insurance_id');
         $this->db->join('iva ides','MI.iva_id = ides.iva_id');
