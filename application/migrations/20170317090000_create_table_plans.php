@@ -13,6 +13,11 @@ class Migration_Create_table_plans extends CI_Migration{
                     'unsigned'      =>  TRUE,
                     'auto_increment'=>  TRUE
                 ),
+                'plan_code' => array(
+                    'type'          =>  'VARCHAR',
+                    'constraint'    =>  5,
+                    'null'          =>  TRUE
+                ),
                 'description' => array(
                     'type'          =>  'VARCHAR',
                     'constraint'    =>  100,
