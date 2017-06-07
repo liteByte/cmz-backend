@@ -94,20 +94,20 @@ class CreditDebitNote extends CI_Model{
         $this->db->select_max('CDN.credit_debit_note_number');
         $this->db->from('credit_debit_note CDN');
         $this->db->where('branch_office', $billData->branch_office);
-        $this->db->where('document_type', $this->credit_debit_type);
+        $this->db->where('document_type', $document_type);
         $this->db->where('type_form', $billData->type_form);
         $query = $this->db->get();
 
         if(!$query) return 0;
 
-        $result = $query->row()->credit_debit_note_number;
+        $previousNoteNumber = $query->row()->credit_debit_note_number;
 
-        if (empty($result)) $result = 0;
+        if (empty($previousNoteNumber)) $previousNoteNumber = 0;
 
         // Add 1 to the number obtained so we get the next bill number
-        $result ++;
+        $previousNoteNumber ++;
 
-        return $result;
+        return $previousNoteNumber;
 
 
     }
