@@ -32,7 +32,6 @@ class Migration_Create_table_professionals extends CI_Migration{
             'document_number' => array(
                 'type'          => 'VARCHAR',
                 'constraint'    => 9,
-                'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_birth' => array(
@@ -118,13 +117,13 @@ class Migration_Create_table_professionals extends CI_Migration{
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  15,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'null'          =>  TRUE
             ),
             'cbu_number' => array(
                 'type'          =>  'VARCHAR',
                 'constraint'    =>  22,
                 'unsigned'      =>  TRUE,
-                'null'          =>  FALSE
+                'null'          =>  TRUE
             ),
             'active'        => array(
                 'type'          => 'VARCHAR',
