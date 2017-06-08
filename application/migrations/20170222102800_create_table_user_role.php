@@ -39,10 +39,6 @@ class Migration_Create_table_user_role extends CI_Migration{
             array(
                 'user_id' => "1",
                 'role_id' => "1"
-            ),
-            array(
-                'user_id' => "2",
-                'role_id' => "2"
             )
         );
 
