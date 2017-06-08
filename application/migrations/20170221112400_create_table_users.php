@@ -71,23 +71,14 @@ class Migration_Create_table_users extends CI_Migration{
             $data = array(
                 array(
                     'document_type' => "DNI",
-                    'document_number' => "1234567",
-                    'name' => "NameTest",
-                    'email' => "email@gmail.com",
-                    'last_name' => "LastNameTest",
-                    'password' => $this->hash->encrypt('1234567'),
-                    'active' => "active",
-                ),
-                array(
-                    'document_type' => "DNI",
-                    'document_number' => "12345678",
-                    'name' => "NameTest 2",
-                    'email' => "email2@gmail.com",
-                    'last_name' => "LastNameTest 2",
-                    'password' => $this->hash->encrypt('1234567'),
+                    'document_number' => "11305650",
+                    'name' => "Adriana",
+                    'email' => "adrianamontani2@gmail.com",
+                    'last_name' => "Montani",
+                    'password' => $this->hash->encrypt('Px%tiJpSJY3egNK/'),
                     'active' => "active",
                 )
-                );
+            );
 
             $this->db->insert_batch('users', $data);
 
