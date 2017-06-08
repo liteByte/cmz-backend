@@ -14,7 +14,6 @@ class Migration_Create_table_fiscal_data extends CI_Migration{
             'cuit' => array(
                 'type'          => 'VARCHAR',
                 'constraint'    => 13,
-                'unique'        => TRUE,
                 'null'          => FALSE
             ),
             'date_start_activity' => array(
