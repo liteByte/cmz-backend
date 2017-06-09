@@ -242,10 +242,12 @@ class CreditDebitNote extends CI_Model{
         if(!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la nota de la que se desea realizar el remito'];
         if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de la nota de la que se desea imprimir el remito'];
 
-        if($query->row()->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede imprimir el remito de esta nota ya que ha sido anulada'];
+        $noteData = $query->row();
 
-        //Obtain the bill ID of the note
-        $billID = $query->row()->id_bill;
+        if($noteData->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede imprimir el remito de esta nota ya que ha sido anulada'];
+
+        //Obtain the bill id
+        $billID = $noteData->id_bill;
 
         //To print the receipt, we need the bill's print data and we have to add the professional information
         $this->db->select('CD.period,CD.quantity,CD.value_honorary,CD.value_expenses,N.unity as value_unit,PR.registration_number,PR.name,FD.cuit,FD.iibb,N.code,N.class');
@@ -288,10 +290,9 @@ class CreditDebitNote extends CI_Model{
         foreach ($result as &$periodArray){
 
             foreach ($periodArray as &$professionalArray){
-                $COUNT=0;
+
                 foreach ($professionalArray as &$benefitArray) {
-                    $COUNT++;
-                    //IF($COUNT==2){print_R($benefitArray);DIE();}
+
                     //If the benefit is V (visit) visit value is honorary value and honorary goes 0
                     if ($benefitArray['value_unit'] == 'V'){
                         $benefitArray['value_visit'] = $benefitArray['value_honorary'];
@@ -334,7 +335,8 @@ class CreditDebitNote extends CI_Model{
                 $expenses_total     = 0;
                 $professional_total = 0;
 
-                foreach ($professionalArray as $benefitArray) {
+                foreach ($professionalArray as &$benefitArray) {
+
                     $quantity_total     = $quantity_total     + $benefitArray['quantity'];
                     $visit_total        = $visit_total        + $benefitArray['visit_benefit_total'];
                     $honorary_total     = $honorary_total     + $benefitArray['honorary_benefit_total'];
@@ -376,7 +378,7 @@ class CreditDebitNote extends CI_Model{
             $periodArray [] = $periodTotal;
 
         }
-        print_R($result);DIE();
+
         $returnArray = [];
         $returnArray ['body'] = $result;
         $returnArray ['endData'] = $totalReceiptData;
@@ -384,13 +386,18 @@ class CreditDebitNote extends CI_Model{
         //Get receipt first page data (same page as bill)
         $billHeadData = $this->Bill->getPrintData($billID);
         if($billHeadData['status'] == 'error') return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la cabecera del remito'];
+
+        //Add note data
+        $billHeadData['msg']['generalInformation']['noteNumber']   = $noteData->credit_debit_note_number;
+        $billHeadData['msg']['generalInformation']['noteType']     = ($noteData->document_type == 'C')? 'Crédito' : 'Débito';
+        $billHeadData['msg']['generalInformation']['total']        = $noteData->total_note;
+        $billHeadData['msg']['generalInformation']['letter_total'] = $this->numbertoletter->to_word(floor($noteData->total_note),'ARS');
+
         $returnArray ['firstPage'] = $billHeadData['msg'];
 
         return ['status' => 'ok', 'msg' => $returnArray];
 
     }
-
-
 
 
 
