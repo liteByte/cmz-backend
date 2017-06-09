@@ -226,6 +226,7 @@ class CreditDebitNote extends CI_Model{
         $notePrintData['letterTotal'] = $this->numbertoletter->to_word(floor($notePrintData['total_note']),'ARS');
 
         return ['status' => 'ok', 'msg' => $notePrintData];
+        
 
     }
 
