@@ -163,6 +163,21 @@ class CreditDebitNote extends CI_Model{
 
     }
 
+    public function getNotesForBill($bill_id){
+
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->where('CDN.id_bill', $bill_id);
+
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Ocurrió un error en el chequeo de notas de crédito/débito de la factura'];
+        if ($query->num_rows() == 0) return ['status' => 'ok', 'msg' => [] ];
+
+        return ['status' => 'ok', 'msg' => $query->result_array()];
+
+    }
+
     public function annulate($credit_debit_note_id){
 
         //Start transaction

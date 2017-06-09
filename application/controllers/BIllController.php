@@ -41,8 +41,8 @@ class BillController extends AuthController{
         if($result['status'] == "ok"){
 
             ////Check if medical insurance is O.S.D.E. If so, change document_type to 'L' and bill again
-            //O.S.D.E id is 17
-            if($data['id_medical_insurance'] == 17){
+            //O.S.D.E id is 19
+            if($data['id_medical_insurance'] == 19){
 
                 $data['document_type'] = 'L';
 

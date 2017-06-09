@@ -16,6 +16,8 @@ class Bill extends CI_Model{
     public function __construct(){
         parent::__construct();
         $this->load->library('numbertoletter');
+        $this->load->model('PayReceipt');
+        $this->load->model('CreditDebitNote');
     }
 
     public function bill_init($data){
@@ -311,8 +313,8 @@ class Bill extends CI_Model{
         $this->db->where('B.state', 1);
         $this->db->where('B.period <=', $this->date_billing);
 
-        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17) {
+        //If medical insurance is OSDE (19), filter benefits depending on the bill's document type
+        if($id_medical == 19) {
             if ($this->document_type == "F") {
                 $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
             } else {
@@ -345,8 +347,8 @@ class Bill extends CI_Model{
         $this->db->where('B.state', 1);
         $this->db->where('B.period <=', $this->date_billing);
 
-        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17) {
+        //If medical insurance is OSDE (19), filter benefits depending on the bill's document type
+        if($id_medical == 19) {
             if ($this->document_type == "F") {
                 $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
             } else {
@@ -380,8 +382,8 @@ class Bill extends CI_Model{
         $this->db->where('B.period <=', $this->date_billing);
         $this->db->where('B.state', 1);
 
-        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($id_medical == 17) {
+        //If medical insurance is OSDE (19), filter benefits depending on the bill's document type
+        if($id_medical == 19) {
             if ($this->document_type == "F") {
                 $this->db->where('PFD.iva_id', 6);  //Iva = monotributista
             } else {
@@ -438,8 +440,8 @@ class Bill extends CI_Model{
             " AND B.state = " . 1 .
             " AND B.period <= '" . $this->date_billing ."' ";
 
-        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($medical_insurance_id == 17) {
+        //If medical insurance is OSDE (19), filter benefits depending on the bill's document type
+        if($medical_insurance_id == 19) {
             if ($this->document_type == "F") {
                 $sql = $sql . " AND PFD.iva_id = 6";   //Iva monotributista
             } else {
@@ -471,8 +473,8 @@ class Bill extends CI_Model{
             " AND B.plan_id = " . $plan_id .
             " AND B.period <= '" . $this->date_billing ."' ";
 
-        //If medical insurance is OSDE (17), filter benefits depending on the bill's document type
-        if($medical_insurance_id == 17) {
+        //If medical insurance is OSDE (19), filter benefits depending on the bill's document type
+        if($medical_insurance_id == 19) {
             if ($this->document_type == "F") {
                 $sql = $sql . " AND PFD.iva_id = 6";   //Iva monotributista
             } else {
@@ -681,44 +683,38 @@ class Bill extends CI_Model{
     //Cancel bill
     public function cancelBill($billID){
 
-        //Validate if the bill can be annulled or not. If it has receipts, and any of it's receipts was liquidated, bill cannot be annulled
-        $this->db->select('PR.pay_receipt_id,PR.liquidated');
-        $this->db->from('pay_receipt PR');
-        $this->db->where('PR.id_bill',$billID);
+        //Obtain the bill data
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill',$billID);
         $query = $this->db->get();
 
-        if (!$query) return ['status' => 'error', 'msg' => 'Error: no se pudo verificar si la factura puede ser anulada o no'];
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
 
-        if ($query->num_rows() > 0) {
+        $bill = $query->row();
 
-            $pay_receipts = $query->result_array();
+        //Check bill's state. If it's 1 (cargada), it can be cancelled
+        if ($bill->state_billing != 1) return ['status' => 'error', 'msg' => 'La factura no puede anularse ya que aún tiene recibos asociados'];
 
-            //If any pay_receipt was liquidated, bill cannot be nulled
-            foreach ($pay_receipts as $pay_receipt){
-                if($pay_receipt['liquidated'] == 1) return ['status' => 'error', 'msg' => 'Error: no se pudo verificar si la factura puede ser anulada o no'];
+        //Check if all of the bill's notes are anulled (if it has any)
+        $noteResult = $this->CreditDebitNote->getNotesForBill($billID);
+        if($noteResult['status'] == 'error') return ['status' => 'error', 'msg' => $noteResult['msg']];
+
+        if (!empty($noteResult['msg'])){
+            foreach ($noteResult['msg'] as $note){
+
+                if ($note['annulled'] == 0) return ['status' => 'error', 'msg' => 'La factura no puede anularse ya que aun tiene notas de crédito/débito no anuladas'];
+
             }
-
         }
 
         //Start transaction
         $this->db->trans_start();
 
-            //Obtain the bill data
-            $this->db->select('B.*');
-            $this->db->from('bill B');
-            $this->db->where('B.id_bill',$billID);
-            $query = $this->db->get();
-
-            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
-            if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
-
-            $bill = $query->row();
-
-
             //Return bill's benefits to "valorized" (state = 1)
             $data = array(
                 'state' => 1,
-                'bill_number' => null,
                 'id_bill' => null
             );
 
@@ -726,29 +722,13 @@ class Bill extends CI_Model{
             $query = $this->db->update('benefits', $data);
 
             if (!$query) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura a "valorizadas"'];
-            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el estado de las prestaciones de la factura'];
-
-
-            //Check bill's state. If state = 2 or 3 it was billed, so we have to delete it's pay receipts (1-Cargada/Generada o 2-Cobrada parcial o 3-Cobrada)
-            if ($bill->state_billing == 2 || $bill->state_billing == 3) {
-
-                //The pay receipts where obtained in the receipt validation
-                foreach ($pay_receipts as $pay_receipt){
-                    $this->db->where('pay_receipt_id', $pay_receipt['pay_receipt_id']);
-                    $this->db->update('pay_receipt', ['annulled' => 1]);
-                }
-
-            }
-
-
-            //TODO: anular las notas de credito y debito de la factura
 
 
             //Cancel the bill
             $this->db->where('id_bill', $billID);
             $this->db->update('bill', ['annulled' => 1]);
 
-            if ($this->db->affected_rows() == 0)    return ['status' => 'error', 'msg' => 'No se pudo anular la factura'];
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo anular la factura'];
 
         //Close transaction
         $this->db->trans_complete();
@@ -789,9 +769,9 @@ class Bill extends CI_Model{
             //Calculate the current debt (Bill total - amount payed - debit notes + credit notes)
             //TODO: Buscar valores de notas de cred y deb de esta factura y sumarlos/restarlos al total.
             $totalDebt = $bill->total; //-notas debito + notas credito
-            $currentDebt = $totalDebt - - $bill->amount_paid;
+            $currentDebt = $totalDebt - $bill->amount_paid;
 
-            //Check the amount payed is more than the pending total
+            //Check the amount payed isn't more than the pending total
             if ($amount_paid > $currentDebt){
                 return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al monto pendiente de pago'];
             }
@@ -803,8 +783,8 @@ class Bill extends CI_Model{
             }else{
                 $dataToUpdateBill['state_billing'] = 2; //Cobrada parcial
             }
-            $dataToUpdateBill['amount_paid'] = $dataToUpdateBill['amount_paid'] + $amount_paid;
 
+            $dataToUpdateBill['amount_paid'] = $dataToUpdateBill['amount_paid'] + $amount_paid;
 
             // 1)Update the bill
             $this->db->where('id_bill', $bill_id);
@@ -865,26 +845,7 @@ class Bill extends CI_Model{
 
     }
 
-    //Generate the correct pay receipt number based on Branch Office + Document Type + Document Form
-    private function generatePayReceiptNumber ($branch_office,$form_type,$document_type ){
 
-        $this->db->select_max('pay_receipt_number');
-        $this->db->where('branch_office', $branch_office);
-        $this->db->where('type_document', $document_type);
-        $this->db->where('type_form', $form_type);
-        $this->db->from('pay_receipt');
-        $query = $this->db->get();
-
-        $result = $query->row()->pay_receipt_number;
-
-        if (empty($result)) $result = 0;
-
-        // Add 1 to the number obtained so we get the next pay receipt number
-        $result ++;
-
-        return $result;
-
-    }
 
     //Obtain the bills of a certain medical insurance
     public function getByMedicalInsuranceLike ($medical_insurance_id,$word){
