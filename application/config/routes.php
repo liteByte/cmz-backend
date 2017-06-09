@@ -55,162 +55,163 @@ $route['translate_uri_dashes'] = FALSE;
 
 
 ////////////////////////Role routes////////////////////////
-$route['roles']                       = 'RoleController/roles';  //Get -> show roles  & post -> create role
-$route['roles/update/(:num)']         = 'RoleController/updateRole/id/$1';
+$route['roles']                                 = 'RoleController/roles';  //Get -> show roles  & post -> create role
+$route['roles/update/(:num)']                   = 'RoleController/updateRole/id/$1';
 
 ////////////////////////Permission routes////////////////////////
-$route['permissions']                 = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
+$route['permissions']                           = 'PermissionController/permissions'; //Get -> show permissions  & post -> create permission
 
 ////////////////////////User routes////////////////////////
-$route['users']                       = 'UserController/users'; //Get -> show users  & post -> create users
-$route['users/(:num)']                = 'UserController/getUser/id/$1';
-$route['users/update/(:num)']         = 'UserController/updateUser/id/$1';
-$route['users/remove/(:num)']         = 'UserController/removeUser/id/$1';
-$route['users/roles/(:num)']          = 'UserController/updateRoles/id/$1';
+$route['users']                                 = 'UserController/users'; //Get -> show users  & post -> create users
+$route['users/(:num)']                          = 'UserController/getUser/id/$1';
+$route['users/update/(:num)']                   = 'UserController/updateUser/id/$1';
+$route['users/remove/(:num)']                   = 'UserController/removeUser/id/$1';
+$route['users/roles/(:num)']                    = 'UserController/updateRoles/id/$1';
 
 //Recover or change password
-$route['recoverPassword']             = 'UserController/recoverPassword';
-$route['changePassword']              = 'UserController/changePassword';
+$route['recoverPassword']                       = 'UserController/recoverPassword';
+$route['changePassword']                        = 'UserController/changePassword';
 
 ////////////////////////Bank routes////////////////////////
-$route['banks']                       = 'BankController/banks';  //Get -> show banks  & post -> create bank
-$route['banks/update/(:num)']         = 'BankController/updateBank/id/$1';
-$route['banks/remove/(:num)']         = 'BankController/removeBank/id/$1';
-$route['banks/(:num)']                = 'BankController/getBank/id/$1';
+$route['banks']                                 = 'BankController/banks';  //Get -> show banks  & post -> create bank
+$route['banks/update/(:num)']                   = 'BankController/updateBank/id/$1';
+$route['banks/remove/(:num)']                   = 'BankController/removeBank/id/$1';
+$route['banks/(:num)']                          = 'BankController/getBank/id/$1';
 
 ////////////////////////Speciality routes////////////////////////
-$route['specialities']                = 'SpecialityController/specialities';  //Get -> show specialities  & post -> create speciality
-$route['specialities/update/(:num)']  = 'SpecialityController/updateSpeciality/id/$1';
-$route['specialities/remove/(:num)']  = 'SpecialityController/removeSpeciality/id/$1';
-$route['specialities/(:num)']         = 'SpecialityController/getSpeciality/id/$1';
+$route['specialities']                          = 'SpecialityController/specialities';  //Get -> show specialities  & post -> create speciality
+$route['specialities/update/(:num)']            = 'SpecialityController/updateSpeciality/id/$1';
+$route['specialities/remove/(:num)']            = 'SpecialityController/removeSpeciality/id/$1';
+$route['specialities/(:num)']                   = 'SpecialityController/getSpeciality/id/$1';
 
 
 ////////////////////////Medical Insurances routes////////////////////////
-$route['insurances']                  = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
-$route['insurances/update/(:num)']    = 'MedicalInsuranceController/updateInsurance/id/$1';
-$route['insurances/remove/(:num)']    = 'MedicalInsuranceController/removeInsurance/id/$1';
-$route['insurances/(:num)']           = 'MedicalInsuranceController/getInsurance/id/$1';
+$route['insurances']                            = 'MedicalInsuranceController/medicalInsurance';  //Get -> show banks  & post -> create bank
+$route['insurances/update/(:num)']              = 'MedicalInsuranceController/updateInsurance/id/$1';
+$route['insurances/remove/(:num)']              = 'MedicalInsuranceController/removeInsurance/id/$1';
+$route['insurances/(:num)']                     = 'MedicalInsuranceController/getInsurance/id/$1';
 
 ////////////////////////Plans routes////////////////////////
-$route['plans']                       = 'PlanController/plans';  //post -> create plan
-$route['plansByInsurance/(:num)']     = 'PlanController/plansByInsurance/id/$1';  //get -> get plans by insurance
-$route['plans/update/(:num)']         = 'PlanController/updatePlan/id/$1';
-$route['plans/remove/(:num)']         = 'PlanController/removePlan/id/$1';
-$route['plans/(:num)']                = 'PlanController/getPlan/id/$1';
-$route['plans/fee/(:num)']            = 'PlanController/getPlanByFeeId/id/$1';
+$route['plans']                                 = 'PlanController/plans';  //post -> create plan
+$route['plansByInsurance/(:num)']               = 'PlanController/plansByInsurance/id/$1';  //get -> get plans by insurance
+$route['plans/update/(:num)']                   = 'PlanController/updatePlan/id/$1';
+$route['plans/remove/(:num)']                   = 'PlanController/removePlan/id/$1';
+$route['plans/(:num)']                          = 'PlanController/getPlan/id/$1';
+$route['plans/fee/(:num)']                      = 'PlanController/getPlanByFeeId/id/$1';
 
 ////////////////////////Contact routes////////////////////////
-$route['contacts']                    = 'ContactController/contacts';  //Get -> show contacts  & post -> create contact
-$route['contacts/update/(:num)']      = 'ContactController/updateContact/id/$1';
-$route['contacts/remove/(:num)']      = 'ContactController/removeContact/id/$1';
-$route['contacts/(:num)']             = 'ContactController/getContact/id/$1';
+$route['contacts']                              = 'ContactController/contacts';  //Get -> show contacts  & post -> create contact
+$route['contacts/update/(:num)']                = 'ContactController/updateContact/id/$1';
+$route['contacts/remove/(:num)']                = 'ContactController/removeContact/id/$1';
+$route['contacts/(:num)']                       = 'ContactController/getContact/id/$1';
 
 ////////////////////////Nomenclator routes////////////////////////
-$route['nomenclators']                = 'NomenclatorController/nomenclators';  //Get -> show contacts  & post -> create contact
-$route['nomenclators/update/(:num)']  = 'NomenclatorController/updateNomenclator/id/$1';
-$route['nomenclators/remove/(:num)']  = 'NomenclatorController/removeNomenclator/id/$1';
-$route['nomenclators/(:num)']         = 'NomenclatorController/getNomenclator/id/$1';
+$route['nomenclators']                          = 'NomenclatorController/nomenclators';  //Get -> show contacts  & post -> create contact
+$route['nomenclators/update/(:num)']            = 'NomenclatorController/updateNomenclator/id/$1';
+$route['nomenclators/remove/(:num)']            = 'NomenclatorController/removeNomenclator/id/$1';
+$route['nomenclators/(:num)']                   = 'NomenclatorController/getNomenclator/id/$1';
 
 ////////////////////////Credit-debit-concepts routes////////////////////////
-$route['cdconcepts']                  = 'CreditDebitConceptController/concepts'; //Get -> show concepts  & post -> create concept
-$route['cdconcepts/(:num)']           = 'CreditDebitConceptController/concepts/id/$1'; //Get -> show specific concept, Put -> update concept , Delete -> delete concept
+$route['cdconcepts']                            = 'CreditDebitConceptController/concepts'; //Get -> show concepts  & post -> create concept
+$route['cdconcepts/(:num)']                     = 'CreditDebitConceptController/concepts/id/$1'; //Get -> show specific concept, Put -> update concept , Delete -> delete concept
 
 ////////////////////////Fee routes////////////////////////
-$route['fees']                        = 'FeeController/fees';  //Get -> show fees  & post -> create fee & put -> update fees
-$route['fees/(:num)']                 = 'FeeController/fees/id/$1';
-$route['fees/increment']              = 'FeeController/incrementedFees';   //Post: create new fees with new values
+$route['fees']                                  = 'FeeController/fees';  //Get -> show fees  & post -> create fee & put -> update fees
+$route['fees/(:num)']                           = 'FeeController/fees/id/$1';
+$route['fees/increment']                        = 'FeeController/incrementedFees';   //Post: create new fees with new values
 
 ////////////////////////Benefit routes////////////////////////
-$route['benefits']                    = 'BenefitController/benefits';  //Get -> show benefits  & post -> create benefit & put -> update benefit
-$route['benefits/(:num)']             = 'BenefitController/benefits/id/$1';
+$route['benefits']                              = 'BenefitController/benefits';  //Get -> show benefits  & post -> create benefit & put -> update benefit
+$route['benefits/(:num)']                       = 'BenefitController/benefits/id/$1';
 
 ////////////////////////IVA routes////////////////////////
-$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+$route['iva']                                   = 'IvaController/iva';  //Get -> show iva
 
 ////////////////////////Scope routes////////////////////////
-$route['scopes']                      = 'ScopeController/scopes';  //Get -> show scopes
+$route['scopes']                                = 'ScopeController/scopes';  //Get -> show scopes
 
 ////////////////////////Login routes////////////////////////
-$route['login']['post']               = 'LoginController/login';
+$route['login']['post']                         = 'LoginController/login';
 
 ////////////////////////IVA routes////////////////////////
-$route['iva']                         = 'IvaController/iva';  //Get -> show iva
+$route['iva']                                   = 'IvaController/iva';  //Get -> show iva
 
 ////////////////////////Patient routes////////////////////////
-$route['affiliates']                  = 'AffiliateController/affiliate';  //Get -> show affiliates
+$route['affiliates']                            = 'AffiliateController/affiliate';  //Get -> show affiliates
 
 ////////////////////////Femeba routes////////////////////////
-$route['categoryfemeba']              = 'CategoryFemebaController/femeba';
+$route['categoryfemeba']                        = 'CategoryFemebaController/femeba';
 
 ////////////////////////Category Circle routes////////////////////////
-$route['medicalcareer']               = 'MedicalCareerController/medical_career';
+$route['medicalcareer']                         = 'MedicalCareerController/medical_career';
 
 ////////////////////////Billing codes routes////////////////////////
-$route['billingCodes']                = 'BillingCodeController/billing_code';
+$route['billingCodes']                          = 'BillingCodeController/billing_code';
 
 ////////////////////////Holiday options routes////////////////////////
-$route['holidayOptions']              = 'HolidayOptionController/holiday_option';
+$route['holidayOptions']                        = 'HolidayOptionController/holiday_option';
 
 ////////////////////////Maternal plan options routes////////////////////////
-$route['maternalPlanOptions']         = 'MaternalPlanOptionController/maternal_plan_option';
+$route['maternalPlanOptions']                   = 'MaternalPlanOptionController/maternal_plan_option';
 
 ////////////////////////Internment-ambulatory options routes////////////////////////
-$route['internmentAmbulatoryOptions'] = 'InternmentAmbulatoryOptionController/internment_ambulatory_option';
+$route['internmentAmbulatoryOptions']           = 'InternmentAmbulatoryOptionController/internment_ambulatory_option';
 
 ////////////////////////Concept Group routes////////////////////////
-$route['conceptgroup']                = 'ConceptGroupController/conceptGroups';
+$route['conceptgroup']                          = 'ConceptGroupController/conceptGroups';
 
 ////////////////////////Payment Types routes////////////////////////
-$route['paymenttypes']                = 'PaymentTypesController/payment_types';
+$route['paymenttypes']                          = 'PaymentTypesController/payment_types';
 
 ////////////////////////Professionals routes////////////////////////
-$route['professionals']               = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
-$route['professionals/(:num)']        = 'ProfessionalsController/getProfessionals/id/$1';
-$route['professionals/update/(:num)'] = 'ProfessionalsController/updateProfessionals/id/$1';
-$route['professionals/remove/(:num)'] = 'ProfessionalsController/removeProfessional/id/$1';
+$route['professionals']                         = 'ProfessionalsController/professionals'; //Get -> show professionals  & post -> create professionals
+$route['professionals/(:num)']                  = 'ProfessionalsController/getProfessionals/id/$1';
+$route['professionals/update/(:num)']           = 'ProfessionalsController/updateProfessionals/id/$1';
+$route['professionals/remove/(:num)']           = 'ProfessionalsController/removeProfessional/id/$1';
 
 ////////////////////////Coverage routes////////////////////////
-$route['coverages']                   = 'CoverageController/coverages';
-$route['coverages/(:num)']            = 'CoverageController/getCoverage/id/$1';
-$route['coverages/update/(:num)']     = 'CoverageController/updateCoverage/id/$1';
-$route['coverages/remove/(:num)']     = 'CoverageController/removeCoverage/id/$1';
+$route['coverages']                             = 'CoverageController/coverages';
+$route['coverages/(:num)']                      = 'CoverageController/getCoverage/id/$1';
+$route['coverages/update/(:num)']               = 'CoverageController/updateCoverage/id/$1';
+$route['coverages/remove/(:num)']               = 'CoverageController/removeCoverage/id/$1';
 
 ////////////////////////Special Conditions routes////////////////////////
-$route['specialconditionstypes']            = 'SpecialConditionsTypesController/types';
-$route['specialconditions']                 = 'SpecialConditionsController/specialconditions';
-$route['specialconditions']                 = 'SpecialConditionsController/specialconditions';
-$route['specialconditions/update/(:num)']   = 'SpecialConditionsController/specialconditions/id/$1';
-$route['specialconditions/remove/(:num)']   = 'SpecialConditionsController/specialconditions/id/$1';
-$route['specialconditions/(:num)']          = 'SpecialConditionsController/specialconditions_by_id/id/$1';
+$route['specialconditionstypes']                = 'SpecialConditionsTypesController/types';
+$route['specialconditions']                     = 'SpecialConditionsController/specialconditions';
+$route['specialconditions']                     = 'SpecialConditionsController/specialconditions';
+$route['specialconditions/update/(:num)']       = 'SpecialConditionsController/specialconditions/id/$1';
+$route['specialconditions/remove/(:num)']       = 'SpecialConditionsController/specialconditions/id/$1';
+$route['specialconditions/(:num)']              = 'SpecialConditionsController/specialconditions_by_id/id/$1';
 
 //////////////////////// Manage Earnings  ////////////////////////
-$route['earnings']                    = 'EarningsController/earnings';
-$route['earnings/(:num)']             = 'EarningsController/earnings/id/$1';
+$route['earnings']                              = 'EarningsController/earnings';
+$route['earnings/(:num)']                       = 'EarningsController/earnings/id/$1';
 
 ////////////////////////Autocomplete services routes////////////////////////
-$route['insurances/like']             = 'MedicalInsuranceController/insuranceData';
-$route['nomenclators/like']           = 'NomenclatorController/nomenclatorData';
-$route['professionals/like']          = 'ProfessionalsController/professionalsData';
-$route['cdconcepts/like']             = 'CreditDebitConceptController/cdconceptData';
-$route['concepts/like']               = 'ConceptController/conceptData';
-$route['bill/like']                   = 'BillController/billData';
+$route['insurances/like']                       = 'MedicalInsuranceController/insuranceData';
+$route['nomenclators/like']                     = 'NomenclatorController/nomenclatorData';
+$route['professionals/like']                    = 'ProfessionalsController/professionalsData';
+$route['cdconcepts/like']                       = 'CreditDebitConceptController/cdconceptData';
+$route['concepts/like']                         = 'ConceptController/conceptData';
+$route['bill/like']                             = 'BillController/billData';
 
 ////////////////////////Billing Process////////////////////////
-$route['bills']                       = 'BillController/bill';
-$route['bills/(:num)']                = 'BillController/bill/id/$1';
-$route['bill/pay']                    = 'BillController/payBill';
-$route['bill/print/(:num)']           = 'BillController/billPrint/id/$1';  //Generates bill
+$route['bills']                                 = 'BillController/bill';
+$route['bills/(:num)']                          = 'BillController/bill/id/$1';
+$route['bill/pay']                              = 'BillController/payBill';
+$route['bill/print/(:num)']                     = 'BillController/billPrint/id/$1';  //Generates bill
 
 ////////////////////////Credit-debit routes////////////////////////
-$route['creditdebit']                 = 'CreditDebitController/creditDebit';                      //Post -> create credit/debit , Get -> get credits/debits of a bill
-$route['creditdebit/(:num)']          = 'CreditDebitController/creditDebit/id/$1';                //Put -> update credit/debit , Delete -> delete credit/debit
-$route['creditdebit/validateCD']      = 'CreditDebitController/validateCreditDebitExistence';     //Post -> validate if the credit/debit exists in the bill
-$route['creditdebit/empty']           = 'CreditDebitController/deleteAll';                        //Post -> delete all credit/debit associated to a bill
+$route['creditdebit']                           = 'CreditDebitController/creditDebit';                      //Post -> create credit/debit , Get -> get credits/debits of a bill
+$route['creditdebit/(:num)']                    = 'CreditDebitController/creditDebit/id/$1';                //Put -> update credit/debit , Delete -> delete credit/debit
+$route['creditdebit/validateCD']                = 'CreditDebitController/validateCreditDebitExistence';     //Post -> validate if the credit/debit exists in the bill
+$route['creditdebit/empty']                     = 'CreditDebitController/deleteAll';                        //Post -> delete all credit/debit associated to a bill
 
 ////////////////////////Credit-debit notes routes////////////////////////
-$route['creditdebitNote']             = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit, Get -> get credit-debits
-$route['creditdebitNote/(:num)']      = 'CreditDebitNoteController/creditDebitNote/id/$1';              //Delete -> Delete note and associated credit/debits
-$route['creditdebitNote/print/(:num)']= 'CreditDebitNoteController/printNote/id/$1';                    //Get -> Generate PDF of the note
+$route['creditdebitNote']                       = 'CreditDebitNoteController/creditDebitNote';              //Post -> create credit/debit, Get -> get credit-debits
+$route['creditdebitNote/(:num)']                = 'CreditDebitNoteController/creditDebitNote/id/$1';              //Delete -> Delete note and associated credit/debits
+$route['creditdebitNote/print/(:num)']          = 'CreditDebitNoteController/printNote/id/$1';                    //Get -> Generate PDF of the note
+$route['creditdebitNote/printReceipt/(:num)']   = 'CreditDebitNoteController/printReceipt/id/$1';                    //Get -> Generate PDF of the note's receipt
 
 ////////////////////////Receipt Process////////////////////////
-$route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
+$route['receipt/print/(:num)']                  = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
