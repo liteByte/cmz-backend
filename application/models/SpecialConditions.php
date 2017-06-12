@@ -261,7 +261,7 @@ class SpecialConditions extends CI_Model{
     public function get_specialconditions_by_id($id){
         $result = [];
 
-        $this->db->select('special_conditions.*');
+        $this->db->select('special_conditions.*,SCT.id_type');
         $this->db->select('medical_insurance.denomination');
         $this->db->select('plans.description');
         $this->db->select('nomenclators.type as nomenclator_type, nomenclators.code, nomenclators.class, nomenclators.description');
@@ -270,6 +270,7 @@ class SpecialConditions extends CI_Model{
         $this->db->join('medical_insurance', 'medical_insurance.medical_insurance_id = special_conditions.medical_insurance_id');
         $this->db->join('plans', 'plans.plan_id = special_conditions.plan_id');
         $this->db->join('nomenclators', 'nomenclators.nomenclator_id = special_conditions.provision');
+        $this->db->join('special_conditions_type SCT', 'SCT.id_special_conditions_type = special_conditions.type');
         $query = $this->db->get();
 
         if (!$query) return false;
