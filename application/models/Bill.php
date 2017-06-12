@@ -759,17 +759,45 @@ class Bill extends CI_Model{
             if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
 
 
-            //Create the array that will update the bill
-            $dataToUpdateBill = [
-                'amount_paid'   => $bill->amount_paid,
-                'state_billing' => 0
-            ];
+            //Obtain the total for the credit-debit notes of the bill
+            $this->db->select('CDN.*');
+            $this->db->from('credit_debit_note CDN');
+            $this->db->where('CDN.id_bill',$bill_id);
+            $this->db->where('CDN.annulled',0);
+            $this->db->where('CDN.state',1);
+            $query = $this->db->get();
+
+            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+
+            $notes      = $query->result_array();
+            $totalNotes = 0;
+
+            foreach($notes as $note){
+                if($note['document_type'] == 'C'){
+                    //Credit note -
+                    $totalNotes = $totalNotes - $note['total_note'];
+                }else{
+                    //Debit note +
+                    $totalNotes = $totalNotes + $note['total_note'];
+                }
+            }
 
 
-            //Calculate the current debt (Bill total - amount payed - debit notes + credit notes)
-            //TODO: Buscar valores de notas de cred y deb de esta factura y sumarlos/restarlos al total.
-            $totalDebt = $bill->total; //-notas debito + notas credito
-            $currentDebt = $totalDebt - $bill->amount_paid;
+            //Obtain the amount that has been payed for the bill (sum of receipt pay amount)
+            $this->db->select('COALESCE(sum(PR.amount_paid),0) as totalPayed');
+            $this->db->from('pay_receipt PR');
+            $this->db->where('PR.id_bill',$bill_id);
+            $this->db->where('PR.annulled',0);
+            $query = $this->db->get();
+
+            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar el total pagado de la factura hasta la fecha'];
+
+            $totalPayed = $query->row()->totalPayed;
+
+
+            //Calculate the current debt (Bill total - amount payed + total of the notes)
+            $currentDebt   = $bill->total - $totalPayed + $totalNotes;
+
 
             //Check the amount payed isn't more than the pending total
             if ($amount_paid > $currentDebt){
