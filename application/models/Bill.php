@@ -755,7 +755,7 @@ class Bill extends CI_Model{
         if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
 
 
-        //Obtain the total for the credit-debit notes of the bill
+        //Obtain the total for the credit-debit notes of the bill that haven't been billed
         $this->db->select('CDN.*');
         $this->db->from('credit_debit_note CDN');
         $this->db->where('CDN.id_bill',$bill_id);
@@ -763,7 +763,7 @@ class Bill extends CI_Model{
         $this->db->where('CDN.state',1);
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
 
         $notes      = $query->result_array();
         $totalNotes = 0;
@@ -778,7 +778,7 @@ class Bill extends CI_Model{
             }
         }
 
-
+        /*
         //Obtain the amount that has been payed for the bill (sum of receipt pay amount)
         $this->db->select('COALESCE(sum(PR.amount_paid),0) as totalPayed');
         $this->db->from('pay_receipt PR');
@@ -786,13 +786,13 @@ class Bill extends CI_Model{
         $this->db->where('PR.annulled',0);
         $query = $this->db->get();
 
-        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar el total pagado de la factura hasta la fecha'];
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar el total pagado de la factura hasta la fecha'];
 
-        $totalPayed = $query->row()->totalPayed;
+        $totalPayed = $query->row()->totalPayed;*/
 
 
         //Calculate the current debt (Bill total - amount payed + total of the notes)
-        $currentDebt   = $bill->total - $totalPayed + $totalNotes;
+        $currentDebt = $bill->total - $bill->amount_paid + $totalNotes;
 
 
         //Check the amount payed isn't more than the pending total
@@ -813,7 +813,7 @@ class Bill extends CI_Model{
 
             // 1)Update the bill
             $this->db->where('id_bill', $bill_id);
-            $this->db->update('bill', ['state_billing' => $billState, 'amount_paid' => $totalPayed]);
+            $this->db->update('bill', ['state_billing' => $billState, 'amount_paid' => ($bill->amount_paid + $amount_paid)]);
 
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el monto pagado en la factura'];
 
@@ -863,6 +863,16 @@ class Bill extends CI_Model{
 
             $this->db->insert('pay_receipt', $payReceiptData);
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo crear el recibo del pago realizado'];
+
+
+            // 4) Update each credit-debit note (state => 2 - pendiente de liquidacion)
+            foreach ($notes as $note) {
+
+                $this->db->where('credit_debit_note_id', $note['credit_debit_note_id']);
+                $this->db->update('credit_debit_note', ['state' => 2]);
+
+            }
+
 
         //Close transaction
         $this->db->trans_complete();
