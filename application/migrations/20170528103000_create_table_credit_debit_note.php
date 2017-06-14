@@ -59,7 +59,7 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
                 'type'           => 'INT',
                 'constraint'     =>  1,
                 'null'           =>  FALSE,
-                'comment'        => '1 -> Generada , 2-> Pendiente de liquidacion'
+                'comment'        => '1 -> Generada/Cargada , 2-> Pendiente de liquidacion'
             ),
             'total_expenses' => array(
                 'type'          =>  'DECIMAL',

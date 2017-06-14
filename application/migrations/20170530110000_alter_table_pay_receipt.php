@@ -11,7 +11,7 @@ class Migration_Alter_table_pay_receipt extends CI_Migration{
                 'type'           => 'INT',
                 'constraint'     =>  1,
                 'null'           =>  FALSE,
-                'comment'        => '1-'
+                'comment'        => '1-Generado (pendiente de liquidar)'
             )
         );
 

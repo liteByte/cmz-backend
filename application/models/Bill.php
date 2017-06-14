@@ -703,9 +703,7 @@ class Bill extends CI_Model{
 
         if (!empty($noteResult['msg'])){
             foreach ($noteResult['msg'] as $note){
-
                 if ($note['annulled'] == 0) return ['status' => 'error', 'msg' => 'La factura no puede anularse ya que aun tiene notas de crédito/débito no anuladas'];
-
             }
         }
 
@@ -732,6 +730,7 @@ class Bill extends CI_Model{
 
         //Close transaction
         $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado: no se pudo anular la factura'];
 
         return ['status' => 'ok', 'msg' => 'Factura anulada con éxito'];
 
@@ -740,55 +739,68 @@ class Bill extends CI_Model{
     //Pay bill
     public function payBill($amount_paid,$pay_date,$bill_id){
 
+        //Obtain the bill data
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill',$bill_id);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
+
+        $bill = $query->row();
+
+
+        //If the bill is annulled, it can't be payed
+        if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
+
+
+        //Obtain the total for the credit-debit notes of the bill that haven't been billed
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->where('CDN.id_bill',$bill_id);
+        $this->db->where('CDN.annulled',0);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+
+        $notes      = $query->result_array();
+        $totalNotes = 0;
+
+        foreach($notes as $note){
+            if($note['document_type'] == 'C'){
+                //Credit note -
+                $totalNotes = $totalNotes - $note['total_note'];
+            }else{
+                //Debit note +
+                $totalNotes = $totalNotes + $note['total_note'];
+            }
+        }
+
+
+        //Calculate the current debt (Bill total - amount payed + total of the notes)
+        $currentDebt = $bill->total - $bill->amount_paid + $totalNotes;
+
+
+        //Check the amount payed isn't more than the pending total
+        if ($amount_paid > $currentDebt){
+            return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al monto pendiente de pago'];
+        }
+
+
+        //Check if the total of the bill was payed or only a part of it
+        if ($currentDebt == $amount_paid){
+            $billState = 3; //Cobrada
+        }else{
+            $billState = 2; //Cobrada parcial
+        }
+
         //Start transaction
         $this->db->trans_start();
 
-            //Obtain the bill data
-            $this->db->select('B.*');
-            $this->db->from('bill B');
-            $this->db->where('B.id_bill',$bill_id);
-            $query = $this->db->get();
-
-            if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura que se quiere anular'];
-            if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura que se quiere anular'];
-
-            $bill = $query->row();
-
-
-            //If the bill is annulled, it can't be payed
-            if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
-
-
-            //Create the array that will update the bill
-            $dataToUpdateBill = [
-                'amount_paid'   => $bill->amount_paid,
-                'state_billing' => 0
-            ];
-
-
-            //Calculate the current debt (Bill total - amount payed - debit notes + credit notes)
-            //TODO: Buscar valores de notas de cred y deb de esta factura y sumarlos/restarlos al total.
-            $totalDebt = $bill->total; //-notas debito + notas credito
-            $currentDebt = $totalDebt - $bill->amount_paid;
-
-            //Check the amount payed isn't more than the pending total
-            if ($amount_paid > $currentDebt){
-                return ['status' => 'error', 'msg' => 'El monto ingresado es mayor al monto pendiente de pago'];
-            }
-
-
-            //Check if the total of the bill was payed or only a part of it
-            if ($currentDebt == $amount_paid){
-                $dataToUpdateBill['state_billing'] = 3; //Cobrada
-            }else{
-                $dataToUpdateBill['state_billing'] = 2; //Cobrada parcial
-            }
-
-            $dataToUpdateBill['amount_paid'] = $dataToUpdateBill['amount_paid'] + $amount_paid;
-
             // 1)Update the bill
             $this->db->where('id_bill', $bill_id);
-            $this->db->update('bill', $dataToUpdateBill);
+            $this->db->update('bill', ['state_billing' => $billState, 'amount_paid' => ($bill->amount_paid + $amount_paid)]);
 
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el monto pagado en la factura'];
 
@@ -815,7 +827,7 @@ class Bill extends CI_Model{
 
 
             //Get the next receipt number
-            $payReceiptNumber = $this->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
+            $payReceiptNumber = $this->PayReceipt->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
 
 
             // 3) Generate the pay_receipt for the bill
@@ -832,20 +844,31 @@ class Bill extends CI_Model{
                 'amount_paid'          => $amount_paid,
                 'letter_amount_paid'   => $this->numbertoletter->to_word(floor($amount_paid),'ARS'),
                 'annulled'             => 0,
+                'state'                => 1,
                 'liquidated'           => 0
             ];
 
             $this->db->insert('pay_receipt', $payReceiptData);
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo crear el recibo del pago realizado'];
 
+
+            // 4) Update each credit-debit note (state => 2 - pendiente de liquidacion)
+            foreach ($notes as $note) {
+
+                $this->db->where('credit_debit_note_id', $note['credit_debit_note_id']);
+                $this->db->where('state', 1);
+                $this->db->update('credit_debit_note', ['state' => 2]);
+
+            }
+
+
         //Close transaction
         $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado: no se pudo cobrar la factura'];
 
         return ['status' => 'ok', 'msg' => 'La factura ha sido cobrada'];
 
     }
-
-
 
     //Obtain the bills of a certain medical insurance
     public function getByMedicalInsuranceLike ($medical_insurance_id,$word){
@@ -867,6 +890,61 @@ class Bill extends CI_Model{
         if ($query->num_rows() == 0) return [];
 
         return $query->result_array();
+
+    }
+
+    //Get information about the debts of the bill
+    public function getBillPaymentInformation($billID){
+
+        //Get bill payment information
+        $this->db->select('B.*,MI.denomination,sum(BDG.total_honorary_period) as total_honorary,sum(BDG.total_expenses_period) as total_expenses');
+        $this->db->from('bill B');
+        $this->db->join('medical_insurance MI', 'MI.medical_insurance_id = B.id_medical_insurance');
+        $this->db->join('bill_details_grouped BDG', 'BDG.id_bill = B.id_bill');
+        $this->db->where('B.id_bill',$billID);
+        $this->db->group_by(["B.id_bill"]);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar los datos de pago de la factura'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de pago de la factura'];
+
+        $billPaymentInformation = $query->result_array()[0];
+
+
+        //Obtain the total for the credit-debit notes of the bill
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->where('CDN.id_bill',$billID);
+        $this->db->where('CDN.annulled',0);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+
+        $notes                  = $query->result_array();
+        $totalNotes             = 0;
+        $totalNotesHonoraries   = 0;
+        $totalNotesExpenses     = 0;
+
+        foreach($notes as $note){
+            if($note['document_type'] == 'C'){
+                //Credit note -
+                $totalNotes             = $totalNotes           - $note['total_note'];
+                $totalNotesHonoraries   = $totalNotesHonoraries - $note['total_honoraries'];
+                $totalNotesExpenses     = $totalNotesExpenses   - $note['total_expenses'];
+            }else{
+                //Debit note +
+                $totalNotes             = $totalNotes           + $note['total_note'];
+                $totalNotesHonoraries   = $totalNotesHonoraries + $note['total_honoraries'];
+                $totalNotesExpenses     = $totalNotesExpenses   + $note['total_expenses'];
+            }
+        }
+
+        $billPaymentInformation['pending_total']     = $billPaymentInformation['total'] + $totalNotes;
+        $billPaymentInformation['pending_honorary']  = $billPaymentInformation['total_honorary'] + $totalNotesHonoraries;
+        $billPaymentInformation['pending_expenses']  = $billPaymentInformation['total_expenses'] + $totalNotesExpenses;
+        $billPaymentInformation['pending_pay_total'] = $billPaymentInformation['pending_total'] - $billPaymentInformation['amount_paid'];
+
+        return ['status' => 'ok', 'msg' => $billPaymentInformation];
 
     }
 
