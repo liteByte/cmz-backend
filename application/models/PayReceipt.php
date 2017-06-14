@@ -6,6 +6,7 @@ class PayReceipt extends CI_Model{
 
     public function __construct(){
         parent::__construct();
+        $this->load->model('Bill');
     }
 
     //Generate the correct pay receipt number based on Branch Office + Document Type + Document Form
@@ -29,7 +30,150 @@ class PayReceipt extends CI_Model{
 
     }
 
+    public function cancelPayReceipt ($payReceiptID){
 
+        //Get the receipt data
+        $payReceiptToCancel = $this->getPayReceiptByID($payReceiptID)[0];
+        if(empty($payReceiptToCancel)) return ['status' => 'error', 'msg' => 'No se encontró el recibo que se quiere anular'];
+
+
+        //If the pay receipt was liquidated, it cannot be anulled
+        if($payReceiptToCancel['liquidated'] == 1) return ['status' => 'error', 'msg' => 'No se puede anular este recibo debido a que ya ha sido liquidado'];
+
+
+        //Get the bill data of the receipt
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill',$payReceiptToCancel['id_bill']);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar la factura asociada al recibo'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró la factura asociada al recibo'];
+
+        $bill = $query->row();
+
+
+        //Check the number of pay receipts left (not liquidated)
+        $this->db->select('count(*) as not_liquidated_receipts');
+        $this->db->from('pay_receipt PR');
+        $this->db->where('PR.id_bill',$bill->id_bill);
+        $this->db->where('PR.annulled',0);
+        $this->db->where('PR.state',1);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error inesperado en el chequeo de recibos pendientes de pago de la factura'];
+
+        $notLiquidatedReceiptsQuantity = $query->row()->not_liquidated_receipts;
+
+        //Check the number of pay receipts left (liquidated)
+        $this->db->select('count(*) as liquidated_receipts');
+        $this->db->from('pay_receipt PR');
+        $this->db->where('PR.id_bill',$bill->id_bill);
+        $this->db->where('PR.annulled',0);
+        $this->db->where('PR.state',2);
+        $this->db->where('PR.liquidated',1);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error inesperado en el chequeo de recibos liquidados pendientes de la factura'];
+
+        $liquidatedReceiptsQuantity = $query->row()->liquidated_receipts;
+
+        //Start transaction
+        $this->db->trans_start();
+
+            //If the bill has no liquidated receipts and there is only one receipt (not payed), return bill state, it's credit-debit notes (all of them) and it's benefits to "1- Cargada/Generada"
+            if($liquidatedReceiptsQuantity == 0 && $notLiquidatedReceiptsQuantity == 1){
+
+                //Update bill
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->update('bill', ['state_billing' => 1]);
+
+                //Update all benefits of the fee
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->update('benefits', ['state' => 2]);
+
+                //Update credit-debit notes
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->update('credit_debit_note', ['state' => 1]);
+
+            //If the bill has liquidated receipts but there is only one receipt (not payed), return all bill's credit debit notes that are "2- Pendientes de liquidacion" to "1- Cargada/Generada"
+            }else if($liquidatedReceiptsQuantity > 0 && $notLiquidatedReceiptsQuantity == 1){
+
+                //Update not liquidated credit-debit notes
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->where('state', 2);
+                $this->db->update('credit_debit_note', ['state' => 1]);
+
+            }
+
+            //Annulate the receipt
+            $this->db->where('pay_receipt_id', $payReceiptID);
+            $this->db->update('pay_receipt', ['annulled' => 1]);
+
+            //Check if the bill is now partially payed and update the amount payed
+            if($bill->amount_paid - $payReceiptToCancel['amount_paid'] > 0){
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->update('bill', ['state_billing' => 2, 'amount_paid' => ($bill->amount_paid - $payReceiptToCancel['amount_paid'])]);
+            }else{
+                $this->db->where('id_bill', $bill->id_bill);
+                $this->db->update('bill', ['amount_paid' => ($bill->amount_paid - $payReceiptToCancel['amount_paid'])]);
+            }
+
+        //Close transaction
+        $this->db->trans_complete();
+        if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado: no se pudo anular el recibo'];
+
+        return ['status' => 'ok', 'msg' => 'Recibo anulado correctamente'];
+
+    }
+
+    public function getPayReceiptByID($payReceiptID){
+
+        $this->db->select('PR.*');
+        $this->db->from('pay_receipt PR');
+        $this->db->where('PR.pay_receipt_id',$payReceiptID);
+        $this->db->where('PR.annulled',0);
+        $this->db->where('PR.state',1);
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        return $query->result_array();
+
+
+
+    }
+
+    public function getReceipts ($billID){
+
+        $this->db->select('PR.*,MI.denomination');
+        $this->db->from('pay_receipt PR');
+        $this->db->join('medical_insurance MI', 'MI.medical_insurance_id = PR.id_medical_insurance');
+        $this->db->where('PR.id_bill',$billID);
+
+        $query = $this->db->get();
+
+        if (!$query)                 return [];
+        if ($query->num_rows() == 0) return [];
+
+        $receipts = $query->result_array();
+
+        foreach ($receipts as &$receipt) {
+
+            if($receipt['liquidated'] == 1){
+                $receipt['state'] = 'Liquidado';
+            }else if($receipt['annulled'] == 1){
+                $receipt['state'] = 'Anulado';
+            }else{
+                $receipt['state'] = 'Generado';
+            }
+
+        }
+
+        return $receipts;
+
+    }
 
 
 

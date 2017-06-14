@@ -136,6 +136,23 @@ class BillController extends AuthController{
 
     }
 
+    //Get bill payment data
+    public function payBill_get(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->getBillPayData($id);
+
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     //Autocomplete service for bill based on medical insurance
     public function billData_get(){
 
@@ -144,6 +161,23 @@ class BillController extends AuthController{
 
         $billData = $this->bill->getByMedicalInsuranceLike($medical_insurance_id,$word);
         return $this->response($billData, RC::HTTP_OK);
+
+    }
+
+    //Get bill's payment information (debts)
+    public function payInfo_get(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->getBillPaymentInformation($id);
+
+        if($result['status'] == "ok") {
+            return $this->response($result['msg'], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
     }
 

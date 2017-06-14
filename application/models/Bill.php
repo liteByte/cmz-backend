@@ -760,7 +760,6 @@ class Bill extends CI_Model{
         $this->db->from('credit_debit_note CDN');
         $this->db->where('CDN.id_bill',$bill_id);
         $this->db->where('CDN.annulled',0);
-        $this->db->where('CDN.state',1);
         $query = $this->db->get();
 
         if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
@@ -777,18 +776,6 @@ class Bill extends CI_Model{
                 $totalNotes = $totalNotes + $note['total_note'];
             }
         }
-
-        /*
-        //Obtain the amount that has been payed for the bill (sum of receipt pay amount)
-        $this->db->select('COALESCE(sum(PR.amount_paid),0) as totalPayed');
-        $this->db->from('pay_receipt PR');
-        $this->db->where('PR.id_bill',$bill_id);
-        $this->db->where('PR.annulled',0);
-        $query = $this->db->get();
-
-        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar el total pagado de la factura hasta la fecha'];
-
-        $totalPayed = $query->row()->totalPayed;*/
 
 
         //Calculate the current debt (Bill total - amount payed + total of the notes)
@@ -840,7 +827,7 @@ class Bill extends CI_Model{
 
 
             //Get the next receipt number
-            $payReceiptNumber = $this->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
+            $payReceiptNumber = $this->PayReceipt->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
 
 
             // 3) Generate the pay_receipt for the bill
@@ -869,6 +856,7 @@ class Bill extends CI_Model{
             foreach ($notes as $note) {
 
                 $this->db->where('credit_debit_note_id', $note['credit_debit_note_id']);
+                $this->db->where('state', 1);
                 $this->db->update('credit_debit_note', ['state' => 2]);
 
             }
@@ -881,8 +869,6 @@ class Bill extends CI_Model{
         return ['status' => 'ok', 'msg' => 'La factura ha sido cobrada'];
 
     }
-
-
 
     //Obtain the bills of a certain medical insurance
     public function getByMedicalInsuranceLike ($medical_insurance_id,$word){
@@ -904,6 +890,61 @@ class Bill extends CI_Model{
         if ($query->num_rows() == 0) return [];
 
         return $query->result_array();
+
+    }
+
+    //Get information about the debts of the bill
+    public function getBillPaymentInformation($billID){
+
+        //Get bill payment information
+        $this->db->select('B.*,MI.denomination,sum(BDG.total_honorary_period) as total_honorary,sum(BDG.total_expenses_period) as total_expenses');
+        $this->db->from('bill B');
+        $this->db->join('medical_insurance MI', 'MI.medical_insurance_id = B.id_medical_insurance');
+        $this->db->join('bill_details_grouped BDG', 'BDG.id_bill = B.id_bill');
+        $this->db->where('B.id_bill',$billID);
+        $this->db->group_by(["B.id_bill"]);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar los datos de pago de la factura'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de pago de la factura'];
+
+        $billPaymentInformation = $query->result_array()[0];
+
+
+        //Obtain the total for the credit-debit notes of the bill
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->where('CDN.id_bill',$billID);
+        $this->db->where('CDN.annulled',0);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+
+        $notes                  = $query->result_array();
+        $totalNotes             = 0;
+        $totalNotesHonoraries   = 0;
+        $totalNotesExpenses     = 0;
+
+        foreach($notes as $note){
+            if($note['document_type'] == 'C'){
+                //Credit note -
+                $totalNotes             = $totalNotes           - $note['total_note'];
+                $totalNotesHonoraries   = $totalNotesHonoraries - $note['total_honoraries'];
+                $totalNotesExpenses     = $totalNotesExpenses   - $note['total_expenses'];
+            }else{
+                //Debit note +
+                $totalNotes             = $totalNotes           + $note['total_note'];
+                $totalNotesHonoraries   = $totalNotesHonoraries + $note['total_honoraries'];
+                $totalNotesExpenses     = $totalNotesExpenses   + $note['total_expenses'];
+            }
+        }
+
+        $billPaymentInformation['pending_total']     = $billPaymentInformation['total'] + $totalNotes;
+        $billPaymentInformation['pending_honorary']  = $billPaymentInformation['total_honorary'] + $totalNotesHonoraries;
+        $billPaymentInformation['pending_expenses']  = $billPaymentInformation['total_expenses'] + $totalNotesExpenses;
+        $billPaymentInformation['pending_pay_total'] = $billPaymentInformation['pending_total'] - $billPaymentInformation['amount_paid'];
+
+        return ['status' => 'ok', 'msg' => $billPaymentInformation];
 
     }
 
