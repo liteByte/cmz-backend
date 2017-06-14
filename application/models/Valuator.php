@@ -41,10 +41,11 @@ class Valuator extends CI_Model{
         ////Get the benefit's special condition (it may not have one)
         $this->db->select('SC.*,');
         $this->db->from('special_conditions SC');
+        $this->db->join('special_conditions_type SCT', 'SCT.id_special_conditions_type = SC.type');
         $this->db->where('SC.medical_insurance_id',$valueBenefit->medical_insurance_id);
         $this->db->where('SC.plan_id',$valueBenefit->plan_id);
         $this->db->where('SC.provision',$valueBenefit->nomenclator_id);
-        $this->db->where('SC.type',$valueBenefit->additional);
+        $this->db->where('SCT.id_type',$valueBenefit->additional);
         $this->db->where('period_since <=', $valueBenefit->period);
         $this->db->group_start();
         $this->db->where('period_until >=', $valueBenefit->period);
@@ -80,9 +81,10 @@ class Valuator extends CI_Model{
         ////CASE 2)
         //Benefit is a surgery and benefit's additional is the same type as special condition's type
         } elseif($nomenclator->surgery) {
+
             if (!empty($specialCondition)) {
 
-                if (($valueBenefit->additional == $specialCondition['type'])) {
+                if (($valueBenefit->additional == $specialCondition['id_type'])) {
 
                     $valueArray = $this->valueBenefitBySpecialCondition($valueBenefit, $specialCondition);
                     if ($valueArray['status'] == 'error') return ['status' => 'error', 'msg' => $valueArray['msg']];
