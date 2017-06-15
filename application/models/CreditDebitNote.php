@@ -15,8 +15,32 @@ class CreditDebitNote extends CI_Model{
 
     public function createNote($medical_insurance_id, $id_bill, $document_type,$branch_office,$form_type){
 
+        //Obtain the bill data
+        $this->db->select('B.*');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill', $id_bill);
+        $query = $this->db->get();
+
+        if(!$query)                 return ['status' => 'error', 'msg' => 'No se pudieron obtener los datos de la factura asociada a la nota'];
+        if($query->num_rows() <= 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de la factura asociada a la nota'];
+
+        $billData = $query->row();
+
+
+        //If the bill's state is 2 (Cobrada parcial) or 1 (Generada) the state of the note will be 1 (Generada) (Se liquidara en el proximo pago)
+        //If the bill's state is 3 (Cobrada total) the state of the note will be 2 (Pendiente a liquidar) (Se liquidara cuando se haga la liquidacion)
+        if($billData->state_billing == 1 || $billData->state_billing == 2){
+            $noteState = 1;
+        }elseif ($billData->state_billing == 3 || $billData->state_billing == 4){
+            $noteState = 2;
+        }else{
+            $noteState = 1;
+        }
+
+
         //Obtain the credit-debit type. It's the opposite of the document type
         $this->credit_debit_type = ($document_type == 'C') ? 'D' : 'C';
+
 
         //Obtain note number
         $noteNumber = $this->calculateNoteNumber($id_bill,$document_type);
@@ -48,7 +72,7 @@ class CreditDebitNote extends CI_Model{
             'creation_date'             => $now,
             'expiration_date'           => $now,
             'credit_debit_note_number'  => $noteNumber,
-            'state'                     => 1,
+            'state'                     => $noteState,
             'total_expenses'            => $totalExpenses,
             'total_honoraries'          => $totalHonoraries,
             'total_note'                => $totalNote,
@@ -77,8 +101,6 @@ class CreditDebitNote extends CI_Model{
         return ['status' => 'ok', 'msg' => 'Nota de crédito/débito creada satisfactoriamente'];
 
     }
-
-
 
     private function calculateNoteNumber($id_bill,$document_type){
 
@@ -199,14 +221,14 @@ class CreditDebitNote extends CI_Model{
 
 
         //Check the note can be cancelled (not cancelled yet or invalid state)
-        if($note->state != 1 || $note->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede anular la nota ya que no se encuentra en estado Generada o bien ya ha sido anulada'];
+        if($note->state == 3 || $note->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede anular la nota ya que se encuentra en estado Liquidada o bien ya ha sido anulada'];
 
         //Start transaction
         $this->db->trans_start();
 
             //Annulate the note
             $this->db->where('credit_debit_note_id', $credit_debit_note_id);
-            $this->db->update('credit_debit_note', ['annulled' => 1]);
+            $this->db->update('credit_debit_note', ['annulled' => 1,'pay_receipt_id' => null]);
 
             if($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo anular la nota de crédito/débito'];
 

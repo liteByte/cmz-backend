@@ -92,19 +92,11 @@ class PayReceipt extends CI_Model{
                 $this->db->where('id_bill', $bill->id_bill);
                 $this->db->update('benefits', ['state' => 2]);
 
-                //Update credit-debit notes
-                $this->db->where('id_bill', $bill->id_bill);
-                $this->db->update('credit_debit_note', ['state' => 1]);
-
-            //If the bill has liquidated receipts but there is only one receipt (not payed), return all bill's credit debit notes that are "2- Pendientes de liquidacion" to "1- Cargada/Generada"
-            }else if($liquidatedReceiptsQuantity > 0 && $notLiquidatedReceiptsQuantity == 1){
-
-                //Update not liquidated credit-debit notes
-                $this->db->where('id_bill', $bill->id_bill);
-                $this->db->where('state', 2);
-                $this->db->update('credit_debit_note', ['state' => 1]);
-
             }
+
+            //Update credit-debit notes
+            $this->db->where('pay_receipt_id', $payReceiptID);
+            $this->db->update('credit_debit_note', ['state' => 1, 'pay_receipt_id' => null]);
 
             //Annulate the receipt
             $this->db->where('pay_receipt_id', $payReceiptID);

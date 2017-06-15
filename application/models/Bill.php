@@ -755,11 +755,16 @@ class Bill extends CI_Model{
         if($bill->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que ha sido anulada'];
 
 
+        //If the bill is totally payed, it can't be payed anymore
+        if($bill->state_billing == 3) return ['status' => 'error', 'msg' => 'No se puede cobrar esta factura ya que se encuentra totalmente pagada'];
+
+
         //Obtain the total for the credit-debit notes of the bill that haven't been billed
         $this->db->select('CDN.*');
         $this->db->from('credit_debit_note CDN');
         $this->db->where('CDN.id_bill',$bill_id);
         $this->db->where('CDN.annulled',0);
+        $this->db->where('CDN.state <>',3);
         $query = $this->db->get();
 
         if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
@@ -789,7 +794,7 @@ class Bill extends CI_Model{
 
 
         //Check if the total of the bill was payed or only a part of it
-        if ($currentDebt == $amount_paid){
+        if ($currentDebt - $amount_paid < 1 || $currentDebt - $amount_paid > 0){
             $billState = 3; //Cobrada
         }else{
             $billState = 2; //Cobrada parcial
@@ -805,7 +810,7 @@ class Bill extends CI_Model{
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo actualizar el monto pagado en la factura'];
 
 
-            //Get all the benefits of the fee
+            // 2) Get all the benefits of the fee and update each one (state -> Cobrado)
             $this->db->select('B.*');
             $this->db->from('benefits B');
             $this->db->where('B.id_bill',$bill_id);
@@ -816,8 +821,6 @@ class Bill extends CI_Model{
 
             $benefits = $query->result_array();
 
-
-            // 2) Update each benefit (benefit state -> Cobrada)
             foreach ($benefits as $benefit) {
 
                 $this->db->where('benefit_id', $benefit['benefit_id']);
@@ -826,11 +829,9 @@ class Bill extends CI_Model{
             }
 
 
-            //Get the next receipt number
+            // 3) Get the next pay receipt number and generate the pay receipt
             $payReceiptNumber = $this->PayReceipt->generatePayReceiptNumber($bill->branch_office,$bill->type_form,$bill->type_document);
 
-
-            // 3) Generate the pay_receipt for the bill
             $payReceiptData = [
                 'pay_receipt_number'   => $payReceiptNumber,
                 'type_bill'            => $bill->type_bill,
@@ -851,13 +852,16 @@ class Bill extends CI_Model{
             $this->db->insert('pay_receipt', $payReceiptData);
             if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'No se pudo crear el recibo del pago realizado'];
 
+            $payReceiptID = $this->db->insert_id();
+
 
             // 4) Update each credit-debit note (state => 2 - pendiente de liquidacion)
             foreach ($notes as $note) {
 
                 $this->db->where('credit_debit_note_id', $note['credit_debit_note_id']);
                 $this->db->where('state', 1);
-                $this->db->update('credit_debit_note', ['state' => 2]);
+                $this->db->where('pay_receipt_id',null);
+                $this->db->update('credit_debit_note', ['state' => 2, 'pay_receipt_id' => $payReceiptID]);
 
             }
 
