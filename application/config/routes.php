@@ -216,8 +216,9 @@ $route['creditdebitNote/print/(:num)']          = 'CreditDebitNoteController/pri
 $route['creditdebitNote/printReceipt/(:num)']   = 'CreditDebitNoteController/printReceipt/id/$1';           //Get -> Generate PDF of the note's receipt
 
 ////////////////////////Receipt Process////////////////////////
-$route['receipt/print/(:num)']                  = 'ReceiptController/receiptPrint/id/$1';                   //Get -> Generates receipt in pdf
+$route['receipt/print/(:num)']                  = 'ReceiptController/receiptPrint/id/$1';                    //Get -> Generates receipt in pdf
 
 ////////////////////////Pay-Receipt Process////////////////////////
 $route['payReceipt/(:num)']                     = 'PayReceiptController/payReceipt/id/$1';                   //Delete -> Anulate receipt
-$route['payReceipt/bill/(:num)']                = 'PayReceiptController/receiptsByBill/id/$1';               //Get -> Generates receipt in pdf
+$route['payReceipt/bill/(:num)']                = 'PayReceiptController/receiptsByBill/id/$1';               //Get -> Generates receipt
+$route['payReceipt/print/(:num)']               = 'PayReceiptController/payReceiptPrint/id/$1';              //Generates pay receipt pdf

@@ -147,9 +147,48 @@ class PayReceipt extends CI_Model{
 
     public function getReceipts ($billID){
 
-        $this->db->select('PR.*,MI.denomination');
+        //Obtain the bill's total
+        $this->db->select('B.total');
+        $this->db->from('bill B');
+        $this->db->where('B.id_bill',$billID);
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar los datos de pago de la factura'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos de pago de la factura'];
+
+        $billTotal = $query->row()->total;
+
+        //Obtain the total for the credit-debit notes of the bill
+        $this->db->select('CDN.*');
+        $this->db->from('credit_debit_note CDN');
+        $this->db->where('CDN.id_bill',$billID);
+        $this->db->where('CDN.annulled',0);
+        $query = $this->db->get();
+
+        if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];
+
+        $notes      = $query->result_array();
+        $totalNotes = 0;
+
+        foreach($notes as $note){
+            if($note['document_type'] == 'C'){
+                //Credit note -
+                $totalNotes             = $totalNotes           - $note['total_note'];
+            }else{
+                //Debit note +
+                $totalNotes             = $totalNotes           + $note['total_note'];
+            }
+        }
+
+
+        //Calculate the pending total of the bill
+        $pendingTotal = $billTotal + $totalNotes;
+
+        //Obtain the receipts data
+        $this->db->select('PR.*,MI.denomination,concat(B.type_document,\'-\',B.type_form,\'-\',lpad(convert(B.branch_office,char),3,\'0\'),\'-\',lpad(convert(B.number_bill,char),8,\'0\')) as bill_number');
         $this->db->from('pay_receipt PR');
         $this->db->join('medical_insurance MI', 'MI.medical_insurance_id = PR.id_medical_insurance');
+        $this->db->join('bill B', 'B.id_bill = PR.id_bill');
         $this->db->where('PR.id_bill',$billID);
 
         $query = $this->db->get();
@@ -169,12 +208,32 @@ class PayReceipt extends CI_Model{
                 $receipt['state'] = 'Generado';
             }
 
+            $receipt['pending_total'] = $pendingTotal;
+
         }
 
         return $receipts;
 
     }
 
+    public function getPrintData ($payReceiptID){
+
+        $this->db->select('PR.*,MI.denomination,concat(B.type_document,\'-\',B.type_form,\'-\',lpad(convert(B.branch_office,char),3,\'0\'),\'-\',lpad(convert(B.number_bill,char),8,\'0\')) as bill_number');
+        $this->db->from('pay_receipt PR');
+        $this->db->join('medical_insurance MI', 'MI.medical_insurance_id = PR.id_medical_insurance');
+        $this->db->join('bill B', 'B.id_bill = PR.id_bill');
+        $this->db->where('PR.pay_receipt_id',$payReceiptID);
+
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error al buscar los datos del recibo a imprimir'];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontraron los datos del recibo a imprimir'];
+
+        $receipt = $query->result_array()[0];
+
+        return ['status' => 'ok', 'msg' => $receipt];
+
+    }
 
 
 

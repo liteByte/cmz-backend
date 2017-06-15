@@ -939,10 +939,10 @@ class Bill extends CI_Model{
             }
         }
 
-        $billPaymentInformation['pending_total']     = $billPaymentInformation['total'] + $totalNotes;
-        $billPaymentInformation['pending_honorary']  = $billPaymentInformation['total_honorary'] + $totalNotesHonoraries;
-        $billPaymentInformation['pending_expenses']  = $billPaymentInformation['total_expenses'] + $totalNotesExpenses;
-        $billPaymentInformation['pending_pay_total'] = $billPaymentInformation['pending_total'] - $billPaymentInformation['amount_paid'];
+        $billPaymentInformation['pending_total']     = round($billPaymentInformation['total'] + $totalNotes,2);
+        $billPaymentInformation['pending_honorary']  = round($billPaymentInformation['total_honorary'] + $totalNotesHonoraries,2);
+        $billPaymentInformation['pending_expenses']  = round($billPaymentInformation['total_expenses'] + $totalNotesExpenses,2);
+        $billPaymentInformation['pending_pay_total'] = round($billPaymentInformation['pending_total'] - $billPaymentInformation['amount_paid'],2);
 
         return ['status' => 'ok', 'msg' => $billPaymentInformation];
 

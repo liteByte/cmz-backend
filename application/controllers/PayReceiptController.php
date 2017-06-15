@@ -50,6 +50,22 @@ class PayReceiptController extends AuthController{
 
     }
 
+    public function payReceiptPrint_get(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID del recibo que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->PayReceipt->getPrintData($id);
+
+        if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+
+        $html = $this->load->view('documents/salesReceipt.html',$result['msg'],TRUE);
+
+        return $this->pdf->pdf_create2($html);
+
+    }
+
 
 
 
