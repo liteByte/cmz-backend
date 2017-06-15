@@ -74,76 +74,11 @@ class CreditDebitNote extends CI_Model{
         $this->db->trans_complete();
         if ($this->db->trans_status() === FALSE) return ['status' => 'error', 'msg' => 'Error inesperado al generar la nota de débito/crédito'];
 
-        //Check if the new note turns de debt of the bill in 0
-        if(!($this->checkBillDebtWithNewNote($id_bill))) return ['status' => 'error', 'msg' => 'Error inesperado en la validación del valor de la nota cargada'];
-
         return ['status' => 'ok', 'msg' => 'Nota de crédito/débito creada satisfactoriamente'];
 
     }
 
-    //Checks if the balance of the notes + amount already payed + bill total is 0. If so, update all notes to "Pendientes de liquidacion"
-    private function checkBillDebtWithNewNote($billID){
 
-        //Obtain bill data
-        $this->db->select('B.*');
-        $this->db->from('bill B');
-        $this->db->where('B.id_bill',$billID);
-        $query = $this->db->get();
-
-        if (!$query)                 return false;
-        if ($query->num_rows() == 0) return false;
-
-        $bill = $query->row();
-
-
-        //Obtain the total for the credit-debit notes of the bill that haven't been billed
-        $this->db->select('CDN.*');
-        $this->db->from('credit_debit_note CDN');
-        $this->db->where('CDN.id_bill',$billID);
-        $this->db->where('CDN.annulled',0);
-        $query = $this->db->get();
-
-        if (!$query) return false;
-
-        $notes      = $query->result_array();
-        $totalNotes = 0;
-
-        foreach($notes as $note){
-            if($note['document_type'] == 'C'){
-                //Credit note -
-                $totalNotes = $totalNotes - $note['total_note'];
-            }else{
-                //Debit note +
-                $totalNotes = $totalNotes + $note['total_note'];
-            }
-        }
-
-        //Check if this new note leaves the debt of the bill in 0. If so, update the bill and its benefits
-        if (($bill->total - $bill->amount_paid + $totalNotes) == 0){
-
-            //Start transaction
-            $this->db->trans_start();
-
-                //Update bill state
-                $this->db->where('id_bill', $billID);
-                $this->db->update('bill', ['state_billing' => 3]);
-
-                //Update all benefits of the fee
-                $this->db->where('id_bill', $billID);
-                $this->db->update('benefits', ['state' => 3]);
-
-                //Update every note of the bill
-                $this->db->where('id_bill', $billID);
-                $this->db->update('credit_debit_note', ['state' => 2]);
-
-            //End transaction and check everything is ok
-            $this->db->trans_complete();
-            if ($this->db->trans_status() === FALSE) return false;
-        }
-
-        return true;
-
-    }
 
     private function calculateNoteNumber($id_bill,$document_type){
 

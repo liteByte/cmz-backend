@@ -79,10 +79,17 @@ class Migration_Create_table_credit_debit_note extends CI_Migration{
             'annulled'   => array(
                 'type'           => 'BOOLEAN',
                 'null'           =>  TRUE,
-            )
+            ),
+            'pay_receipt_id'   => array(
+                'type'           => 'INT',
+                'constraint'    =>  10,
+                'unsigned'       => TRUE,
+                'auto_increment' => TRUE
+            ),
         ));
 
         $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (id_bill) REFERENCES bill(id_bill)');
+        $this->dbforge->add_field('CONSTRAINT FOREIGN KEY (pay_receipt_id) REFERENCES pay_receipt(pay_receipt_id)');
         $this->dbforge->add_key('credit_debit_note_id', TRUE);
         $this->dbforge->create_table('credit_debit_note');
 
