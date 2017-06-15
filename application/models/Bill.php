@@ -794,7 +794,7 @@ class Bill extends CI_Model{
 
 
         //Check if the total of the bill was payed or only a part of it
-        if ($currentDebt - $amount_paid < 1 || $currentDebt - $amount_paid > 0){
+        if ($currentDebt - $amount_paid < 1 && $currentDebt - $amount_paid >= 0){
             $billState = 3; //Cobrada
         }else{
             $billState = 2; //Cobrada parcial
