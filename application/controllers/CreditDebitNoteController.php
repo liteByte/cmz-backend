@@ -97,10 +97,11 @@ class CreditDebitNoteController extends AuthController{
         $result = $this->CreditDebitNote->generateReceipt($id);
 
         if($result['status'] == 'error') return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
-        print_r($result['msg']);die();
-        //$html = $this->load->view('documents/receipt.html',$result['msg'],TRUE);
+        //print_r($result['msg']);die();
 
-        //return $this->pdf->pdf_create2($html);
+        $html = $this->load->view('documents/creditDebitReceipt.html',$result['msg'],TRUE);
+
+        return $this->pdf->pdf_create2($html);
 
     }
 
