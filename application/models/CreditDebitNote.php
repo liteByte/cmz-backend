@@ -147,6 +147,7 @@ class CreditDebitNote extends CI_Model{
         $this->db->from('credit_debit CD');
         $this->db->where('CD.id_bill', $id_bill);
         $this->db->where('CD.type', $credit_debit_type);
+        $this->db->where('CD.credit_debit_note_id', null);
         $query = $this->db->get();
 
         if(!$query)                 return 0;
