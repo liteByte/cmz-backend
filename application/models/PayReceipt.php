@@ -40,6 +40,9 @@ class PayReceipt extends CI_Model{
         //If the pay receipt was liquidated, it cannot be anulled
         if($payReceiptToCancel['liquidated'] == 1) return ['status' => 'error', 'msg' => 'No se puede anular este recibo debido a que ya ha sido liquidado'];
 
+        //If the pay receipt was annulled, it cannot be anulled
+        if($payReceiptToCancel['annulled'] == 1) return ['status' => 'error', 'msg' => 'No se puede anular este recibo debido a que ya ha sido anulado'];
+
 
         //Get the bill data of the receipt
         $this->db->select('B.*');
@@ -58,6 +61,7 @@ class PayReceipt extends CI_Model{
         $this->db->from('pay_receipt PR');
         $this->db->where('PR.id_bill',$bill->id_bill);
         $this->db->where('PR.annulled',0);
+        $this->db->where('PR.liquidated',0);
         $this->db->where('PR.state',1);
         $query = $this->db->get();
 
@@ -70,7 +74,6 @@ class PayReceipt extends CI_Model{
         $this->db->from('pay_receipt PR');
         $this->db->where('PR.id_bill',$bill->id_bill);
         $this->db->where('PR.annulled',0);
-        $this->db->where('PR.state',2);
         $this->db->where('PR.liquidated',1);
         $query = $this->db->get();
 
@@ -124,16 +127,12 @@ class PayReceipt extends CI_Model{
         $this->db->select('PR.*');
         $this->db->from('pay_receipt PR');
         $this->db->where('PR.pay_receipt_id',$payReceiptID);
-        $this->db->where('PR.annulled',0);
-        $this->db->where('PR.state',1);
         $query = $this->db->get();
 
         if (!$query)                 return [];
         if ($query->num_rows() == 0) return [];
 
         return $query->result_array();
-
-
 
     }
 

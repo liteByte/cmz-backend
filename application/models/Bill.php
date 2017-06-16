@@ -793,7 +793,7 @@ class Bill extends CI_Model{
         }
 
 
-        //Check if the total of the bill was payed or only a part of it
+        //Check if the total of the bill was payed or only a part of it (if the debt is less than 1 it's considered payed)
         if ($currentDebt - $amount_paid < 1 && $currentDebt - $amount_paid >= 0){
             $billState = 3; //Cobrada
         }else{
@@ -920,6 +920,7 @@ class Bill extends CI_Model{
         $this->db->from('credit_debit_note CDN');
         $this->db->where('CDN.id_bill',$billID);
         $this->db->where('CDN.annulled',0);
+        $this->db->where('CDN.state <>',3);
         $query = $this->db->get();
 
         if (!$query) return ['status' => 'error', 'msg' => 'Error al buscar notas de credito/débito asociadas a la factura'];

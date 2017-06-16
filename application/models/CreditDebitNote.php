@@ -27,7 +27,7 @@ class CreditDebitNote extends CI_Model{
         $billData = $query->row();
 
 
-        //If the bill's state is 2 (Cobrada parcial) or 1 (Generada) the state of the note will be 1 (Generada) (Se liquidara en el proximo pago)
+        //If the bill's state is 2 (Cobrada parcial) or 1 (Generada) the state of the note will be 1 (Generada) (Se liquidará en el proximo pago)
         //If the bill's state is 3 (Cobrada total) the state of the note will be 2 (Pendiente a liquidar) (Se liquidara cuando se haga la liquidacion)
         if($billData->state_billing == 1 || $billData->state_billing == 2){
             $noteState = 1;
