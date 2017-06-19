@@ -1,13 +1,45 @@
 <?php
 
-defined("BASEPATH") or exit("No direct script access allowed");
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class UploadExcelController extends CI_Controller
-{
+require APPPATH . '/controllers/AuthController.php';
 
-    public function test()    {
+// use namespace
+use Restserver\Libraries\REST_Controller;
+
+class UploadExcelController extends AuthController {
+
+    private $token_valid;
+    protected $access = "*";
+    function __construct() {
+        parent::__construct();
         $this->load->library('excel');
-        $file = "aa";/*Obtener archivo subido*/
+        $this->load->helper(array('form', 'url'));
+        $this->token_valid = $this->validateToken(apache_request_headers());
+    }
+
+    public function test_post()    {
+        $config['upload_path']          = 'upload_benefits/';
+        $config['allowed_types']        = 'csv|txt|dbf|xls|xlt|xltx';
+        $config['max_size']             = 0;
+        $config['max_width']            = 0;
+        $config['max_height']           = 0;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('benefit'))
+        {
+            $error = array('error' => $this->upload->display_errors());
+
+            print_r($error);die();
+        }
+        else
+        {
+            $data = array('upload_data' => $this->upload->data());
+
+            print_r($data);die();
+        }
+
 
         if(!$file) {
             if (((($_FILES["file"]["type"] == "application/vnd.ms-excel"))
@@ -28,7 +60,7 @@ class UploadExcelController extends CI_Controller
                     $log_interfaces_data = $archivo;
                     //INSERTAR EN AUDITORIA EL ARCHIVO PROCESADO; QUIEN LO PROCESO; CUANDO Y DIRECCION DEL ARCHIVO EN EL SERVER
                     //("INSERT INTO auditoria (id_usuario, interfaz, fecha_ejecucion, valor) VALUES
-                      //          ($id_usuario, '$log_interfaces_name', '$log_interfaces_ts', '$log_interfaces_data')");
+                    //          ($id_usuario, '$log_interfaces_name', '$log_interfaces_ts', '$log_interfaces_data')");
                 }
             }
             $FileType = PHPExcel_IOFactory::identify($archivo);
@@ -63,10 +95,11 @@ class UploadExcelController extends CI_Controller
             }
 
         }
-
-
     }
 
 
-}
 
+
+
+
+}

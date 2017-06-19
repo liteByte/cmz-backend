@@ -202,6 +202,6 @@ $route['bill/print/(:num)']            = 'BillController/billPrint/id/$1';  //Ge
 ////////////////////////Receipt Process////////////////////////
 $route['receipt/print/(:num)']        = 'ReceiptController/receiptPrint/id/$1';  //Generates receipt in pdf
 
-
+$route['excel']        = 'UploadExcelController/test';
 
 
