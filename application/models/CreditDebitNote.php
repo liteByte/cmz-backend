@@ -293,6 +293,10 @@ class CreditDebitNote extends CI_Model{
         $note = $query->row();
 
 
+        //If the note has an associated pay receipt, it can't be annulled
+        if(!empty($note->pay_receipt_id)) return ['status' => 'error', 'msg' => 'No se puede anular la nota de credito. Primero, debe anular el recibo asociado a ella'];
+
+
         //Check the note can be cancelled (not cancelled yet or invalid state)
         if($note->state == 3 || $note->annulled == 1) return ['status' => 'error', 'msg' => 'No se puede anular la nota ya que se encuentra en estado Liquidada o bien ya ha sido anulada'];
 
