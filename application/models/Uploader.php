@@ -5,6 +5,9 @@ use XBase\Table;
 class Uploader extends CI_Model{
 
     public function __construct(){
+        $this->load->model('Plan');
+        $this->load->model('Nomenclator');
+        $this->load->model('Professionals');
         parent::__construct();
     }
 
@@ -33,9 +36,36 @@ class Uploader extends CI_Model{
         }
 
         /**
-         *  Obtain DBF data
+         *  Check each benefit has valid data. If not, add it to the array of the invalid benefits
          */
-        print_r($benefitArray);die();
+        $invalidBenefits = [];
+
+        foreach ($benefitArray as $benefit){
+
+            //Validate Plan
+            if(!$this->Plan->existPlanCode($benefit['os'])) {
+                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'];
+                continue;
+            }
+
+
+            //Validate professional's registration number
+            if(!$this->Professionals->existProfessionalRegistrationNumber($benefit['matricula'])) {
+                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'];
+                continue;
+            }
+
+            //Validate nomenclators
+            if(!$this->Nomenclator->existNomenclator($benefit['practica'])) {
+                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'];
+                continue;
+            }
+
+        }
+        if (count($invalidBenefits) > 0) {
+            $cantidadInvalida = count($invalidBenefits);
+            return ['status' => 'error', 'msg' => 'Se han encontrados registros invalidos en el archivo ingresado ('.$cantidadInvalida.')' , 'invalidBenefits' => $invalidBenefits];
+        }
 
         return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidBenefits' => []];
 

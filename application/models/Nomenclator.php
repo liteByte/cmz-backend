@@ -128,7 +128,6 @@ class Nomenclator extends CI_Model{
 
     }
 
-
     public function searchData($param){
 
         $result = [];
@@ -146,6 +145,20 @@ class Nomenclator extends CI_Model{
             array_push($result, $row);
         }
         return $result;
+    }
+
+    public function existNomenclator($nomenclatorCode){
+
+        $this->db->select('N.*');
+        $this->db->from('nomenclators N');
+        $this->db->where('N.code',$nomenclatorCode);
+        $query = $this->db->get();
+
+        if (!$query)                 return false;
+        if ($query->num_rows() == 0) return false;
+
+        return true;
+
     }
 }
 

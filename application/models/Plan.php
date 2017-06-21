@@ -147,4 +147,18 @@ class Plan extends CI_Model{
 
   }
 
+  public function existPlanCode($planCode){
+
+        $this->db->select('P.*');
+        $this->db->from('plans P');
+        $this->db->where('P.plan_code',$planCode);
+        $query = $this->db->get();
+
+        if (!$query)                 return false;
+        if ($query->num_rows() == 0) return false;
+
+        return true;
+
+    }
+
 }

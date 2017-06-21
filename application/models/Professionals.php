@@ -230,4 +230,19 @@ class Professionals extends CI_Model{
         }
         return $result;
     }
+
+    public function existProfessionalRegistrationNumber($registrationNumber){
+
+        $this->db->select('P.*');
+        $this->db->from('professionals P');
+        $this->db->where('P.registration_number',$registrationNumber);
+        $query = $this->db->get();
+
+        if (!$query)                 return false;
+        if ($query->num_rows() == 0) return false;
+
+        return true;
+
+    }
+
 }
