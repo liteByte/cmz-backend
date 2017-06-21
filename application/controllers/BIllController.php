@@ -41,8 +41,8 @@ class BillController extends AuthController{
         if($result['status'] == "ok"){
 
             ////Check if medical insurance is O.S.D.E. If so, change document_type to 'L' and bill again
-            //O.S.D.E id is 17
-            if($data['id_medical_insurance'] == 17){
+            //O.S.D.E id is 19
+            if($data['id_medical_insurance'] == 19){
 
                 $data['document_type'] = 'L';
 
@@ -134,8 +134,50 @@ class BillController extends AuthController{
             return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+    }
 
+    //Get bill payment data
+    public function payBill_get(){
 
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura que se desea imprimir'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->getBillPayData($id);
+
+        if($result['status'] == "ok") {
+            return $this->response(['msg' => $result['msg']], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    //Autocomplete service for bill based on medical insurance
+    public function billData_get(){
+
+        $medical_insurance_id = $this->get('medical_insurance_id') ?? "";
+        $word                 = $this->get('word')                 ?? "";
+
+        $billData = $this->bill->getByMedicalInsuranceLike($medical_insurance_id,$word);
+        return $this->response($billData, RC::HTTP_OK);
+
+    }
+
+    //Get bill's payment information (debts)
+    public function payInfo_get(){
+
+        $id = $this->get('id');
+
+        if(empty($id)) return $this->response(['error' => 'No se ha informado el ID de la factura'], RC::HTTP_BAD_REQUEST);
+
+        $result = $this->bill->getBillPaymentInformation($id);
+
+        if($result['status'] == "ok") {
+            return $this->response($result['msg'], RC::HTTP_OK);
+        }else{
+            return $this->response(['error'=>$result['msg']], RC::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
     }
 
