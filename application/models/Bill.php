@@ -361,6 +361,8 @@ class Bill extends CI_Model{
         $this->db->group_by(array("B.plan_id", "B.period"));
         $query = $this->db->get();
 
+        if (!$query) return [];
+
         $result = $query->result_array();
         $result = $this->array_group_by($result, 'plan_id');
 
