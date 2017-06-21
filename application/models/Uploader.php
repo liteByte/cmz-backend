@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use XBase\Table;
 
 class Uploader extends CI_Model{
 
@@ -9,6 +9,27 @@ class Uploader extends CI_Model{
     }
 
     public function processFemebaFile($medical_insurance_id,$period,$uploadData){
+
+        $table = new Table($uploadData['full_path']);
+        $columns = $table->getColumns();
+
+        //This array will store all benefits that came from the DBF
+        $benefitArray = [];
+
+        while ($registroPrestacion = $table->nextRecord()) {
+
+            //Parse each column
+            $prestacionDBF = [];
+            foreach ($columns as $column) {
+                $prestacionDBF[$column->name] = $registroPrestacion->forceGetString($column->name);
+            }
+
+            //Add the benefit to the array
+            $benefitArray [] = $prestacionDBF;
+
+        }
+
+        print_r($benefitArray);die();
 
         return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidBenefits' => []];
 
@@ -22,9 +43,9 @@ class Uploader extends CI_Model{
         //If the file is open, read and parse every benefit. Then, save then valorized
         if ($archivoOsde) {
 
-            while (($lineaPrestacion = fgets($archivoOsde)) !== false) {
+            while (($registroPrestacion = fgets($archivoOsde)) !== false) {
 
-                print_r($lineaPrestacion);die();
+                print_r($registroPrestacion);die();
 
             }
 

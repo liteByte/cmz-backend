@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8dce6f16e061104d01717eae0d701a86",
+    "content-hash": "c2981a22f1c9e85ad72c8dccd56508c6",
     "packages": [
+        {
+            "name": "hisamu/php-xbase",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hisamu/php-xbase.git",
+                "reference": "26ceae6c7ca67d67132b5c1108e5e2906343631d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hisamu/php-xbase/zipball/26ceae6c7ca67d67132b5c1108e5e2906343631d",
+                "reference": "26ceae6c7ca67d67132b5c1108e5e2906343631d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "XBase": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erwin Kooi",
+                    "email": "info@cyane.nl"
+                },
+                {
+                    "name": "Luã de Souza",
+                    "email": "lsouza@codeinc.com.br"
+                }
+            ],
+            "description": "A simple parser for *.dbf, *.fpt files using PHP",
+            "homepage": "https://github.com/hisamu/php-xbase",
+            "keywords": [
+                "dbase",
+                "foxpro"
+            ],
+            "time": "2017-01-09T22:28:13+00:00"
+        },
         {
             "name": "vlucas/phpdotenv",
             "version": "v2.4.0",
