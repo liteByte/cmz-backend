@@ -40,7 +40,7 @@ class UploadController extends AuthController {
         {
             $uploadData = $this->upload->data();
         }
-
+        print_r($uploadData);die();
         // Special cases)
         // -Femeba          (ID 1)      -> DBF
         // -OSDE            (ID 19)     -> TXT

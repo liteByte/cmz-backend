@@ -10,6 +10,9 @@ class Uploader extends CI_Model{
 
     public function processFemebaFile($medical_insurance_id,$period,$uploadData){
 
+        /**
+         *  Obtain DBF data
+         */
         $table = new Table($uploadData['full_path']);
         $columns = $table->getColumns();
 
@@ -29,6 +32,9 @@ class Uploader extends CI_Model{
 
         }
 
+        /**
+         *  Obtain DBF data
+         */
         print_r($benefitArray);die();
 
         return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidBenefits' => []];
@@ -37,6 +43,9 @@ class Uploader extends CI_Model{
 
     public function processOsdeFile($medical_insurance_id,$period,$uploadData){
 
+        /**
+         *  Obtain TXT data
+         */
         //Open the file
         $archivoOsde = fopen($uploadData['full_path'], "r");
 
