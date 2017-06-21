@@ -222,3 +222,6 @@ $route['receipt/print/(:num)']                  = 'ReceiptController/receiptPrin
 $route['payReceipt/(:num)']                     = 'PayReceiptController/payReceipt/id/$1';                   //Delete -> Anulate receipt
 $route['payReceipt/bill/(:num)']                = 'PayReceiptController/receiptsByBill/id/$1';               //Get -> Generates receipt
 $route['payReceipt/print/(:num)']               = 'PayReceiptController/payReceiptPrint/id/$1';              //Generates pay receipt pdf
+
+////////////////////////Uploader routes////////////////////////
+$route['upload']                                = 'UploadController/upload';
