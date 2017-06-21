@@ -58,16 +58,17 @@
 <body style="margin: 0; width: 100vw; height: 100vh;">
 <div>
     <p class="none">CIRCULO MEDICO DE ZARATE</p>
-    <p class="right none">RECIBO Nro: (48515)</p>
-    <p class="right none">FECHA: (04/04/2017)</p>
-    <p>ITUZAINGO 543 ZARATE C.P 2800-TE:03487-420709</p>
+    <p class="right none">RECIBO Nro: <?php echo $pay_receipt_number ?></p>
+    <p class="right none">FECHA: <?php echo date_format(date_create_from_format('Y-m-d', $pay_date), 'd/m/Y') ?></p>
+    <p class="none">ITUZAINGO 545 ZARATE C.P 2800</p>
+    <p class="none">TE:(03487) - 425541 / (03487) - 424478 / (03487) - 433469</p>
     <hr class="bottom">
-    <p>Recibi de : (LUIS PASTEUR P.4069)</p>
-    <p>La cantidad de PESOS: (CIENTO CUARENTA Y CINCO MIL NOVECIENTOS TREINTA CON 87/100)</p>
+    <p>Recibí de : <?php echo $denomination ?></p>
+    <p>La cantidad de PESOS: <?php echo $letter_amount_paid ?></p>
     <p>En concepto de:</p>
-    <p>(PAGO DOCUMENTO: F C0002) <span class="left">(2809)</span></p>
+    <p>PAGO DOCUMENTO: <?php echo $bill_number ?></p>
     <hr class="top">
-    <p>SON PESOS: <span class="left">(145930.87)</span></p>
+    <p>SON PESOS: <span class="left"><?php echo $amount_paid ?></span></p>
     <p class="signature">FIRMA</p>
     <p class="small">El presente pago no libera al deudor de su responsabilidad de satisfacer los intereses producidos por su morocidad
         en cancelar la factura del rubro. En tal sentido queda hecha la reserva prescripta por el Art.624 del Cod.Civ.</p>
