@@ -47,6 +47,8 @@ class UploadController extends AuthController {
         // -SWISS MEDICAL   (ID 52)     ->
         if($medical_insurance_id == 1){
 
+            if(strtoupper($uploadData['file_ext']) != '.DBF') return $this->response(['error' => 'Se esperaba un archivo .DBF para la obra social FEMEBA', 'invalidBenefits' => []], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
             $result = $this->Uploader->processFemebaFile($medical_insurance_id,$period,$uploadData);
 
             if($result['status'] == 'error'){
@@ -57,6 +59,8 @@ class UploadController extends AuthController {
 
         }elseif ($medical_insurance_id == 19){
 
+            if(strtoupper($uploadData['file_ext']) != '.TXT') return $this->response(['error' => 'Se esperaba un archivo .TXT para la obra social OSDE', 'invalidBenefits' => []], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
             $result = $this->Uploader->processOsdeFile($medical_insurance_id,$period,$uploadData);
 
             if($result['status'] == 'error'){
@@ -66,6 +70,8 @@ class UploadController extends AuthController {
             }
 
         }elseif ($medical_insurance_id == 52){
+
+            if(strtoupper($uploadData['file_ext']) != '.TXT') return $this->response(['error' => 'Se esperaba un archivo .TXT para la obra social Swiss Medical', 'invalidBenefits' => []], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
             $result = $this->Uploader->processSwissMedicalFile($medical_insurance_id,$period,$uploadData);
 

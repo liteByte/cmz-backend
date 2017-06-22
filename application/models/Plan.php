@@ -161,4 +161,19 @@ class Plan extends CI_Model{
 
     }
 
+  public function existPlanDescription($planDescription){
+
+      $this->db->select('P.*');
+      $this->db->from('plans P');
+      $this->db->like('P.description', $planDescription, 'after');
+      $query = $this->db->get();
+
+      if (!$query)                 return false;
+      if ($query->num_rows() == 0) return false;
+
+      return true;
+
+  }
+
+
 }

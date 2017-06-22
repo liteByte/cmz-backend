@@ -245,4 +245,18 @@ class Professionals extends CI_Model{
 
     }
 
+    public function existProfessionalOsdeRegistrationNumber($osdeRegistrationNumber){
+
+        $this->db->select('P.*');
+        $this->db->from('professionals P');
+        $this->db->where('LPAD(P.osde,6,"0")',$osdeRegistrationNumber);
+        $query = $this->db->get();
+
+        if (!$query)                 return false;
+        if ($query->num_rows() == 0) return false;
+
+        return true;
+
+    }
+
 }
