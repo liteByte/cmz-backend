@@ -66,7 +66,7 @@ class Bill extends CI_Model{
         /**
          *  Generate the bill in base of the print type (1->una factura por obra social completa y 2->una factura por plan)
          */
-        if($this->type_of_print == 1 ){  //1- Una factura por obra social
+        if($this->type_of_print == 1){  //1- Una factura por obra social
 
             //Start transaction
             $this->db->trans_start();
@@ -154,7 +154,6 @@ class Bill extends CI_Model{
 
             $data = [
                 'id_bill'               => $id_Bill,
-                'plan_id'               => $t['plan_id'],
                 'billing_period'        => $t['period'],
                 'total_honorary_period' => $t['total_honorary'],
                 'total_expenses_period' => $t['total_expenses'],
@@ -304,8 +303,7 @@ class Bill extends CI_Model{
      */
     private function getTotalForMedical($id_medical){
 
-        $this->db->select('B.benefit_id,B.medical_insurance_id, B.plan_id, B.period, 
-                           SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
+        $this->db->select('B.period, SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
@@ -326,6 +324,8 @@ class Bill extends CI_Model{
         $this->db->group_by(array("B.period"));
         $query = $this->db->get();
 
+        if (!$query) return [];
+
         $result = $query->result_array();
 
         return $result;
@@ -338,8 +338,7 @@ class Bill extends CI_Model{
      */
     private function getTotalForPlans($id_medical){
 
-        $this->db->select('B.benefit_id, B.plan_id, B.period, B.value_honorary, B.value_expenses, B.value_unit,
-           SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
+        $this->db->select('B.plan_id, B.period,SUM(B.value_honorary * B.quantity) AS total_honorary, SUM(B.value_expenses * B.quantity) AS total_expenses, sum(B.quantity) as total_benefit', FALSE);
         $this->db->from('benefits B');
         $this->db->join('professionals PF', 'B.id_professional_data = PF.id_professional_data');
         $this->db->join('fiscal_data PFD', 'PFD.id_fiscal_data = PF.id_fiscal_data');
@@ -623,7 +622,7 @@ class Bill extends CI_Model{
         
         $bills = $query->result_array();
 
-        //Get every bill's plan description
+        //Get every bill's plan description (not every bill has a plan, if the bill type is 1 it was billed by period
         foreach ($bills as &$bill){
 
             $this->db->select('P.description as plan_description');
@@ -634,9 +633,13 @@ class Bill extends CI_Model{
             $query = $this->db->get();
 
             if (!$query)                 return [];
-            if ($query->num_rows() == 0) return [];
 
-            $bill['plan_description'] = $query->row()->plan_description;
+            //If the bill has no plan, assign an empty string
+            if ($query->num_rows() == 0) {
+                $bill['plan_description'] = "";
+            }else{
+                $bill['plan_description'] = $query->row()->plan_description;
+            }
 
         }
 
