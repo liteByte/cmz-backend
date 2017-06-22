@@ -16,7 +16,7 @@
                 <p style="position: absolute; top: 50px; left: 200px; font-size: 12px; margin: 0;">NUMERO REMITO INTERNO:&#09;<?php echo $generalInformation['receipt_number'] ?></p>
             <?php } ?>
             <p style="position: absolute; top: 67px; left: 360px; font-size: 12px; margin: 0;"><?php echo date_format(date_create_from_format('Y-m-d', $header['billing_date']), 'd/m/Y') ?> </p>
-            <p style="position: absolute; top: 140px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
+            <p style="position: absolute; overflow: hidden; top: 140px; left: 69px; width: 250px; white-space: nowrap; font-size: 12px; margin: 0; text-overflow: ellipsis"><?php echo $header['settlement_name']?> <?php if(!empty($generalInformation['plan_description'])) echo $generalInformation['plan_description'] ?></p>
             <p style="position: absolute; top: 151px; left: 69px; font-size: 12px; margin: 0;"><?php echo $header['iva_description']?></p>
             <p style="position: absolute; top: 140px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['address'] ?></p>
             <p style="position: absolute; top: 151px; left: 360px; font-size: 12px; margin: 0;"><?php echo $header['cuit'] ?></p>
