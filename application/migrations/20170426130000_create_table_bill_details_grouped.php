@@ -23,7 +23,7 @@ class Migration_Create_table_bill_details_grouped extends  CI_Migration{
                 'type'           => 'INT',
                 'constraint'     =>  5,
                 'unsigned'       => TRUE,
-                'null'           => FALSE,
+                'null'           => TRUE,
             ],
             'billing_period'   => [
                 'type'           => 'VARCHAR',
