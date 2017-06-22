@@ -235,7 +235,7 @@ class Professionals extends CI_Model{
 
         $this->db->select('P.*');
         $this->db->from('professionals P');
-        $this->db->where('P.registration_number',$registrationNumber);
+        $this->db->where('LPAD(P.registration_number,6,"0")',$registrationNumber);
         $query = $this->db->get();
 
         if (!$query)                 return false;
