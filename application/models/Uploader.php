@@ -162,18 +162,73 @@ class Uploader extends CI_Model{
          *  Obtain TXT data
          */
         //Open the file
-        $archivoOsde = fopen($uploadData['full_path'], "r");
+        $osdeFile = fopen($uploadData['full_path'], "r");
 
-        //If the file is open, read and parse every benefit. Then, save then valorized
-        if ($archivoOsde) {
+        //If the file is open, read and parse every benefit
+        $benefitArray = [];
+        if ($osdeFile) {
 
-            while (($registroPrestacion = fgets($archivoOsde)) !== false) {
+            while (($benefitRegistry = fgets($osdeFile)) !== false) {
 
-                print_r($registroPrestacion);die();
+                $newOsdeBenefit = [];
+
+                //Plan description (get plan ID)
+                $newOsdeBenefit['plan_description']         = trim(substr($benefitRegistry, 253, 5));
+
+
+
+                //Registration number (osde)
+                $newOsdeBenefit['osde_registration_number'] = substr($benefitRegistry, 1, 6);
+
+                //Period
+                $date = new DateTime();
+                $date->setDate('20'.substr($benefitRegistry, 56, 2), substr($benefitRegistry, 54, 2), 01);
+                $newOsdeBenefit['period'] = $date->format('Y-m-d');
+
+                //Nomenclator code
+                $newOsdeBenefit['nomenclator_code'] = trim(substr($benefitRegistry, 24, 15));
+
+                //Quantity
+                $newOsdeBenefit['quantity'] = (int)(substr($benefitRegistry, 46, 3));
+
+                //Billing code
+                $value1 = (substr($benefitRegistry, 97, 3));
+                $value2 = (substr($benefitRegistry, 169, 3));
+
+                if($value1 != '000' && $value2 == '000'){
+                    $newOsdeBenefit['billing_code'] = 1;
+                }elseif($value1 == '000' && $value2 != '000'){
+                    $newOsdeBenefit['billing_code'] = 2;
+                }else{
+                    $newOsdeBenefit['billing_code'] = 3;
+                }
+
+                //Benefit date
+                $benefit_date = new DateTime();
+                $benefit_date->setDate('20'.substr($benefitRegistry, 56, 2), substr($benefitRegistry, 54, 2), substr($benefitRegistry, 52, 2));
+                $newOsdeBenefit['benefit_date'] = $benefit_date->format('Y-m-d');
+
+                //Affiliate ID
+                $affiliate_number = trim(substr($benefitRegistry, 10, 11));
+                $affiliate_name   = trim(substr($benefitRegistry, 339, 30));
+
+                if (!empty($affiliate_number)) {
+                    //If a number was informed, check it's existence.
+                    if (!$this->affiliate->checkExistence($affiliate_number)) {
+                        $affiliateOperation = $this->affiliate->save($medical_insurance_id, $plan_id, $affiliate_number, $affiliate_name);
+                        if (!$affiliateOperation["status"]) {
+                            return $this->response(['error' => 'Error de base de datos'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    }
+                }
+
+
+                print_r();die();
+                print_r($newOsdeBenefit['benefit_date']);die();
 
             }
 
-            fclose($archivoOsde);
+            fclose($osdeFile);
 
         } else {
 
