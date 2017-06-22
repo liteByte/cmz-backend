@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class numberToLetter {
+class Numbertoletter {
     private $UNIDADES = array(
         '',
         'UN ',

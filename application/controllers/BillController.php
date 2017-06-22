@@ -15,7 +15,7 @@ class BillController extends AuthController{
     function __construct(){
         parent::__construct();
         $this->load->library('Response_msg');
-        $this->load->library('pdf');
+        $this->load->library('Pdf');
         $this->load->model('bill');
         $this->load->library('validator');
         $this->token_valid = $this->validateToken();
