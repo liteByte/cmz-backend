@@ -93,12 +93,13 @@ class Uploader extends CI_Model{
 
 
             //Get nomenclator's ID
-            $this->db->select('N.nomenclator_id');
+            $this->db->select('N.nomenclator_id, N.unity');
             $this->db->from('nomenclators N');
             $this->db->where('N.code',$benefit['practica']);
             $query = $this->db->get();
 
             $nomenclator_id = $query->row()->nomenclator_id;
+            $unit           = $query->row()->unity;
 
 
             //Determinate billing code
@@ -141,7 +142,7 @@ class Uploader extends CI_Model{
                 'new_expenses'                     => null,
                 'value_honorary'                   => $benefit['honorarios'],
                 'value_expenses'                   => $benefit['gastos'],
-                'value_unit'                       => (empty($bill_number)                                  ? null : $nomenclator->unity),
+                'value_unit'                       => $unit,
                 'state'                            => 1,  //The benefit form FEMEBA is already valued
                 'active'                           => 'active'
             );
