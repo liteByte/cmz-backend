@@ -15,6 +15,7 @@ class UploadController extends AuthController {
         parent::__construct();
         $this->load->library('excel');
         $this->load->model('Uploader');
+        $this->load->library('Pdf');
         $this->load->library('validator');
         $this->load->helper(array('form', 'url'));
         $this->token_valid = $this->validateToken(apache_request_headers());
@@ -76,22 +77,10 @@ class UploadController extends AuthController {
                 return $this->response(['msg' => $result['msg']], REST_Controller::HTTP_OK);
             }
 
-        }elseif ($medical_insurance_id == 52){
-
-            if(strtoupper($uploadData['file_ext']) != '.TXT') return $this->response(['error' => 'Se esperaba un archivo .TXT para la obra social Swiss Medical', 'invalidBenefits' => []], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-
-            $result = $this->Uploader->processSwissMedicalFile($medical_insurance_id,$period,$uploadData);
-
-            if($result['status'] == 'error'){
-                return $this->response(['error' => $result['msg'], 'invalidBenefits' => $result['invalidBenefits']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-            }else{
-                return $this->response(['msg' => $result['msg']], REST_Controller::HTTP_OK);
-            }
-
         }else{
 
-            //Importador generico
-            print_r("Generico");die();
+            //Importador generico, no realizado aun
+            return $this->response(['error' => 'No se pueden importar archivos para esta obra social actualmente', 'invalidBenefits' => []], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
 
         }
 

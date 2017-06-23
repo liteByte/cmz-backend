@@ -46,20 +46,20 @@ class Uploader extends CI_Model{
 
             //Validate Plan
             if(!$this->Plan->existPlanCode($benefit['os'])) {
-                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'] . ': No se encontró un plan cuyo código de plan concuerde con el código del plan ingresado';
+                $invalidBenefits [] = ['plan' => $benefit['os'] , 'nomenclator_code' => $benefit['practica'], 'registration_number' => $benefit['matricula'], 'errorMessage' => 'No se encontró un plan cuyo código de plan concuerde con el código del plan ingresado'];
                 continue;
             }
 
 
             //Validate professional's registration number
             if(!$this->Professionals->existProfessionalRegistrationNumber($benefit['matricula'])) {
-                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'] . ': No se encontró un profesional cuya matrícula concuerde con la matrícula ingresada';
+                $invalidBenefits [] = ['plan' => $benefit['os'] , 'nomenclator_code' => $benefit['practica'], 'registration_number' => $benefit['matricula'], 'errorMessage' => 'No se encontró un profesional cuya matrícula concuerde con la matrícula ingresada'];
                 continue;
             }
 
             //Validate nomenclators
             if(!$this->Nomenclator->existNomenclator($benefit['practica'])) {
-                $invalidBenefits [] = $benefit['os'] . ' - ' . $benefit['practica'] . ' - ' . $benefit['matricula'] . ': No se encontró un código de nomenclador que concuerde con el código ingresado';
+                $invalidBenefits [] = ['plan' => $benefit['os'] , 'nomenclator_code' => $benefit['practica'], 'registration_number' => $benefit['matricula'], 'errorMessage' => 'No se encontró un código de nomenclador que concuerde con el código ingresado'];
                 continue;
             }
 
@@ -232,19 +232,19 @@ class Uploader extends CI_Model{
 
             //Validate Plan
             if(!$this->Plan->existPlanDescription($benefit['plan_description'])) {
-                $invalidBenefits [] = $benefit['plan_description'] . ' - ' . $benefit['nomenclator_code'] . ' - ' . $benefit['osde_registration_number'] . ': No se encontró un plan que concuerde con la descripción del plan ingresado';
+                $invalidBenefits [] = ['plan' => $benefit['plan_description'], 'nomenclator_code' => $benefit['nomenclator_code'], 'registration_number' => $benefit['osde_registration_number'], 'errorMessage' => 'No se encontró un plan que concuerde con la descripción del plan ingresado'];
                 continue;
             }
 
             //Validate professional's registration number (the one from OSDE)
             if(!$this->Professionals->existProfessionalOsdeRegistrationNumber($benefit['osde_registration_number'])) {
-                $invalidBenefits [] = $benefit['plan_description'] . ' - ' . $benefit['nomenclator_code'] . ' - ' . $benefit['osde_registration_number'] . ': No se encontró un profesional cuya matrícula de OSDE coincida con la ingresada';
+                $invalidBenefits [] = ['plan' => $benefit['plan_description'], 'nomenclator_code' => $benefit['nomenclator_code'], 'registration_number' => $benefit['osde_registration_number'], 'errorMessage' => 'No se encontró un profesional cuya matrícula de OSDE coincida con la ingresada'];
                 continue;
             }
 
             //Validate nomenclators
             if(!$this->Nomenclator->existNomenclator($benefit['nomenclator_code'])) {
-                $invalidBenefits [] = $benefit['plan_description'] . ' - ' . $benefit['nomenclator_code'] . ' - ' . $benefit['osde_registration_number'] . ': No se encontró un código de nomenclador que coincida con el ingresado';
+                $invalidBenefits [] = ['plan' => $benefit['plan_description'], 'nomenclator_code' => $benefit['nomenclator_code'], 'registration_number' => $benefit['osde_registration_number'], 'errorMessage' => 'No se encontró un código de nomenclador que coincida con el ingresado'];
                 continue;
             }
 
