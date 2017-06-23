@@ -279,13 +279,12 @@ class Uploader extends CI_Model{
 
 
             //Get nomenclator's ID
-            $this->db->select('N.nomenclator_id, N.unity');
+            $this->db->select('N.nomenclator_id');
             $this->db->from('nomenclators N');
             $this->db->where('N.code',$benefit['nomenclator_code']);
             $query = $this->db->get();
 
             $nomenclator_id = $query->row()->nomenclator_id;
-            $unit           = $query->row()->unity;
 
 
             //Affiliate validation (if it exists, get the ID. If not, save it)
