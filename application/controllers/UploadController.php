@@ -15,6 +15,7 @@ class UploadController extends AuthController {
         parent::__construct();
         $this->load->library('excel');
         $this->load->model('Uploader');
+        $this->load->library('validator');
         $this->load->helper(array('form', 'url'));
         $this->token_valid = $this->validateToken(apache_request_headers());
     }
@@ -23,6 +24,12 @@ class UploadController extends AuthController {
 
         $medical_insurance_id = $this->input->post('medical_insurance_id');
         $period               = $this->input->post('period');
+
+        if(empty($medical_insurance_id)) return $this->response(['error'=>'No se ha ingresado obra social'], REST_Controller::HTTP_BAD_REQUEST);
+        if(empty($period))               return $this->response(['error'=>'No se ha ingresado período'], REST_Controller::HTTP_BAD_REQUEST);
+
+        //Validations
+        if(!$this->validator->validateDate($period)) return $this->response(['error'=>'Fecha del período inválida'], REST_Controller::HTTP_BAD_REQUEST);
 
         $config['upload_path']          = 'upload_benefits/';
         $config['allowed_types']        = 'csv|txt|dbf|xls|xlsx';
