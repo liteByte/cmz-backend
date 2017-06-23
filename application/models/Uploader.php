@@ -9,6 +9,7 @@ class Uploader extends CI_Model{
         $this->load->model('Nomenclator');
         $this->load->model('Professionals');
         $this->load->model('Benefit');
+        $this->load->model('Affiliate');
         parent::__construct();
     }
 
@@ -148,7 +149,7 @@ class Uploader extends CI_Model{
             );
 
             $this->db->insert('benefits', $data);
-            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'Error inesperado: No se pudo grabar alguna de las prestaciones del archivo'];
+            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'Error inesperado: No se pudo grabar alguna de las prestaciones del archivo. Se cancela la carga'];
 
         }
 
@@ -280,51 +281,37 @@ class Uploader extends CI_Model{
             //Get nomenclator's ID
             $this->db->select('N.nomenclator_id, N.unity');
             $this->db->from('nomenclators N');
-            $this->db->where('N.code',$benefit['practica']);
+            $this->db->where('N.code',$benefit['nomenclator_code']);
             $query = $this->db->get();
 
             $nomenclator_id = $query->row()->nomenclator_id;
             $unit           = $query->row()->unity;
 
 
-            //Affiliate validation
+            //Affiliate validation (if it exists, get the ID. If not, save it)
+            if(!$this->Affiliate->checkExistence($benefit['affiliate_number'])){
+
+                $result = $this->Affiliate->save($medical_insurance_id,$plan_id,$benefit['affiliate_number'],$benefit['affiliate_name']);
+                if ($result['status']){
+                    $affiliate_id = $result['affiliate_id'];
+                }else{
+                    return ['status' => 'error', 'msg' => 'Error inesperado: No se pudo guardar el afiliado '.$benefit['affiliate_number'].'-'.$benefit['affiliate_name']];
+                }
+
+            }else{
+
+                $affiliate_id = $this->Affiliate->getAffiliateByNumber($benefit['affiliate_number'])['affiliate_id'];
+
+            }
 
 
+            //Save the benefit. Osde must be valorized, so we use the save method from benefits which saves and valorizes it.
+            $result = $this->Benefit->save($medical_insurance_id, $plan_id, $id_professional_data, $period, '0', 1, $nomenclator_id, $benefit['quantity'], $benefit['billing_code'], 100, 1, 1, 1, '0.00', $benefit['benefit_date'], $affiliate_id, 0, '0', null, null,null, null);
 
-            //Save the benefit. FEMEBA already has it's benefits valorized, that's why it's only saved.
-            $data = array(
-                'medical_insurance_id'             => $medical_insurance_id,
-                'plan_id'                          => $plan_id,
-                'id_professional_data'             => $id_professional_data,
-                'period'                           => $period,
-                'remesa'                           => 0,
-                'additional'                       => 1,                                                        //Default value
-                'nomenclator_id'                   => $nomenclator_id,
-                'quantity'                         => $benefit['cantpca'],
-                'billing_code_id'                  => $billing_code_id,
-                'multiple_operation_value'         => $benefit['porcpago'],
-                'holiday_option_id'                => 1,
-                'maternal_plan_option_id'          => 1,
-                'internment_ambulatory_option_id'  => 1,
-                'unit_price'                       => 0,
-                'benefit_date'                     => $benefit_date,
-                'affiliate_id'                     => null,
-                'bill_number'                      => null,
-                'modify_coverage'                  => 0,
-                'new_honorary'                     => null,
-                'new_expenses'                     => null,
-                'value_honorary'                   => $benefit['honorarios'],
-                'value_expenses'                   => $benefit['gastos'],
-                'value_unit'                       => $unit,
-                'state'                            => 1,  //The benefit form FEMEBA is already valued
-                'active'                           => 'active'
-            );
+            if ($result['status'] == 'error') return ['status' => 'error', 'msg' => 'Error inesperado: No se pudo grabar alguna de las prestaciones del archivo. Se cancela la carga', 'invalidBenefits' => []];
 
-            $this->db->insert('benefits', $data);
-            if ($this->db->affected_rows() == 0) return ['status' => 'error', 'msg' => 'Error inesperado: No se pudo grabar alguna de las prestaciones del archivo'];
 
         }
-
 
         return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidBenefits' => []];
 
