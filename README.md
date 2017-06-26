@@ -19,7 +19,9 @@
    there before)
    NOTE: you will need to constantly upload changes to this folder or work 
    directly on it.
-7. Exectute migrations
+7. Install composer
+8. Go to the directory that has the "composer.json" file and run "composer install" in cmd
+9. Exectute migrations
    http://localhost/migrate/up
 ```
 
