@@ -108,14 +108,17 @@ class UploadController extends AuthController {
         $fileYear  = substr($uploadData['raw_name'],-4,4);
 
         if($fileMonth != date('m') || $fileYear != date('Y')){
+            unlink($uploadData['full_path']);
             return $this->response(['error' => 'El período del archivo no coincide con el período actual'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $result = $this->Uploader->processARBA($uploadData);
 
         if ($result['status'] == 'error') {
+            unlink($uploadData['full_path']);
             return $this->response(['error' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         } else {
+            unlink($uploadData['full_path']);
             return $this->response(['msg' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_OK);
         }
 
