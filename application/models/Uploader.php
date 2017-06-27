@@ -322,6 +322,18 @@ class Uploader extends CI_Model{
 
     }
 
+    public function processARBA($uploadData){
+
+        /**
+         *  Obtain TXT data
+         */
+        //Open the file
+        $arbaFile = fopen($uploadData['full_path'], "r");
+
+
+
+    }
+
 
 
 

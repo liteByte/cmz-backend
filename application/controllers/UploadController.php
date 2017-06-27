@@ -89,9 +89,39 @@ class UploadController extends AuthController {
 
     }
 
+    public function uploadARBA_post()
+    {
 
+        $config['upload_path'] = 'upload_arba/';
+        $config['allowed_types'] = 'txt';
+        $config['max_size'] = 0;
+        $config['max_width'] = 0;
+        $config['max_height'] = 0;
 
+        $this->load->library('upload', $config);
 
+        if (!$this->upload->do_upload('benefit')) {
+            return $this->response(['error' => $this->upload->display_errors()], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        } else {
+            $uploadData = $this->upload->data();
+        }
 
+        //Validate the arba file is the one for this month (fileName = PadronRGSRetMMYYYY)
+        $fileMonth = substr($uploadData['raw_name'],-7,2);
+        $fileYear = substr($uploadData['raw_name'],-5,4);
+
+        if($fileMonth != date('m') || $fileYear != date('Y')){
+            return $this->response(['error' => 'El período del archivo no coincide con el período actual'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $result = $this->Uploader->processARBA($uploadData);
+
+        if ($result['status'] == 'error') {
+            return $this->response(['error' => $result['msg']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        } else {
+            return $this->response(['msg' => $result['msg']], REST_Controller::HTTP_OK);
+        }
+
+    }
 
 }

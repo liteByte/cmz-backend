@@ -225,3 +225,4 @@ $route['payReceipt/print/(:num)']               = 'PayReceiptController/payRecei
 
 ////////////////////////Uploader routes////////////////////////
 $route['upload']                                = 'UploadController/upload';
+$route['uploadARBA']                            = 'UploadController/uploadARBA';
