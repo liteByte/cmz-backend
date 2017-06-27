@@ -324,13 +324,71 @@ class Uploader extends CI_Model{
 
     public function processARBA($uploadData){
 
+        //Get all professional's cuits
+        $this->db->select('replace(F.cuit,\'-\',\'\') as cuit, F.id_fiscal_data, 0 as updated');
+        $this->db->from('professionals P');
+        $this->db->join('fiscal_data F','F.id_fiscal_data = P.id_fiscal_data');
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado al obtener los datos de los profesionales','invalidProfessionals'=>[]];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró informacion de profesionales','invalidProfessionals'=>[]];
+
+        $professionalArray = $query->result_array();
+
         /**
          *  Obtain TXT data
          */
         //Open the file
         $arbaFile = fopen($uploadData['full_path'], "r");
 
+        if ($arbaFile) {
 
+            while (($register = fgets($arbaFile)) !== false) {
+
+                //4-> CUIT
+                //8-> Alicuota a actualizar
+                $alicuotaRegister = explode(';',$register);
+
+                foreach ($professionalArray as &$professional){
+
+                    //If professional is found, add him it's new percentage
+                    if($professional['cuit'] == $alicuotaRegister[4]){
+
+                        $professional['new_iibb_percentage'] = $alicuotaRegister[8];
+                        $professional['updated'] = 1;
+                    }
+
+                }
+
+            }
+
+            fclose($arbaFile);
+
+            //Check if all professionals were found
+            $notFoundProfessionals = [];
+            foreach ($professionalArray as $professional){
+
+                if($professional['updated'] == 0){
+                    $notFoundProfessionals [] = $professional;
+                }
+
+            }
+
+            if(!empty($notFoundProfessionals)) return ['status' => 'error', 'msg' => 'Hubo profesionales cuyos datos no fueron encontrados en el archivo ARBA', 'invalidProfessionals'=>$notFoundProfessionals];
+
+            //Update each professional
+            foreach ($professionalArray as $professional) {
+                $this->db->where("id_fiscal_data", $professional['id_fiscal_data']);
+                $this->db->update('fiscal_data', ['iibb_percentage' => $professional['new_iibb_percentage']]);
+            }
+
+            return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidProfessionals' => []];
+
+        }else{
+
+            return ['status' => 'error', 'msg' => 'Error al leer el archivo enviado','invalidProfessionals'=>[]];
+
+        }
 
     }
 
