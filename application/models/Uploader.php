@@ -322,7 +322,7 @@ class Uploader extends CI_Model{
 
     }
 
-    public function processARBA($uploadData){
+    public function processARBA($uploadData,$fileName){
 
         //Get all professional's cuits
         $this->db->select('replace(F.cuit,\'-\',\'\') as cuit, F.id_fiscal_data, 0 as updated');
@@ -344,7 +344,7 @@ class Uploader extends CI_Model{
          *  Obtain TXT data
          */
         //Open the file
-        $arbaFile = fopen($uploadData['full_path'], "r");
+        $arbaFile = fopen($uploadData['file_path'].'/'.$fileName, "r");
 
         if ($arbaFile) {
 

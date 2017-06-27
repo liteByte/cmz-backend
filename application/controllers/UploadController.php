@@ -90,7 +90,7 @@ class UploadController extends AuthController {
     public function uploadARBA_post()
     {
         $config['upload_path']      = 'upload_arba/';
-        $config['allowed_types']    = 'txt';
+        $config['allowed_types']    = 'zip';
         $config['max_size']         = 0;
         $config['max_width']        = 0;
         $config['max_height']       = 0;
@@ -98,27 +98,51 @@ class UploadController extends AuthController {
         $this->load->library('upload', $config);
 
         if (!$this->upload->do_upload('arba')) {
+
             return $this->response(['error' => $this->upload->display_errors()], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+
         } else {
+
+            //Get the file data
             $uploadData = $this->upload->data();
+
+
+            //Validate the arba file is the one for this month (fileName = PadronRGSRetMMYYYY)
+            $fileMonth = substr($uploadData['raw_name'],-6,2);
+            $fileYear  = substr($uploadData['raw_name'],-4,4);
+
+            if($fileMonth != date('m') || $fileYear != date('Y')){
+                unlink($uploadData['full_path']);
+                unlink($uploadData['file_path'].'PadronRGSRet'.$fileMonth.$fileYear.'.txt');
+                unlink($uploadData['file_path'].'PadronRGSPer'.$fileMonth.$fileYear.'.txt');
+                return $this->response(['error' => 'El período del archivo no coincide con el período actual'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+
+            //Unzip the file
+            $zip = new ZipArchive;
+            if($zip->open($uploadData['full_path']) == TRUE){
+                $zip->extractTo($uploadData['file_path']);
+                $zip->close();
+            } else {
+                unlink($uploadData['full_path']);
+                return $this->response(['error' => 'Error inesperado al descromprimir el archivo'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
         }
 
-        //Validate the arba file is the one for this month (fileName = PadronRGSRetMMYYYY)
-        $fileMonth = substr($uploadData['raw_name'],-6,2);
-        $fileYear  = substr($uploadData['raw_name'],-4,4);
-
-        if($fileMonth != date('m') || $fileYear != date('Y')){
-            unlink($uploadData['full_path']);
-            return $this->response(['error' => 'El período del archivo no coincide con el período actual'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
-        $result = $this->Uploader->processARBA($uploadData);
+        //The name of the file we need is PadronRGSRetMMYYYY
+        $result = $this->Uploader->processARBA($uploadData,'PadronRGSRet'.$fileMonth.$fileYear.'.txt');
 
         if ($result['status'] == 'error') {
             unlink($uploadData['full_path']);
+            unlink($uploadData['file_path'].'PadronRGSRet'.$fileMonth.$fileYear.'.txt');
+            unlink($uploadData['file_path'].'PadronRGSPer'.$fileMonth.$fileYear.'.txt');
             return $this->response(['error' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         } else {
             unlink($uploadData['full_path']);
+            unlink($uploadData['file_path'].'PadronRGSRet'.$fileMonth.$fileYear.'.txt');
+            unlink($uploadData['file_path'].'PadronRGSPer'.$fileMonth.$fileYear.'.txt');
             return $this->response(['msg' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_OK);
         }
 
