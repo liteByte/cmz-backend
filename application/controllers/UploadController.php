@@ -89,7 +89,6 @@ class UploadController extends AuthController {
 
     public function uploadARBA_post()
     {
-
         $config['upload_path']      = 'upload_arba/';
         $config['allowed_types']    = 'txt';
         $config['max_size']         = 0;
@@ -117,7 +116,7 @@ class UploadController extends AuthController {
         if ($result['status'] == 'error') {
             return $this->response(['error' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         } else {
-            return $this->response(['msg' => $result['msg']], REST_Controller::HTTP_OK);
+            return $this->response(['msg' => $result['msg'],'invalidProfessionals' => $result['invalidProfessionals']], REST_Controller::HTTP_OK);
         }
 
     }
