@@ -113,8 +113,6 @@ class UploadController extends AuthController {
 
             if($fileMonth != date('m') || $fileYear != date('Y')){
                 unlink($uploadData['full_path']);
-                unlink($uploadData['file_path'].'PadronRGSRet'.$fileMonth.$fileYear.'.txt');
-                unlink($uploadData['file_path'].'PadronRGSPer'.$fileMonth.$fileYear.'.txt');
                 return $this->response(['error' => 'El período del archivo no coincide con el período actual'], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
             }
 
