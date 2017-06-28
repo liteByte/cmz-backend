@@ -322,6 +322,72 @@ class Uploader extends CI_Model{
 
     }
 
+    public function processARBA($uploadData,$fileName){
+
+        //Get all professional's cuits
+        $this->db->select('replace(F.cuit,\'-\',\'\') as cuit, F.id_fiscal_data, 0 as updated');
+        $this->db->from('professionals P');
+        $this->db->join('fiscal_data F','F.id_fiscal_data = P.id_fiscal_data');
+        $query = $this->db->get();
+
+        if (!$query)                 return ['status' => 'error', 'msg' => 'Error inesperado al obtener los datos de los profesionales','invalidProfessionals'=>[]];
+        if ($query->num_rows() == 0) return ['status' => 'error', 'msg' => 'No se encontró informacion de profesionales','invalidProfessionals'=>[]];
+
+        $professionalArray = [];
+
+        foreach($query->result() as $row)
+        {
+            $professionalArray[$row->cuit] = ['id_fiscal_data' => $row->id_fiscal_data, 'found' => 0]; // add each user id to the array
+        }
+
+        /**
+         *  Obtain TXT data
+         */
+        //Open the file
+        $arbaFile = fopen($uploadData['file_path'].'/'.$fileName, "r");
+
+        if ($arbaFile) {
+
+            while (($register = fgets($arbaFile)) !== false) {
+
+                //4-> CUIT
+                //8-> Alicuota a actualizar
+                $alicuotaRegister = explode(';',$register);
+
+                if(array_key_exists($alicuotaRegister[4], $professionalArray)){
+                    $professionalArray[$alicuotaRegister[4]]['found'] = 1;
+                    $this->db->where("id_fiscal_data", $professionalArray[$alicuotaRegister[4]]['id_fiscal_data']);
+                    $this->db->update('fiscal_data', ['iibb_percentage' => str_replace(',','.',$alicuotaRegister[8])]);
+                }
+
+            }
+
+            fclose($arbaFile);
+
+            //Check if all professionals were found
+            $notFoundProfessionals = [];
+            foreach ($professionalArray as $professional){
+
+                if($professional['found'] == 0){
+                    $notFoundProfessionals [] = $professional;
+                }
+
+            }
+
+            if(count($notFoundProfessionals) > 0) {
+                return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente. Hubo profesionales cuyo cuit no se encontro en el archivo', 'invalidProfessionals' => $notFoundProfessionals];
+            }else{
+                return ['status' => 'ok', 'msg' => 'Archivo procesado correctamente', 'invalidProfessionals' => $notFoundProfessionals];
+            }
+
+        }else{
+
+            return ['status' => 'error', 'msg' => 'Error al leer el archivo enviado','invalidProfessionals'=>[]];
+
+        }
+
+    }
+
 
 
 
