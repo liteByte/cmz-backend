@@ -114,7 +114,7 @@ class Receipt extends CI_Model{
                 $expenses_total     = 0;
                 $professional_total = 0;
 
-                foreach ($professionalArray as $benefitArray) {
+                foreach ($professionalArray as &$benefitArray) {
                     $quantity_total     = $quantity_total     + $benefitArray['quantity'];
                     $visit_total        = $visit_total        + $benefitArray['visit_benefit_total'];
                     $honorary_total     = $honorary_total     + $benefitArray['honorary_benefit_total'];
@@ -128,7 +128,6 @@ class Receipt extends CI_Model{
                 $professionalArray[0]['professional_honorary_total']    = $honorary_total;
                 $professionalArray[0]['professional_expenses_total']    = $expenses_total;
                 $professionalArray[0]['professional_total']             = $professional_total;
-
             }
 
             $periodTotal = [];
