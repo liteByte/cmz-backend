@@ -366,10 +366,12 @@ class Uploader extends CI_Model{
 
             //Check if all professionals were found
             $notFoundProfessionals = [];
-            foreach ($professionalArray as $professional){
+            foreach ($professionalArray as $cuit => $professional){
 
                 if($professional['found'] == 0){
-                    $notFoundProfessionals [] = $professional;
+                    $cuitNotFound = substr($cuit, 0, 2) . '-' . substr($cuit, 2);
+                    $cuitNotFound = substr($cuitNotFound, 0, 11) . '-' . substr($cuitNotFound, 11);
+                    $notFoundProfessionals [] = $cuitNotFound;
                 }
 
             }
