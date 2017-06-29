@@ -101,9 +101,9 @@ class Receipt extends CI_Model{
                     $benefitArray['professional_total']          = 0;
 
                     //Complete cuit with zeros to fill 11 numbers. Then, add a -
-                    $benefitArray['cuit'] = str_pad($benefitArray['cuit'], 11, '0', STR_PAD_LEFT);
-                    $benefitArray['cuit'] = substr($benefitArray['cuit'], 0, 2) . '-' . substr($benefitArray['cuit'], 2);
-                    $benefitArray['cuit'] = substr($benefitArray['cuit'], 0, 11) . '-' . substr($benefitArray['cuit'], 11);
+                    //$benefitArray['cuit'] = str_pad($benefitArray['cuit'], 11, '0', STR_PAD_LEFT);
+                    //$benefitArray['cuit'] = substr($benefitArray['cuit'], 0, 2) . '-' . substr($benefitArray['cuit'], 2);
+                    //$benefitArray['cuit'] = substr($benefitArray['cuit'], 0, 11) . '-' . substr($benefitArray['cuit'], 11);
 
                 }
 
